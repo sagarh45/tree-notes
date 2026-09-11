@@ -11,6 +11,7 @@ import { HeapDualViz } from '../components/viz/HeapDualViz'
 import { TrieSvg } from '../components/viz/TrieSvg'
 import { CallStack } from '../components/viz/CallStack'
 import { HuffmanPanel } from '../components/viz/HuffmanPanel'
+import { ModelGallery } from '../components/lab/ModelGallery'
 import { usePlayback } from '../hooks/usePlayback'
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts'
 import { LAB_CODE, LAB_PSEUDO, type LabSnippetId } from '../data/labCode'
@@ -58,6 +59,16 @@ const HEAP_CX: ComplexityRow[] = [
 const RB_CX: ComplexityRow[] = [{ op: 'Search / Insert / Delete', time: 'O(log n)', space: 'O(n)', note: '≤ 2 rotations on insert; recolors may walk up' }]
 const HUFF_CX: ComplexityRow[] = [{ op: 'Build', time: 'O(n log n)', space: 'O(n)', note: 'n = number of letters' }]
 const TRIE_CX: ComplexityRow[] = [{ op: 'Insert / Search', time: 'O(L)', space: 'O(ALPHABET · nodes)', note: 'L = word length, not dictionary size' }]
+
+const TOTAL_PACKS =
+  TRAV_PACKS.length +
+  BST_PACKS.length +
+  AVL_PACKS.length +
+  BTREE_PACKS.length +
+  HEAP_PACKS.length +
+  RB_PACKS.length +
+  HUFF_PACKS.length +
+  TRIE_PACKS.length
 
 const CORE: [TreeKind, string][] = [
   ['traversal', 'Traversals'],
@@ -289,12 +300,32 @@ export function LabPage() {
 
   return (
     <div>
-      <div className="card">
-        <h2>TREES LAB — Core + Advanced models</h2>
-        <p className="muted" style={{ marginTop: 0 }}>
-          Every model is a different <b>law</b> on the same idea of a tree. Type a value, press Insert, then Play. The
-          picture, the array / stack, and the C code move together.
+      <div className="card hero-band">
+        <div className="hero-kicker">VISUALIZER LAB</div>
+        <h2>Eight models, {TOTAL_PACKS} example trees, one step at a time</h2>
+        <p className="muted">
+          Every model is a different <b>law</b> bolted onto the same idea of a tree. Type a key, press Insert, then
+          Play — the drawing, the array or call stack, the variables and the highlighted line of C all move together.
+          Tap any drawn example pack to load it instantly.
         </p>
+        <div className="stat-strip">
+          <div className="stat">
+            <b>8</b>
+            <span>models</span>
+          </div>
+          <div className="stat">
+            <b>{TOTAL_PACKS}</b>
+            <span>example trees</span>
+          </div>
+          <div className="stat">
+            <b>{steps.length || '—'}</b>
+            <span>steps loaded</span>
+          </div>
+          <div className="stat">
+            <b>{history.length}</b>
+            <span>operations run</span>
+          </div>
+        </div>
         <div className="tabs" role="tablist" aria-label="Core tree type">
           {CORE.map(([k, label]) => (
             <button key={k} type="button" role="tab" aria-selected={kind === k} onClick={() => switchKind(k)}>
@@ -603,6 +634,8 @@ export function LabPage() {
           </tbody>
         </table>
       </div>
+
+      <ModelGallery />
     </div>
   )
 }

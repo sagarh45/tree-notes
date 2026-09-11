@@ -16,12 +16,86 @@ export type Fig = {
   showBf?: boolean
   showColor?: boolean
   showIndex?: boolean
+  showNulls?: boolean
   edgeLabels?: boolean
   threads?: ThreadEdge[]
   heap?: number[]
   trie?: TrieNode
   forest?: BinNode[]
   codes?: { ch: string; freq: number; code: string }[]
+  marks?: Record<string, string>
+  tags?: Record<string, string>
+}
+
+/** Map "value → mark/tag" onto the generated node ids of a freshly built tree. */
+function byValue(root: BinNode | null, wanted: Record<string, string>): Record<string, string> {
+  const out: Record<string, string> = {}
+  function walk(n: BinNode | null) {
+    if (!n) return
+    const hit = wanted[String(n.value)]
+    if (hit !== undefined) out[n.id] = hit
+    walk(n.left)
+    walk(n.right)
+  }
+  walk(root)
+  return out
+}
+
+/** Number the nodes level by level so the array-representation figure can show [i]. */
+function withLevelIndexes(root: BinNode | null): BinNode | null {
+  if (!root) return null
+  function walk(n: BinNode | null, i: number) {
+    if (!n) return
+    n.heapIndex = i
+    walk(n.left, 2 * i + 1)
+    walk(n.right, 2 * i + 2)
+  }
+  walk(root, 0)
+  return root
+}
+
+function mirrored(root: BinNode | null): BinNode | null {
+  if (!root) return null
+  const t = root.left
+  root.left = mirrored(root.right)
+  root.right = mirrored(t)
+  return root
+}
+
+/** General tree A(B(E,F), C, D(G)) stored as left-child / right-sibling. */
+function lcrs(): BinNode {
+  resetIds(1)
+  const A = makeNode('A')
+  const B = makeNode('B')
+  const C = makeNode('C')
+  const D = makeNode('D')
+  const E = makeNode('E')
+  const F = makeNode('F')
+  const G = makeNode('G')
+  A.left = B // first child
+  B.right = C // sibling chain
+  C.right = D
+  B.left = E
+  E.right = F
+  D.left = G
+  return A
+}
+
+/* Marks and tags are keyed by node id, so the SAME tree object must be reused
+   for the drawing and for the mark map — bstFromSequence generates fresh ids. */
+const OPS_LCA = bstFromSequence([8, 3, 10, 1, 6, 14, 4, 7, 13])
+const OPS_DIA = bstFromSequence([8, 3, 10, 1, 6, 14, 4, 7, 13])
+const OPS_LVL = bstFromSequence([8, 3, 10, 1, 6, 14, 4, 7, 13])
+
+/** The same three children hung the naive (wrong) way, for the contrast figure. */
+function subForest(): BinNode[] {
+  resetIds(50)
+  const B = makeNode('B')
+  B.left = makeNode('D')
+  B.right = makeNode('E')
+  const C = makeNode('C')
+  C.right = makeNode('F')
+  return [B, C]
 }
 
 function company(): BinNode {
@@ -335,5 +409,309 @@ export const THEORY_FIGURES: Record<string, Fig[]> = {
     { title: 'AVL same keys — search tree with shape law', caption: 'Job still search. |BF|≤1.', root: avlFromSequence([10, 20, 30, 40]), showBf: true },
     { title: 'Heap same keys — NOT for search', caption: 'Job is “best first”. Complete array. Root is max.', heap: heapFromSequence([10, 20, 30, 40], true) },
     { title: 'RB same keys — industry search tree', caption: 'Colour law instead of BF. Maps use this.', root: rbFromSequence([10, 20, 30, 40]), showColor: true },
+  ],
+  props: [
+    {
+      title: 'Fattest shape of height 2 — perfect tree',
+      caption: 'Max nodes = 2^(h+1) − 1 = 7. Level 0 has 2^0 = 1, level 1 has 2, level 2 has 4.',
+      root: buildLetterTree(),
+    },
+    {
+      title: 'Thinnest shape of height 3 — the stick',
+      caption: 'Min nodes for height h = h + 1 = 4. Same 4 keys, maximum possible height n − 1 = 3.',
+      root: bstFromSequence([10, 20, 30, 40]),
+    },
+    {
+      title: 'n + 1 NULL pointers (the ∅ stubs)',
+      caption: '7 nodes → 14 pointer slots → 6 used for children → 8 = n + 1 are NULL. Threaded trees recycle exactly these.',
+      root: buildLetterTree(),
+      showNulls: true,
+    },
+    {
+      title: 'Full tree: L = I + 1',
+      caption: 'Internal = {2} so I = 1. Leaves = {1, 3} so L = 2. L = I + 1 ✓ and n = 2I + 1 = 3 is odd.',
+      root: bstFromSequence([2, 1, 3]),
+    },
+    { title: 'Catalan C₃ = 5 · shape 1 of 5', caption: 'Root 1, right chain 2 → 3.', root: bstFromSequence([1, 2, 3]) },
+    { title: 'Catalan · shape 2 of 5', caption: 'Root 1, then 3, then 2 as the left child of 3.', root: bstFromSequence([1, 3, 2]) },
+    { title: 'Catalan · shape 3 of 5', caption: 'Root 2 — the only balanced one. This is the minimum height.', root: bstFromSequence([2, 1, 3]) },
+    { title: 'Catalan · shape 4 of 5', caption: 'Root 3, then 1, then 2 as the right child of 1.', root: bstFromSequence([3, 1, 2]) },
+    { title: 'Catalan · shape 5 of 5', caption: 'Root 3, left chain 2 → 1. Five shapes total for 3 keys.', root: bstFromSequence([3, 2, 1]) },
+  ],
+  repr: [
+    {
+      title: 'Array representation — index printed under each node',
+      caption: 'Fill level by level. Left of [1] is [3], right of [2] is [6], parent of [5] is [2]. No pointers stored at all.',
+      root: withLevelIndexes(buildLetterTree()),
+      showIndex: true,
+    },
+    {
+      title: 'Why arrays fail for skewed trees',
+      caption: '4 real nodes, but 40 lands at index 14 — you must allocate 15 slots. Waste grows as 2^(h+1) − 1.',
+      root: withLevelIndexes(bstFromSequence([10, 20, 30, 40])),
+      showIndex: true,
+    },
+    {
+      title: 'Linked representation — see the NULL sides',
+      caption: 'Every ∅ is an unused pointer. Any shape fits, and insert/delete only repoint — no shifting.',
+      root: bstFromSequence([8, 3, 10, 1, 6, 14]),
+      showNulls: true,
+    },
+  ],
+  general: [
+    {
+      title: 'LCRS binary form of A(B(E,F), C, D(G))',
+      caption: 'Left = first child (A→B, B→E, D→G). Right = next sibling (B→C→D, E→F). Right-heavy is CORRECT here.',
+      root: lcrs(),
+      edgeLabels: true,
+    },
+    {
+      title: 'Forest of two trees: B(D,E) and C(F)',
+      caption: 'Before joining. Convert each tree, then chain the roots with right pointers.',
+      forest: subForest(),
+    },
+    {
+      title: 'After joining the forest: B→right = C',
+      caption: 'That is exactly the company sample tree. Deleting root A of a tree always leaves a forest.',
+      root: company(),
+      edgeLabels: true,
+    },
+  ],
+  nonrec: [
+    {
+      title: 'Dry-run tree: 4,2,6,1,3,5,7',
+      caption: 'Iterative inorder pushes 4,2,1 then pops-and-prints. Max stack depth 3 = height + 1. Output 1..7.',
+      root: bstFromSequence([4, 2, 6, 1, 3, 5, 7]),
+      edgeLabels: true,
+    },
+    {
+      title: 'Iterative preorder on A–G',
+      caption: 'Push RIGHT before LEFT so the left pops first: A B D E C F G.',
+      root: buildLetterTree(),
+      edgeLabels: true,
+    },
+    {
+      title: 'Worst case for any iterative walk',
+      caption: 'A stick makes the explicit stack hold all n nodes. Iteration removes recursion, not the O(h) space.',
+      root: bstFromSequence([1, 2, 3, 4, 5]),
+    },
+  ],
+  ops: [
+    {
+      title: 'Working tree: 8,3,10,1,6,14,4,7,13',
+      caption: 'height = 3, count = 9, leaves = 4 (1,4,7,13), internal = 5. Every example in this section uses it.',
+      root: bstFromSequence([8, 3, 10, 1, 6, 14, 4, 7, 13]),
+    },
+    {
+      title: 'LCA(1, 7) = 3 — the split node',
+      caption: 'At 8 both keys are smaller → left. At 3 one is smaller and one bigger → they split → 3 is the LCA.',
+      root: OPS_LCA,
+      marks: byValue(OPS_LCA, {
+        '8': 'path',
+        '3': 'current',
+        '1': 'found',
+        '7': 'found',
+      }),
+    },
+    {
+      title: 'Diameter = 6 edges (7 nodes)',
+      caption: 'Path 4 – 6 – 3 – 8 – 10 – 14 – 13. Through the root: height(3) + height(10) + 2 = 2 + 2 + 2.',
+      root: OPS_DIA,
+      marks: byValue(OPS_DIA, {
+        '4': 'found',
+        '6': 'path',
+        '3': 'path',
+        '8': 'current',
+        '10': 'path',
+        '14': 'path',
+        '13': 'found',
+      }),
+    },
+    {
+      title: 'Before mirror: 2,1,3',
+      caption: 'Inorder = 1 2 3.',
+      root: bstFromSequence([2, 1, 3]),
+    },
+    {
+      title: 'After mirror: every left ↔ right swapped',
+      caption: 'Inorder = 3 2 1 — reverse sorted. A mirrored BST is no longer a BST under the normal rule.',
+      root: mirrored(bstFromSequence([2, 1, 3])),
+    },
+    {
+      title: 'Level of each node (badge = level)',
+      caption: 'level_of(7) = 3 via 8 → 3 → 6 → 7. Root is level 0.',
+      root: OPS_LVL,
+      tags: byValue(OPS_LVL, {
+        '8': 'L0',
+        '3': 'L1',
+        '10': 'L1',
+        '1': 'L2',
+        '6': 'L2',
+        '14': 'L2',
+        '4': 'L3',
+        '7': 'L3',
+        '13': 'L3',
+      }),
+    },
+  ],
+  'avl-del': [
+    {
+      title: 'Before: AVL of 20,10,30,25,40,35',
+      caption: 'Every |BF| ≤ 1. We will delete 10 from here.',
+      root: avlFromSequence([20, 10, 30, 25, 40, 35]),
+      showBf: true,
+    },
+    {
+      title: 'After deleting 10 — no rotation needed',
+      caption: 'Same keys minus 10. BF(20) = −1, BF(30) = 0. Always COMPUTE the BF instead of assuming a rotation.',
+      root: avlFromSequence([30, 20, 40, 25, 35]),
+      showBf: true,
+    },
+    {
+      title: 'Before: AVL of 2,1,4,3 — now delete 1',
+      caption: 'Node 2 currently has BF 0. Removing the left leaf makes it right-heavy.',
+      root: avlFromSequence([2, 1, 4, 3]),
+      showBf: true,
+    },
+    {
+      title: 'After deleting 1 → case R1 → double rotation',
+      caption: 'BF(2) = −2 and BF(4) = +1 (opposite lean) → right at 4, then left at 2. Result root 3, all BF = 0.',
+      root: avlFromSequence([3, 2, 4]),
+      showBf: true,
+    },
+  ],
+  bsearch: [
+    {
+      title: 'Order-3 tree for the search dry run',
+      caption: 'Search 17: root [10 20] → i = 1 → descend the middle child → found inside [12 17]. Two node visits.',
+      btree: bTreeFromSequence([10, 20, 5, 6, 12, 30, 7, 17], 3).root,
+    },
+    {
+      title: 'A node with 2 keys has 3 children',
+      caption: 'The root holds 20 and 40, so it has three ranges: < 20, between 20 and 40, > 40. Never “left or right” — find the GAP.',
+      btree: bTreeFromSequence([10, 30, 20, 40, 50], 3).root,
+    },
+  ],
+  bdel: [
+    {
+      title: 'Start state (inserted 10,20,5,6,12,30)',
+      caption: 'Root [10 20] with leaves [5 6], [12], [30]. All leaves on one level.',
+      btree: bTreeFromSequence([10, 20, 5, 6, 12, 30], 3).root,
+    },
+    {
+      title: 'After delete 6 — Case 1, leaf had a spare',
+      caption: 'Leaf [5 6] → [5]. Still ≥ 1 key for order 3. Nothing moves.',
+      btree: bTreeFromSequence([10, 20, 5, 12, 30], 3).root,
+    },
+    {
+      title: 'After delete 12 — merge pulled 10 down',
+      caption: 'Neither sibling could spare a key, so separator 10 came down and joined [5] → [5 10]. Root became [20].',
+      btree: bTreeFromSequence([10, 30, 20, 5], 3).root,
+    },
+    {
+      title: 'End state — root emptied, height shrank',
+      caption: 'The final merge left the root with no keys, so the root is dropped. Single node [10 30], height 0.',
+      btree: bTreeFromSequence([10, 30], 3).root,
+    },
+  ],
+  sorting: [
+    {
+      title: 'Tree sort: BST of 5,3,8,1,4 → inorder',
+      caption: 'Inorder reads 1 3 4 5 8. Sorting is a free side effect of the BST rule.',
+      root: bstFromSequence([5, 3, 8, 1, 4]),
+    },
+    {
+      title: 'Tree sort worst case: already sorted input',
+      caption: '1,2,3,4,5 builds a stick → n inserts × O(n) = O(n²). Use an AVL and it is O(n log n) again.',
+      root: bstFromSequence([1, 2, 3, 4, 5]),
+    },
+    {
+      title: 'Heap sort step 0 — after build_heap on 4,10,3,5,1',
+      caption: 'Started at index n/2 − 1 = 1 and heapified backwards. Array and tree are the same object.',
+      heap: heapFromSequence([4, 10, 3, 5, 1], true),
+    },
+    {
+      title: 'Heap sort: the max is always index 0',
+      caption: 'Swap a[0] with the last slot, shrink by one, heapify the root. Repeat n − 1 times, in place.',
+      heap: heapFromSequence([10, 5, 3, 4, 1], true),
+    },
+  ],
+  apps: [
+    {
+      title: 'Compiler: expression tree for (1+2)*3',
+      caption: 'Parse trees and code generation. Post-order = the stack machine that evaluates it.',
+      root: expr(),
+      edgeLabels: true,
+    },
+    {
+      title: 'File system: Notes → DS / OS',
+      caption: 'Hierarchy, one parent per folder. Directories are indexed with B+ Trees underneath.',
+      root: folders(),
+    },
+    {
+      title: 'Autocomplete: trie of cat / car / cart / dog',
+      caption: 'Typing “ca” walks two edges and the rest of the words hang below. Cost = word length.',
+      trie: trieFromWords(['cat', 'car', 'cart', 'dog']),
+    },
+    {
+      title: 'Database index: B+ style fat nodes',
+      caption: 'One node = one disk page. Millions of keys in 3–4 page reads.',
+      btree: bTreeFromSequence([10, 20, 5, 6, 12, 30, 7, 17], 3).root,
+    },
+    {
+      title: 'Scheduler / Dijkstra: max-heap priority queue',
+      caption: '“Give me the best pending item” is O(1) at index 0, then O(log n) to repair.',
+      heap: heapFromSequence([10, 20, 5, 30], true),
+    },
+    {
+      title: 'Compression: Huffman codes',
+      caption: 'F:45 is the most frequent letter so it gets the shortest code. ZIP and JPEG headers use this.',
+      ...huffFig(HUFF_CLASSIC),
+    },
+  ],
+  solved: [
+    {
+      title: 'Q1 — BST of 50,30,70,20,40,60,80',
+      caption: 'In-order 20 30 40 50 60 70 80 confirms the drawing before you write the traversals.',
+      root: bstFromSequence([50, 30, 70, 20, 40, 60, 80]),
+    },
+    {
+      title: 'Q1 — after deleting 30 (successor 40)',
+      caption: 'Two-child case: 40 moved into the 30-box, the old leaf 40 was removed.',
+      root: bstDelete(bstFromSequence([50, 30, 70, 20, 40, 60, 80]), 30).root,
+    },
+    {
+      title: 'Q2 — final AVL of 10,20,30,40,50,25',
+      caption: 'Three rotations: RR at 10, RR at 30, then an RL double at 20. Root ends at 30, every |BF| ≤ 1.',
+      root: avlFromSequence([10, 20, 30, 40, 50, 25]),
+      showBf: true,
+    },
+    {
+      title: 'Q3 — reconstructed from Pre + In',
+      caption: 'Pre A B D E C F G with In D B E A F C G gives exactly one tree. Verify by re-reading the preorder.',
+      root: buildLetterTree(),
+      edgeLabels: true,
+    },
+    {
+      title: 'Q4 — order-3 B-Tree after all 8 keys',
+      caption: 'Root split twice, so the height reached 2. All leaves on one level, ≤ 2 keys per node.',
+      btree: bTreeFromSequence([10, 20, 5, 6, 12, 30, 7, 17], 3).root,
+    },
+    {
+      title: 'Q5 — Huffman tree for A5 B9 C12 D13 E16 F45',
+      caption: 'Average code length 2.24 bits versus 3 bits fixed-length — about 25 % smaller.',
+      ...huffFig(HUFF_CLASSIC),
+    },
+    {
+      title: 'Q6 — max-heap after 10,20,5,30',
+      caption: 'Array [30, 20, 5, 10]. 30 swam from index 3 → 1 → 0. Extract-max then leaves [20, 10, 5].',
+      heap: heapFromSequence([10, 20, 5, 30], true),
+    },
+    {
+      title: 'Q9 — general tree converted with LCRS',
+      caption: 'A(B(E,F), C, D(G)) stored in binary form. Left = first child, right = next sibling.',
+      root: lcrs(),
+      edgeLabels: true,
+    },
   ],
 }

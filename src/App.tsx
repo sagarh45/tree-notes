@@ -5,6 +5,7 @@ import { TheoryPage } from './pages/TheoryPage'
 import { LabPage } from './pages/LabPage'
 import { ProgramsPage } from './pages/ProgramsPage'
 import { PracticePage } from './pages/PracticePage'
+import { RevisionPage } from './pages/RevisionPage'
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="lab" element={<LabPage />} />
           <Route path="programs" element={<ProgramsPage />} />
           <Route path="practice" element={<PracticePage />} />
+          <Route path="revise" element={<RevisionPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
