@@ -4,21 +4,22 @@ export function HomePage() {
   return (
     <div>
       <div className="card home-hero">
-        <h2>Complete Trees Learning Package</h2>
+        <h2>Trees — the notes that draw every model</h2>
         <p className="muted">
-          Everything from Unit IV on a white page: every term with a drawn tree, every C function with full syntax.
-          Programs take keys from you with scanf — no hard-coded A→left.
+          Not a list of definitions. Every tree model is a <b>law</b> + a <b>trap</b> + a live picture. Core Unit IV
+          (binary, BST, AVL, B-Tree) and the advanced models textbooks leave as a paragraph: Heap, Red-Black, Huffman,
+          Trie, threads, expression trees, B+.
         </p>
       </div>
 
       <div className="home-cards home-cards-4">
         <Link to="/theory">
           <h3>📘 Theory</h3>
-          <p className="muted">Definitions, linked nodes, traversals, BST cases, B-Tree splits, AVL BF and rotations.</p>
+          <p className="muted">26 sections. Core exam notes + advanced models with dual pictures (tree + array, stack, codes).</p>
         </Link>
         <Link to="/lab">
           <h3>🎬 Visualizer</h3>
-          <p className="muted">Traversals · BST · AVL · B-Tree with step playback, code highlight, variables.</p>
+          <p className="muted">8 labs: Traversals (call stack), BST, AVL, B-Tree, Heap, Red-Black, Huffman, Trie.</p>
         </Link>
         <Link to="/programs">
           <h3>💻 Programs</h3>
@@ -26,38 +27,71 @@ export function HomePage() {
         </Link>
         <Link to="/practice">
           <h3>📝 Practice</h3>
-          <p className="muted">MCQ, True/False, Fill in the blanks with explanations.</p>
+          <p className="muted">MCQ, True/False, Fill in the blanks — including heap / RB / Huffman / trie traps.</p>
         </Link>
       </div>
 
       <div className="card">
-        <h3>Learning path (recommended)</h3>
+        <h3>Learning path</h3>
         <ol>
           <li>
-            Read <b>Theory</b> (tree words → binary node → traversals → BST delete cases → AVL letters → B-Tree split).
+            <b>Core (Theory 1–16):</b> node → traversals → BST delete cases → AVL letters → B-Tree split.
           </li>
           <li>
-            Open <b>Visualizer</b> and run the same steps you just read.
+            <b>Advanced (Theory 17–26):</b> recursion stack, expression, Huffman, heap-as-array, threads, Red-Black,
+            trie, B+, reconstruction, master map.
           </li>
           <li>
-            Copy a <b>Program</b> and run on OneCompiler.
+            Open <b>Visualizer</b>. Core tabs first, then the teal advanced tabs. Play until the Law and the picture are
+            the same object.
           </li>
-          <li>
-            Finish with <b>Practice</b> quiz.
-          </li>
+          <li>Copy a <b>Program</b>, then finish <b>Practice</b>.</li>
         </ol>
       </div>
 
       <div className="card">
-        <h3>This unit covers</h3>
-        <ul>
-          <li>Definition of a tree, root / leaf / height / degree</li>
-          <li>Linked binary trees (LEFT | DATA | RIGHT)</li>
-          <li>Traversals: pre-order, in-order, post-order, level-order</li>
-          <li>BST: insert, search, delete (leaf / one child / two children)</li>
-          <li>Multiway trees and B-Trees of order m</li>
-          <li>AVL: balance factor, LL / RR / LR / RL</li>
-        </ul>
+        <h3>Eight models, eight jobs</h3>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Job</th>
+              <th>The law</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>BST / AVL / RB</td>
+              <td>Where is key k?</td>
+              <td>Left &lt; node &lt; right (+ balance / colour)</td>
+            </tr>
+            <tr>
+              <td>Heap</td>
+              <td>What is the best?</td>
+              <td>Complete array + parent ≥ children</td>
+            </tr>
+            <tr>
+              <td>B-Tree / B+</td>
+              <td>Search when a step costs a disk jump</td>
+              <td>Fat nodes, leaves on one level (B+ leaves linked)</td>
+            </tr>
+            <tr>
+              <td>Huffman</td>
+              <td>Cheap names for frequent letters</td>
+              <td>Merge two lightest; prefix-free codes</td>
+            </tr>
+            <tr>
+              <td>Trie</td>
+              <td>What continues this prefix?</td>
+              <td>One letter per edge; time = word length</td>
+            </tr>
+            <tr>
+              <td>Expression / Threaded</td>
+              <td>Evaluate / inorder with no stack</td>
+              <td>Operators inside; NULL pointers become successors</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   )

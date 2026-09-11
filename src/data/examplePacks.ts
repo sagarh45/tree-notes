@@ -29,6 +29,32 @@ export const BTREE_PACKS = [
   { id: 'b6', label: 'Ex6: 4,8,12,16,20,24', seq: [4, 8, 12, 16, 20, 24] },
 ]
 
+export const HEAP_PACKS = [
+  { id: 'h1', label: 'Ex1: 10, 20, 5, 30', seq: [10, 20, 5, 30] },
+  { id: 'h2', label: 'Ex2: 4, 10, 3, 5, 1', seq: [4, 10, 3, 5, 1] },
+  { id: 'h3', label: 'Ex3: 1, 2, 3, 4, 5, 6, 7', seq: [1, 2, 3, 4, 5, 6, 7] },
+  { id: 'h4', label: 'Ex4: 50, 30, 40, 10, 20, 35', seq: [50, 30, 40, 10, 20, 35] },
+]
+
+export const RB_PACKS = [
+  { id: 'r1', label: 'Ex1: 10, 20, 30 (RR line)', seq: [10, 20, 30] },
+  { id: 'r2', label: 'Ex2: 30, 20, 10 (LL line)', seq: [30, 20, 10] },
+  { id: 'r3', label: 'Ex3: 10, 30, 20 (triangle)', seq: [10, 30, 20] },
+  { id: 'r4', label: 'Ex4: 7, 3, 18, 10, 22, 8, 11, 26', seq: [7, 3, 18, 10, 22, 8, 11, 26] },
+]
+
+export const HUFF_PACKS = [
+  { id: 'hf1', label: 'Tiny: A:4 B:2 C:1 D:1', text: 'A:4,B:2,C:1,D:1' },
+  { id: 'hf2', label: 'CLRS: A5 B9 C12 D13 E16 F45', text: 'A:5,B:9,C:12,D:13,E:16,F:45' },
+  { id: 'hf3', label: 'Exam: a:3 b:3 c:2 d:1', text: 'a:3,b:3,c:2,d:1' },
+]
+
+export const TRIE_PACKS = [
+  { id: 'tr1', label: 'cat, car, cart, dog', words: ['cat', 'car', 'cart', 'dog'] },
+  { id: 'tr2', label: 'to, tea, ted, ten, a, i, in, inn', words: ['to', 'tea', 'ted', 'ten', 'a', 'i', 'in', 'inn'] },
+  { id: 'tr3', label: 'she, sells, sea, shells', words: ['she', 'sells', 'sea', 'shells'] },
+]
+
 export const TRAV_PACKS = [
   { id: 't1', label: 'Ex1: 4,2,6,1,3,5,7 (balanced)', seq: [4, 2, 6, 1, 3, 5, 7] },
   { id: 't2', label: 'Ex2: 1,2,3,4 (skew right)', seq: [1, 2, 3, 4] },

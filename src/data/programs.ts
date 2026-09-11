@@ -573,4 +573,183 @@ int main(void) {
 }
 `,
   },
+  {
+    id: 'heap',
+    title: '11. Max-heap as an array (user types keys)',
+    source: 'Insert + extract-max + print array/tree indexes',
+    blurb: 'The array IS the tree. Insert appends then swims. Extract swaps root with last, then sinks.',
+    code: `#include <stdio.h>
+
+void swap(int *a, int *b) { int t = *a; *a = *b; *b = t; }
+
+void swim(int a[], int i) {
+    while (i > 0) {
+        int p = (i - 1) / 2;
+        if (a[i] <= a[p]) break;
+        swap(&a[i], &a[p]);
+        i = p;
+    }
+}
+
+void sink(int a[], int i, int n) {
+    for (;;) {
+        int l = 2 * i + 1, r = 2 * i + 2, pick = i;
+        if (l < n && a[l] > a[pick]) pick = l;
+        if (r < n && a[r] > a[pick]) pick = r;
+        if (pick == i) break;
+        swap(&a[i], &a[pick]);
+        i = pick;
+    }
+}
+
+void print(int a[], int n) {
+    int i;
+    printf("array: ");
+    for (i = 0; i < n; i++) printf("[%d]=%d ", i, a[i]);
+    printf("\\n");
+}
+
+int main(void) {
+    int a[100], n = 0, ch, k;
+    for (;;) {
+        printf("1 insert  2 extract-max  3 print  0 quit\\n");
+        if (scanf("%d", &ch) != 1) break;
+        if (ch == 0) break;
+        if (ch == 1) {
+            printf("key: ");
+            scanf("%d", &k);
+            a[n++] = k;
+            swim(a, n - 1);
+        } else if (ch == 2 && n) {
+            printf("max = %d\\n", a[0]);
+            a[0] = a[--n];
+            if (n) sink(a, 0, n);
+        } else if (ch == 3) print(a, n);
+    }
+    return 0;
+}
+`,
+  },
+  {
+    id: 'huffman',
+    title: '12. Huffman codes from typed frequencies',
+    source: 'Build code tree, print leaf codes',
+    blurb: 'Type n, then letter and frequency pairs. Merges two lightest trees. Left=0, right=1.',
+    code: `#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Node {
+    char ch;
+    int freq;
+    struct Node *left, *right;
+} Node;
+
+Node *newn(char ch, int f, Node *l, Node *r) {
+    Node *n = (Node *)malloc(sizeof(Node));
+    n->ch = ch; n->freq = f; n->left = l; n->right = r;
+    return n;
+}
+
+void codes(Node *n, char *buf, int d) {
+    if (!n) return;
+    if (!n->left && !n->right) {
+        buf[d] = 0;
+        printf("%c  f=%d  %s\\n", n->ch, n->freq, d ? buf : "0");
+        return;
+    }
+    buf[d] = '0'; codes(n->left, buf, d + 1);
+    buf[d] = '1'; codes(n->right, buf, d + 1);
+}
+
+int main(void) {
+    Node *f[64];
+    int n, i, a, b;
+    char c;
+    printf("How many letters? ");
+    scanf("%d", &n);
+    for (i = 0; i < n; i++) {
+        printf("letter freq: ");
+        scanf(" %c %d", &c, &a);
+        f[i] = newn(c, a, NULL, NULL);
+    }
+    while (n > 1) {
+        a = 0; b = 1;
+        if (f[b]->freq < f[a]->freq) { a = 1; b = 0; }
+        for (i = 2; i < n; i++) {
+            if (f[i]->freq < f[a]->freq) { b = a; a = i; }
+            else if (f[i]->freq < f[b]->freq) b = i;
+        }
+        Node *p = newn('#', f[a]->freq + f[b]->freq, f[a], f[b]);
+        if (a > b) { i = a; a = b; b = i; }
+        f[a] = p;
+        f[b] = f[n - 1];
+        n--;
+    }
+    {
+        char buf[64];
+        codes(f[0], buf, 0);
+    }
+    return 0;
+}
+`,
+  },
+  {
+    id: 'trie',
+    title: '13. Trie of words the user types',
+    source: 'Insert words, search prefix / full word',
+    blurb: '26 children. END flag so car and cart can both exist. Time is word length, not dictionary size.',
+    code: `#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+typedef struct Node {
+    int end;
+    struct Node *next[26];
+} Node;
+
+Node *newn(void) {
+    Node *n = (Node *)calloc(1, sizeof(Node));
+    return n;
+}
+
+void insert(Node *r, const char *w) {
+    int i;
+    for (i = 0; w[i]; i++) {
+        int k = tolower((unsigned char)w[i]) - 'a';
+        if (k < 0 || k > 25) continue;
+        if (!r->next[k]) r->next[k] = newn();
+        r = r->next[k];
+    }
+    r->end = 1;
+}
+
+int search(Node *r, const char *w) {
+    int i;
+    for (i = 0; w[i]; i++) {
+        int k = tolower((unsigned char)w[i]) - 'a';
+        if (k < 0 || k > 25 || !r->next[k]) return 0;
+        r = r->next[k];
+    }
+    return r->end;
+}
+
+int main(void) {
+    Node *root = newn();
+    char w[64];
+    int ch;
+    for (;;) {
+        printf("1 insert word  2 search word  0 quit\\n");
+        if (scanf("%d", &ch) != 1) break;
+        if (ch == 0) break;
+        printf("word: ");
+        scanf("%63s", w);
+        if (ch == 1) insert(root, w);
+        else printf(search(root, w) ? "found\\n" : "missing\\n");
+    }
+    return 0;
+}
+`,
+  },
 ]

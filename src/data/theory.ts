@@ -555,7 +555,7 @@ int leaves(struct Node *n) {
   },
   {
     id: 'exam',
-    title: '16. How to write this in the exam',
+    title: '16. How to write this in the exam (core models)',
     body: `
 <ol>
   <li>Definition in one sentence, then the sample diagram.</li>
@@ -566,7 +566,240 @@ int leaves(struct Node *n) {
   <li>For B-Tree, write order m, circle the median, show the split.</li>
   <li>Check: in-order of a BST must be sorted.</li>
 </ol>
-<p>Then open <b>Visualizer</b> and replay the same numbers you will write in the answer book.</p>
+<p>The next sections are the <b>advanced models</b> most notes skip — heap, threads, expression, Huffman, Red-Black, trie, B+, reconstruction. Each one has a <b>Law</b> (tattoo this), a <b>Trap</b> (exam mistake), and a <b>dual picture</b> (two views of the same object).</p>
+`,
+  },
+  {
+    id: 'stack',
+    title: '17. Recursion stack — what the computer actually does',
+    body: `
+<div class="law"><b>Law:</b> A recursive traversal is not “magic walking”. It is a <b>stack of unfinished function calls</b>. Enter a node = <b>push</b> a frame. Return = <b>pop</b>. “Visit” is a separate moment: you print, then you still have more work (the other child) sitting in the frame below.</div>
+<p>Textbooks show only the printed letters: A B D E C F G. That hides the real machine. Open Visualizer → Traversals → Pre-order and watch the <b>call stack</b> grow and shrink. The printed chips are the visits. The stack frames are the ancestors that still owe you a right-child call.</p>
+<div class="trap"><b>Exam trap:</b> “Space of preorder is O(1) because we only print.” Wrong. Recursion uses O(height) stack. A stick of n nodes needs n frames. Level-order does not use that stack — it uses a <b>queue</b> of the next floor.</div>
+<div class="story">
+  <b>Worked story on A–G (preorder):</b>
+  <ol>
+    <li>Call(A) — stack [A]. Print A. Must still do left of A and right of A.</li>
+    <li>Call(B) — stack [A,B]. Print B.</li>
+    <li>Call(D) — stack [A,B,D]. Print D. D is a leaf → return. Pop D.</li>
+    <li>Back in B, go right to E. Call(E) — stack [A,B,E]. Print E. Return. Pop E, then pop B.</li>
+    <li>Back in A, go right to C… and so on. Output A B D E C F G.</li>
+  </ol>
+  Same tree, inorder: you push A, push B, push D, then <b>print D first</b> because left is empty. The stack is identical in shape; only the print moment moved.
+</div>
+<p><b>Memory trick:</b> Pre = print on the way <i>down</i>. In = print at the <i>bottom of the left</i>. Post = print on the way <i>up</i>.</p>
+`,
+  },
+  {
+    id: 'expr',
+    title: '18. Expression tree — the compiler’s secret',
+    body: `
+<div class="law"><b>Law:</b> An expression tree puts <b>operators at internal nodes</b> and <b>operands at leaves</b>. The operator acts on its two subtrees. Evaluating the tree is exactly <b>post-order</b>: finish both children, then apply the operator.</div>
+<p>Human writing is infix: <code>(1+2)*3</code>. The compiler does not compute left-to-right blindly (that would do 1+2*3 = 9 if you forget precedence). It builds a tree so that <b>*</b> sits above <b>+</b>, and + sits above 1 and 2.</p>
+<div class="ex"><b>Draw this every time:</b>
+<pre class="tree-pic">        *
+       / \\
+      +   3
+     / \\
+    1   2</pre>
+Post-order: 1, 2, +, 3, * → that is postfix <code>1 2 + 3 *</code>. A stack machine: push 1, push 2, see + so pop 2 and 1, push 3, see 3, push 3, see * pop 3 and 3, push 9.
+</div>
+<div class="trap"><b>Exam trap:</b> “Inorder of an expression tree is the original infix.” Almost — you must add parentheses, or 1+2*3 and (1+2)*3 have the <b>same</b> inorder letters but <b>different trees</b>. Always draw the tree, never trust the letters alone.</div>
+<div class="fn">
+  <div class="fn-name">Why three traversals map to three notations</div>
+  <table>
+    <tr><th>Traversal</th><th>Notation</th><th>On (1+2)*3</th></tr>
+    <tr><td>Preorder (NLR)</td><td>Prefix</td><td>* + 1 2 3</td></tr>
+    <tr><td>Inorder (LNR)</td><td>Infix</td><td>1 + 2 * 3 &nbsp;(needs parens)</td></tr>
+    <tr><td>Postorder (LRN)</td><td>Postfix</td><td>1 2 + 3 *</td></tr>
+  </table>
+</div>
+<p>Build the tree from postfix with a stack of <b>tree pointers</b>: operand → new leaf, push. Operator → pop right, pop left, make them children, push the operator node.</p>
+`,
+  },
+  {
+    id: 'huffman',
+    title: '19. Huffman tree — short tickets for frequent letters',
+    body: `
+<div class="law"><b>Law:</b> Huffman coding builds an <b>optimal prefix-free binary code</b>. Repeatedly merge the two lightest trees. Left edge = bit 0, right edge = bit 1. The code of a letter is the path from the root to that leaf. Frequent letters stay near the root → short codes.</div>
+<p><b>Prefix-free</b> means no code is the beginning of another code. So you can glue bits with no commas and still decode uniquely. Morse code is not prefix-free (you need gaps). Huffman is.</p>
+<div class="story">
+  <b>Worked story — A:4, B:2, C:1, D:1</b>
+  <ol>
+    <li>Forest of four trees: C(1) D(1) B(2) A(4).</li>
+    <li>Merge lightest C and D → tree of 2. Forest: CD(2), B(2), A(4).</li>
+    <li>Merge CD(2) and B(2) → tree of 4. Forest: CDB(4), A(4).</li>
+    <li>Merge those two → root 8.</li>
+  </ol>
+  Possible codes: A = 1 (one bit!), B = 01, C and D = 000 / 001. A appears 4 times so it deserved the short ticket.
+</div>
+<div class="trap"><b>Exam trap 1:</b> “Huffman always gives A the shortest code.” No — only if A is the most frequent. If frequencies change, codes change.<br/>
+<b>Exam trap 2:</b> Internal node labels are <b>sums of frequencies</b>, not letters. Only leaves are letters.<br/>
+<b>Exam trap 3:</b> Huffman is not a BST. There is no “left &lt; right” on letters. The only order is frequency.</div>
+<p>Weighted external path length = Σ freq(letter) × depth(letter). Huffman minimises this among binary prefix codes. Open Visualizer → Huffman → CLRS pack (F is so frequent it becomes a child of the root — code 0).</p>
+`,
+  },
+  {
+    id: 'heap',
+    title: '20. Heap — the array IS the tree (most unique dual picture)',
+    body: `
+<div class="law"><b>Law:</b> A binary heap is a <b>complete</b> binary tree that is stored in an <b>array</b>, plus one extra order: in a max-heap, <b>parent ≥ both children</b>. There are no left/right pointers. Index formulas replace them: parent ⌊(i−1)/2⌋, left 2i+1, right 2i+2 (0-based).</div>
+<p>This is the model nobody draws properly. Students draw a tree OR an array. The genius is they are the <b>same object</b>. Visualizer → Heap shows both, live, with the same indexes on the circles and on the cells.</p>
+<div class="term">
+  <div class="term-name">Two laws, not one</div>
+  <p><b>Shape law (completeness):</b> fill level by level, left to right. The array has no holes. Insert = append at a[n]. Delete-max = move last into a[0] and shrink n.</p>
+  <p><b>Order law (heap property):</b> parent ≥ children. After append, the new key may be too big → <b>swim / sift-up</b> (swap with parent). After extract, the new root may be too small → <b>sink / sift-down</b> (swap with the <i>larger</i> child).</p>
+</div>
+<div class="story">
+  <b>Insert 30 into [50, 20, 40, 10]:</b>
+  <ol>
+    <li>Append → [50, 20, 40, 10, <b>30</b>] at index 4. Parent of 4 is ⌊3/2⌋ = 1, value 20.</li>
+    <li>30 &gt; 20 → swap → [50, <b>30</b>, 40, 10, 20]. Parent of 1 is 0, value 50.</li>
+    <li>30 &lt; 50 → stop. Root still 50. Tree stayed complete for free.</li>
+  </ol>
+</div>
+<div class="trap"><b>Exam trap 1:</b> “Heap is a BST.” Never. In-order of a heap is <b>not</b> sorted. 40 can sit left of 20. Search for an arbitrary key is O(n).<br/>
+<b>Exam trap 2:</b> “Extract-max walks to a leaf and deletes it.” No. Max is index 0 in O(1). You steal the last leaf to fill the hole, then sink.<br/>
+<b>Exam trap 3:</b> Sinking must pick the <b>larger</b> child. If you swap with the smaller one, the other child can stay bigger than the parent — heap broken.</div>
+<p><b>Why heaps exist:</b> priority queues, heap-sort, Dijkstra/Prim waiting lists. You need “give me the best, then fix in log n”, not “find 17”.</p>
+<p><b>Height:</b> complete tree of n nodes has height ⌊log₂ n⌋. That is why insert/extract are O(log n) even in the worst case — the stick shape is illegal.</p>
+`,
+  },
+  {
+    id: 'thread',
+    title: '21. Threaded binary tree — recycling NULL',
+    body: `
+<div class="law"><b>Law:</b> In a binary tree most left/right pointers are NULL (about n+1 NULLs in n nodes). A <b>threaded</b> tree reuses an empty left pointer as a link to the <b>inorder predecessor</b>, and an empty right pointer as a link to the <b>inorder successor</b>. A bit (ltag/rtag) says “this is a real child” vs “this is a thread”.</div>
+<p>Why bother? Inorder traversal of a threaded tree needs <b>no recursion and no stack</b>: from a node, if the right is a thread, just jump to the successor. Otherwise go to the leftmost node of the right subtree. Visualizer → Traversals → <b>Show inorder threads</b> draws those jumps as dashed curves on any tree you built.</p>
+<div class="ex"><b>On the company sample</b> (inorder D, B, E, A, F, C):
+<ul>
+  <li>D has no left child → left thread to… nobody (D is first). Right of D is empty → thread to successor B.</li>
+  <li>E’s left is empty → thread to predecessor B. E’s right empty → thread to A.</li>
+  <li>F’s left empty → thread to A. F’s right empty → thread to C.</li>
+</ul>
+Real children stay solid: A→B, A→C, B→D, B→E, C→F.
+</div>
+<div class="trap"><b>Exam trap:</b> “Threads replace all pointers.” No. Only the <b>NULL</b> ones. If a node already has a left child, that pointer is a real child, not a thread. Also: threads follow <b>inorder</b>, not preorder. A preorder-threaded tree is a different (rarer) exam variant — say so if they ask.</div>
+<p>Double-threaded = both left and right NULLs become threads. Single-threaded = only right NULLs (enough for inorder successor walks).</p>
+`,
+  },
+  {
+    id: 'rbtree',
+    title: '22. Red-Black tree — the industry BST (not AVL)',
+    body: `
+<div class="law"><b>Law (5 properties):</b> (1) every node is RED or BLACK. (2) root is BLACK. (3) every NIL leaf is BLACK. (4) <b>no two reds in a row</b> (a red node’s children are black). (5) every path from a node to a descendant NIL has the <b>same number of black nodes</b> (black-height).</div>
+<p><b>Mental model nobody teaches:</b> a black node is a 2-node of a 2-3-4 tree. A red node is an extra key glued onto its black parent (making a 3-node or 4-node). Recolor = split a 4-node. Rotate = restack a 3-node. That is why RB insert looks like “paint, then maybe rotate” instead of “always rotate like AVL”.</p>
+<div class="term">
+  <div class="term-name">Insert in three English cases</div>
+  <p>Hang the new key as a <b>RED leaf</b> (BST insert). Red does not change black-height, so property 5 stays. Property 4 may break if the parent is also red. Then:</p>
+  <ol>
+    <li><b>Uncle is RED</b> → recolor: parent &amp; uncle BLACK, grandparent RED. Climb to grandparent. Cheap. No rotate.</li>
+    <li><b>Uncle BLACK, triangle</b> (LR or RL) → rotate at the parent first, so it becomes a straight line.</li>
+    <li><b>Uncle BLACK, line</b> (LL or RR) → rotate at the grandparent, paint parent BLACK, grandparent RED.</li>
+  </ol>
+  Finally paint the root BLACK.
+</div>
+<div class="story">
+  <b>Insert 10, then 20, then 30:</b>
+  10 black root. 20 red right of 10 — OK (parent black). 30 red right of 20 — red-red. Uncle of 30 is NIL (black), and the path is a line (RR) → left-rotate at 10, paint 20 black, 10 red. Root becomes 20 (then forced black). Same picture as AVL RR, but the <b>reason</b> was colour, not BF = −2.
+</div>
+<div class="trap"><b>Exam trap 1:</b> “RB is more balanced than AVL.” Opposite. AVL is stricter (|BF|≤1). RB height ≤ 2 log₂(n+1), so it can be up to ~2× taller. Insert/delete do <b>fewer rotations</b> (at most 2 on insert). That is why Java TreeMap, C++ std::map, the Linux CFS scheduler — they pick RB.<br/>
+<b>Exam trap 2:</b> New node is RED, never black (except the very first root).<br/>
+<b>Exam trap 3:</b> Recolor can walk all the way to the root; rotations are local.</div>
+<p>Open Visualizer → Red-Black → 10, 20, 30 and the CLRS-style pack 7,3,18,10,22,8,11,26. Watch red/black paint before you memorise rotations.</p>
+`,
+  },
+  {
+    id: 'trie',
+    title: '23. Trie (prefix tree) — search without comparing the whole key',
+    body: `
+<div class="law"><b>Law:</b> A trie stores strings so that <b>one letter lives on one edge</b> (or on the child). All words that share a prefix share the same path. Search / insert cost is <b>O(L)</b> where L is the length of <i>this</i> word — not the number of words in the dictionary.</div>
+<p>BST on words compares whole strings at every node (O(L log n) in the worst case). A trie pays L and stops. Autocomplete, IP routing, dictionaries, spell-check — this is their tree.</p>
+<div class="story">
+  <b>Insert cat, then car, then cart, then dog:</b>
+  <ol>
+    <li>cat: create c → a → t, mark t as END.</li>
+    <li>car: reuse c → a, then create r, mark r as END. The node a now has two children t and r.</li>
+    <li>cart: reuse c → a → r, create t, mark END. Node r is both a complete word <i>and</i> a prefix of cart. That is why END is a flag, not “being a leaf”.</li>
+    <li>dog: new branch d → o → g from the dummy root. No letter of cat is compared.</li>
+  </ol>
+</div>
+<div class="trap"><b>Exam trap 1:</b> “A word is stored only at a leaf.” False. <code>car</code> and <code>cart</code> — car ends at an internal node. Always draw the END mark.<br/>
+<b>Exam trap 2:</b> The dummy root holds no letter. First letters hang off it.<br/>
+<b>Exam trap 3:</b> Space can be huge (up to 26 children per node). Compressed tries / radix trees glue single-child chains — that is the next-level answer if they ask “how do we save space?”</div>
+<p>Visualizer → Trie. Type cat, car, cart. Watch the existing c–a path light up instead of growing a second copy. That reuse is the whole invention.</p>
+`,
+  },
+  {
+    id: 'bplus',
+    title: '24. B+ Tree — what databases actually use',
+    body: `
+<div class="law"><b>Law:</b> A B+ Tree is a B-Tree where <b>all keys live in the leaves</b>, leaves are linked left-to-right, and internal nodes keep <b>copies</b> of keys only as signposts. Range queries (“all marks from 40 to 70”) then walk a linked list of leaves — one disk page after another — instead of jumping around the tree.</div>
+<table>
+  <tr><th></th><th>B-Tree</th><th>B+ Tree</th></tr>
+  <tr><td>Where is the record?</td><td>In any node (internal or leaf)</td><td>Only in leaves</td></tr>
+  <tr><td>Internal keys</td><td>The actual keys</td><td>Copies / separators</td></tr>
+  <tr><td>Leaves</td><td>Not linked</td><td>Linked as a sorted list</td></tr>
+  <tr><td>Range scan</td><td>Inorder walk of the tree</td><td>Find start leaf, then follow next pointers</td></tr>
+  <tr><td>Fanout</td><td>Good</td><td>Better (internal nodes hold only keys, no records)</td></tr>
+</table>
+<div class="trap"><b>Exam trap:</b> “B+ is just a fatter B-Tree.” The linked leaves are the point. Also: a key may appear twice — once as a separator upstairs, once as the real record in a leaf. Deleting the record does not always delete the separator (implementations vary; say this and the examiner knows you think).</div>
+<p>B-Tree of order m still matters: you must split at the median, height grows only at the root, all leaves on one level. B+ keeps those rules and adds the leaf highway. MySQL InnoDB, PostgreSQL, filesystems (NTFS, HFS+) — B+ family.</p>
+`,
+  },
+  {
+    id: 'rebuild',
+    title: '25. Reconstruct a tree from two traversals',
+    body: `
+<div class="law"><b>Law:</b> Preorder + Inorder uniquely rebuild a binary tree. Postorder + Inorder also. Preorder + Postorder do <b>not</b> (unless the tree is full). Inorder is the spine: it tells you who is left of the root and who is right. Preorder (or postorder) tells you <b>which node is the root</b>.</div>
+<div class="story">
+  <b>Classic A–G:</b> Preorder = <b>A</b> B D E C F G. Inorder = D B E <b>A</b> F C G.
+  <ol>
+    <li>First of preorder is the root = A.</li>
+    <li>In inorder, everything left of A (D B E) is the left subtree. Everything right (F C G) is the right.</li>
+    <li>Next in preorder after A is B — root of the left piece. In D B E, left of B is D, right is E.</li>
+    <li>After the left piece is consumed, preorder gives C — root of the right piece. In F C G, left of C is F, right is G.</li>
+  </ol>
+  You just rebuilt the unique tree. Draw it. Check: preorder of your drawing must match the given preorder.
+</div>
+<div class="trap"><b>Exam trap 1:</b> “Any two traversals fix the tree.” Pre + Post of a skewed tree is ambiguous (many shapes share them). You <b>need inorder</b> as one of the two.<br/>
+<b>Exam trap 2:</b> Duplicate keys make reconstruction ambiguous. Lecture examples use unique letters.<br/>
+<b>Exam trap 3:</b> Level-order + inorder also works (root is first of level-order), but they rarely ask it.</div>
+<p><b>Algorithm (pre + in):</b> root = pre[0]. Split in[] at root. Recurse on left in-slice with the next |left| preorder keys, then the rest.</p>
+`,
+  },
+  {
+    id: 'master',
+    title: '26. Master map — which tree, which universe',
+    body: `
+<p>Every advanced model is the same skeleton (nodes + edges, no cycles) with a <b>different law</b> bolted on. Pick the law that matches the job. This table is the last page you revise the night before the exam.</p>
+<table>
+  <tr><th>Job</th><th>Model</th><th>Why this one</th><th>Killer fact</th></tr>
+  <tr><td>Search a key in RAM, simple code</td><td>BST</td><td>One comparison throws a side away</td><td>Sorted inserts → stick → O(n)</td></tr>
+  <tr><td>Guaranteed log n, many searches</td><td>AVL</td><td>Strict |BF|≤1, shortest height</td><td>Insert ≤ 2 rotations</td></tr>
+  <tr><td>Guaranteed log n, many inserts (maps)</td><td>Red-Black</td><td>Fewer rotations than AVL</td><td>std::map, TreeMap</td></tr>
+  <tr><td>“Give me the maximum / highest priority”</td><td>Heap</td><td>Root is the answer in O(1)</td><td>Array, not a search tree</td></tr>
+  <tr><td>Database / disk pages</td><td>B-Tree / B+</td><td>Fat nodes = fewer I/O</td><td>B+ leaves are linked</td></tr>
+  <tr><td>Compress text</td><td>Huffman</td><td>Short codes for frequent letters</td><td>Prefix-free</td></tr>
+  <tr><td>Autocomplete / dictionary</td><td>Trie</td><td>Time = word length</td><td>END flag ≠ leaf</td></tr>
+  <tr><td>Evaluate (1+2)*3</td><td>Expression tree</td><td>Post-order is the stack machine</td><td>Operators inside, numbers at leaves</td></tr>
+  <tr><td>Inorder with no stack</td><td>Threaded tree</td><td>NULL pointers become successor links</td><td>Need a tag bit</td></tr>
+</table>
+<div class="law"><b>One-line universe:</b> BST family answers “where is key k?”. Heap answers “what is the best?”. Huffman answers “how do I name frequent symbols cheaply?”. Trie answers “what continues this prefix?”. B-Tree answers “how do I search when one step costs a disk jump?”. If you can say that in the viva, you are done.</div>
+<div class="fn">
+  <div class="fn-name">Complexity tattoo</div>
+  <table>
+    <tr><th>Model</th><th>Search</th><th>Insert</th><th>Extra</th></tr>
+    <tr><td>BST</td><td>O(h)</td><td>O(h)</td><td>h = n if skewed</td></tr>
+    <tr><td>AVL / RB</td><td>O(log n)</td><td>O(log n)</td><td>RB taller, fewer rotates</td></tr>
+    <tr><td>Heap</td><td>O(n) arbitrary</td><td>O(log n)</td><td>peek max O(1)</td></tr>
+    <tr><td>B-Tree</td><td>O(log_m n)</td><td>O(log_m n)</td><td>m huge on disk</td></tr>
+    <tr><td>Trie</td><td>O(L)</td><td>O(L)</td><td>space: alphabet × nodes</td></tr>
+    <tr><td>Huffman build</td><td>—</td><td>O(n log n)</td><td>n = alphabet size</td></tr>
+    <tr><td>Any walk of all nodes</td><td>Θ(n)</td><td>—</td><td>stack O(h) or queue O(w)</td></tr>
+  </table>
+</div>
+<p>Now open <b>Visualizer</b>. For each row of this table, run one example pack. The picture in your head and the picture on the screen must become the same object.</p>
 `,
   },
 ]

@@ -11,7 +11,7 @@ export function AppShell() {
     <div className="app-shell">
       <header className="app-header">
         <h1>Unit IV — Trees (Complete Package)</h1>
-        <p>Theory · Visualizer · Programs · Practice — Binary · BST · B-Tree · AVL</p>
+        <p>Theory · Visualizer · Programs · Practice — 8 models, every one drawn</p>
       </header>
       <nav className="nav-bar" aria-label="Primary">
         <NavLink to="/" end>

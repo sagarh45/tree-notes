@@ -1,8 +1,12 @@
 import { bstDelete, bstFromSequence } from '../lib/bst'
 import { avlFromSequence } from '../lib/avl'
 import { bTreeFromSequence } from '../lib/btree'
-import { buildLetterTree, makeNode, resetIds, type BinNode } from '../lib/binaryTree'
+import { buildLetterTree, inorderThreads, makeNode, resetIds, type BinNode, type ThreadEdge } from '../lib/binaryTree'
 import type { BTreeNode } from '../lib/btree'
+import { heapFromSequence } from '../lib/heap'
+import { rbFromSequence } from '../lib/rbtree'
+import { huffmanBuild, HUFF_CLASSIC, HUFF_TINY } from '../lib/huffman'
+import { trieFromWords, type TrieNode } from '../lib/trie'
 
 export type Fig = {
   title: string
@@ -10,6 +14,14 @@ export type Fig = {
   root?: BinNode | null
   btree?: BTreeNode
   showBf?: boolean
+  showColor?: boolean
+  showIndex?: boolean
+  edgeLabels?: boolean
+  threads?: ThreadEdge[]
+  heap?: number[]
+  trie?: TrieNode
+  forest?: BinNode[]
+  codes?: { ch: string; freq: number; code: string }[]
 }
 
 function company(): BinNode {
@@ -37,6 +49,22 @@ function expr(): BinNode {
   plus.left = makeNode(1)
   plus.right = makeNode(2)
   return mul
+}
+
+function exprPlusTimes(): BinNode {
+  resetIds(1)
+  const plus = makeNode('+')
+  const mul = makeNode('*')
+  plus.left = makeNode(1)
+  plus.right = mul
+  mul.left = makeNode(2)
+  mul.right = makeNode(3)
+  return plus
+}
+
+function huffFig(items: { ch: string; freq: number }[]) {
+  const b = huffmanBuild(items)
+  return { root: b.root, forest: b.snaps[b.snaps.length - 1]?.forest, codes: b.codes, edgeLabels: true as const }
 }
 
 function folders(): BinNode {
@@ -165,5 +193,147 @@ export const THEORY_FIGURES: Record<string, Fig[]> = {
     { title: 'Draw this BST in the answer book', caption: 'Lecture keys 45,15,79,90,10,55,12,20,50. Check: in-order is sorted.', root: bstFromSequence([45, 15, 79, 90, 10, 55, 12, 20, 50]) },
     { title: 'Draw this A–G for traversals', caption: 'Write NLR / LNR / LRN next to the figure.', root: buildLetterTree() },
     { title: 'Draw RR: before was 10-20-30 stick', caption: 'After rotation root is 20.', root: avlFromSequence([10, 20, 30]), showBf: true },
+  ],
+  stack: [
+    {
+      title: 'A–G — the tree the stack walks',
+      caption: 'Preorder stack peaks at depth 3 (A-B-D). Visualizer shows every push/pop, not only A B D E C F G.',
+      root: buildLetterTree(),
+      edgeLabels: true,
+    },
+    {
+      title: 'Skew 1-2-3-4 — stack becomes a stick',
+      caption: 'Preorder stack depth = n. This is why “traversal is O(1) extra space” is false for recursion.',
+      root: bstFromSequence([1, 2, 3, 4]),
+      edgeLabels: true,
+    },
+  ],
+  expr: [
+    {
+      title: '(1+2)*3 — * above +',
+      caption: 'Post-order 1 2 + 3 * = postfix. Inorder without parens looks like 1+2*3, which is a DIFFERENT tree.',
+      root: expr(),
+      edgeLabels: true,
+    },
+    {
+      title: '1+(2*3) — + above *',
+      caption: 'Same letters, different tree, different value. Precedence lives in the shape.',
+      root: exprPlusTimes(),
+      edgeLabels: true,
+    },
+  ],
+  huffman: [
+    {
+      title: 'Tiny Huffman A:4 B:2 C:1 D:1',
+      caption: 'A is most frequent → shortest code. Leaves are letters. Internal nodes are frequency sums.',
+      ...huffFig(HUFF_TINY),
+    },
+    {
+      title: 'CLRS classic F is huge',
+      caption: 'F:45 is so common it sits next to the root (often code 0). That is the whole point of Huffman.',
+      ...huffFig(HUFF_CLASSIC),
+    },
+  ],
+  heap: [
+    {
+      title: 'Max-heap after inserts 10,20,5,30',
+      caption: 'Look at indexes on the nodes AND on the array. They are the same object. Parent of [4] is [1].',
+      heap: heapFromSequence([10, 20, 5, 30], true),
+    },
+    {
+      title: 'Sorted inserts 1..7 still complete',
+      caption: 'A BST would become a stick. A heap refuses that shape — completeness is the law. 7 swims toward the root.',
+      heap: heapFromSequence([1, 2, 3, 4, 5, 6, 7], true),
+    },
+    {
+      title: 'NOT a BST: 50,30,40,10,20,35',
+      caption: '40 is left of 30? Fine in a heap. In-order is not sorted. Do not search here.',
+      heap: heapFromSequence([50, 30, 40, 10, 20, 35], true),
+    },
+  ],
+  thread: [
+    {
+      title: 'Company tree with inorder threads',
+      caption: 'Dashed curves = recycled NULLs. D→B, E→B and E→A, F→A and F→C. Solid lines stay real children.',
+      root: company(),
+      threads: inorderThreads(company()),
+      edgeLabels: true,
+    },
+    {
+      title: 'A–G threads (perfect tree has fewer NULLs)',
+      caption: 'Only the leftmost D has a left-NULL (no predecessor). Only G has a right-NULL (no successor).',
+      root: buildLetterTree(),
+      threads: inorderThreads(buildLetterTree()),
+    },
+  ],
+  rbtree: [
+    {
+      title: 'RB after 10,20,30',
+      caption: 'Same shape as AVL RR, but the reason was red-red, not BF=−2. Root is black.',
+      root: rbFromSequence([10, 20, 30]),
+      showColor: true,
+    },
+    {
+      title: 'RB after 30,20,10',
+      caption: 'LL line. Recolor + rotate. Compare with AVL LL demo — pictures match, laws differ.',
+      root: rbFromSequence([30, 20, 10]),
+      showColor: true,
+    },
+    {
+      title: 'RB after 10,30,20 (triangle)',
+      caption: 'Uncle black + zig-zag → rotate parent first, then grandparent.',
+      root: rbFromSequence([10, 30, 20]),
+      showColor: true,
+    },
+    {
+      title: 'Bigger RB: 7,3,18,10,22,8,11,26',
+      caption: 'No two reds in a row. Count black nodes on any root-to-leaf path — they match.',
+      root: rbFromSequence([7, 3, 18, 10, 22, 8, 11, 26]),
+      showColor: true,
+    },
+  ],
+  trie: [
+    {
+      title: 'cat / car / cart / dog',
+      caption: 'c–a is shared. car is END and also a prefix of cart. dog is a separate branch. Dummy root holds no letter.',
+      trie: trieFromWords(['cat', 'car', 'cart', 'dog']),
+    },
+    {
+      title: 'to, tea, ted, ten, a, i, in, inn',
+      caption: 'Classic exam trie. Node n of “in” is END and has child n for “inn”.',
+      trie: trieFromWords(['to', 'tea', 'ted', 'ten', 'a', 'i', 'in', 'inn']),
+    },
+  ],
+  bplus: [
+    {
+      title: 'B-Tree (keys live in every node)',
+      caption: 'Internal node [10] really stores 10. Range scan must inorder-walk the whole tree.',
+      btree: bTreeFromSequence([10, 20, 5, 6, 12, 30, 7, 17], 3).root,
+    },
+    {
+      title: 'Same keys, think B+ mentally',
+      caption: 'In a B+ the real 5,6,7,10,12,17,20,30 sit only in linked leaves. The upstairs 10 is a copy/signpost.',
+      btree: bTreeFromSequence([10, 20, 5, 6, 12, 30, 7, 17], 3).root,
+    },
+  ],
+  rebuild: [
+    {
+      title: 'Unique tree from Pre A B D E C F G + In D B E A F C G',
+      caption: 'Root = first of pre = A. Inorder split at A. This is the only binary tree that fits both lists.',
+      root: buildLetterTree(),
+      edgeLabels: true,
+    },
+    {
+      title: 'Numbers twin: Pre 4,2,1,3,6,5,7  In 1,2,3,4,5,6,7',
+      caption: 'Same reconstruction algorithm. Check: preorder of the drawing must match the given preorder.',
+      root: bstFromSequence([4, 2, 6, 1, 3, 5, 7]),
+      edgeLabels: true,
+    },
+  ],
+  master: [
+    { title: 'BST stick — search tree gone wrong', caption: 'Job was search. Shape law missing. O(n).', root: bstFromSequence([10, 20, 30, 40]) },
+    { title: 'AVL same keys — search tree with shape law', caption: 'Job still search. |BF|≤1.', root: avlFromSequence([10, 20, 30, 40]), showBf: true },
+    { title: 'Heap same keys — NOT for search', caption: 'Job is “best first”. Complete array. Root is max.', heap: heapFromSequence([10, 20, 30, 40], true) },
+    { title: 'RB same keys — industry search tree', caption: 'Colour law instead of BF. Maps use this.', root: rbFromSequence([10, 20, 30, 40]), showColor: true },
   ],
 }

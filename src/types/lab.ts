@@ -1,7 +1,8 @@
-import type { BinNode } from '../lib/binaryTree'
+import type { BinNode, ThreadEdge } from '../lib/binaryTree'
 import type { BTreeNode } from '../lib/btree'
+import type { TrieNode } from '../lib/trie'
 
-export type TreeKind = 'traversal' | 'bst' | 'avl' | 'btree'
+export type TreeKind = 'traversal' | 'bst' | 'avl' | 'btree' | 'heap' | 'rbtree' | 'huffman' | 'trie'
 
 export type Explanation = {
   happening: string
@@ -19,6 +20,11 @@ export type TreeStep = {
   highlightBId?: string
   highlightKey?: number
   showBf?: boolean
+  showColor?: boolean
+  showIndex?: boolean
+  showNulls?: boolean
+  edgeLabels?: boolean
+  threads?: ThreadEdge[]
   codeLine: number | null
   codeSnippetId: string
   variables: Record<string, string | number | boolean>
@@ -26,6 +32,14 @@ export type TreeStep = {
   message?: string
   messageTone?: 'info' | 'success' | 'warn' | 'error'
   visitList?: Array<string | number>
+  callStack?: string[]
+  queue?: string[]
+  heap?: number[]
+  heapFocus?: number[]
+  forest?: BinNode[]
+  codes?: { ch: string; freq: number; code: string }[]
+  trieRoot?: TrieNode
+  trieHi?: string[]
 }
 
 export type HistoryEntry = {

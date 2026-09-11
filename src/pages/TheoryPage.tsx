@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom'
 import { THEORY_SECTIONS } from '../data/theory'
-import { THEORY_FIGURES } from '../data/figures'
+import { THEORY_FIGURES, type Fig } from '../data/figures'
 import { TERM_CARDS } from '../data/terms'
 import { BinaryTreeSvg } from '../components/viz/BinaryTreeSvg'
 import { BTreeSvg } from '../components/viz/BTreeSvg'
+import { HeapDualViz } from '../components/viz/HeapDualViz'
+import { TrieSvg } from '../components/viz/TrieSvg'
+import { HuffmanPanel } from '../components/viz/HuffmanPanel'
 import { withBalanceFactors } from '../lib/binaryTree'
 
 function TermLegend() {
@@ -25,14 +28,33 @@ function TermLegend() {
   )
 }
 
+function FigureView({ fig }: { fig: Fig }) {
+  if (fig.heap) return <HeapDualViz arr={fig.heap} compact />
+  if (fig.trie) return <TrieSvg root={fig.trie} compact />
+  if (fig.forest?.length) return <HuffmanPanel forest={fig.forest} codes={fig.codes} compact />
+  if (fig.btree) return <BTreeSvg root={fig.btree} compact />
+  return (
+    <BinaryTreeSvg
+      root={fig.showBf ? withBalanceFactors(fig.root ?? null) : (fig.root ?? null)}
+      showBf={fig.showBf}
+      showColor={fig.showColor}
+      showIndex={fig.showIndex}
+      edgeLabels={fig.edgeLabels}
+      threads={fig.threads}
+      compact
+    />
+  )
+}
+
 export function TheoryPage() {
   return (
     <div>
       <div className="card">
-        <h2>Unit IV — Complete Tree Theory</h2>
+        <h2>Unit IV — Trees, from first node to every advanced model</h2>
         <p className="muted">
-          Every term has a meaning + drawn tree. Every function is full C with proper syntax. Many examples — not just
-          one. Programs take keys from the user (no hard-coded A→left = …).
+          Core: definition → BST → AVL → B-Tree. Advanced: heap (array IS the tree), Red-Black, Huffman, trie, threads,
+          expression trees, B+, reconstruction. Every model has a Law, a Trap, and a drawing. Functions are full C.
+          Programs take keys from you — never A→left = … in source.
         </p>
         <div className="toc-grid">
           {THEORY_SECTIONS.map((s) => (
@@ -106,15 +128,7 @@ export function TheoryPage() {
                   <div className="term-name" style={{ color: 'var(--accent)', fontWeight: 800, marginBottom: 8 }}>
                     {fig.title}
                   </div>
-                  {fig.btree ? (
-                    <BTreeSvg root={fig.btree} compact />
-                  ) : (
-                    <BinaryTreeSvg
-                      root={fig.showBf ? withBalanceFactors(fig.root ?? null) : (fig.root ?? null)}
-                      showBf={fig.showBf}
-                      compact
-                    />
-                  )}
+                  <FigureView fig={fig} />
                   <p className="muted">{fig.caption}</p>
                 </div>
               ))}
@@ -124,8 +138,9 @@ export function TheoryPage() {
       ))}
 
       <div className="card tip-card">
-        <b>Study path:</b> Read Theory (look at every drawn tree) → type the same keys in Visualizer → copy a general
-        Program → Practice.
+        <b>Study path:</b> Core theory (1–16) → Advanced models (17–26) with every drawing → Visualizer (core tabs, then
+        Heap / Red-Black / Huffman / Trie) → Programs → Practice. If a Law and a Trap do not stick, replay that example
+        pack until the picture and the sentence are the same object.
       </div>
     </div>
   )

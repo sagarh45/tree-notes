@@ -111,6 +111,73 @@ struct Node *rotate_left(struct Node *z) {
     y->left = z;
     return y;
 }`,
+  heap: `void swim(int a[], int i) {          /* sift-up after append */
+    while (i > 0) {
+        int p = (i - 1) / 2;
+        if (a[i] <= a[p]) break;
+        swap(&a[i], &a[p]);
+        i = p;
+    }
+}
+
+void sink(int a[], int i, int n) {    /* sift-down after extract */
+    for (;;) {
+        int l = 2*i+1, r = 2*i+2, pick = i;
+        if (l < n && a[l] > a[pick]) pick = l;
+        if (r < n && a[r] > a[pick]) pick = r;
+        if (pick == i) break;
+        swap(&a[i], &a[pick]);
+        i = pick;
+    }
+}
+
+void heap_insert(int a[], int *n, int key) {
+    a[(*n)++] = key;                  /* append = keep complete */
+    swim(a, *n - 1);
+}
+
+int heap_extract(int a[], int *n) {
+    int max = a[0];
+    a[0] = a[--(*n)];                 /* last leaf → root */
+    sink(a, 0, *n);
+    return max;
+}`,
+  rbtree: `/* New node is RED. Fix while parent is RED. */
+void rb_insert_fix(Node *z) {
+    while (z->parent && z->parent->color == RED) {
+        Node *p = z->parent, *g = p->parent, *u = uncle(z);
+        if (u && u->color == RED) {           /* case 1: recolor */
+            p->color = BLACK; u->color = BLACK; g->color = RED;
+            z = g;                            /* climb */
+        } else if (triangle(z)) {             /* case 2: rotate parent */
+            rotate_at_parent(z);
+        } else {                              /* case 3: rotate grandparent */
+            p->color = BLACK; g->color = RED;
+            rotate_at_grandparent(z);
+        }
+    }
+    root->color = BLACK;
+}`,
+  huffman: `/* Repeat until one tree remains. */
+while (forest has more than 1 tree) {
+    a = extract_min(forest);          /* smallest freq */
+    b = extract_min(forest);          /* next smallest */
+    parent.freq = a.freq + b.freq;
+    parent.left = a;  /* bit 0 */
+    parent.right = b; /* bit 1 */
+    insert(forest, parent);
+}
+/* Code of a letter = bits on the unique root→leaf path. */`,
+  trie: `void trie_insert(Node *root, const char *w) {
+    Node *cur = root;
+    for (int i = 0; w[i]; i++) {
+        int k = w[i] - 'a';
+        if (cur->next[k] == NULL)
+            cur->next[k] = new_trie_node();
+        cur = cur->next[k];
+    }
+    cur->end = 1;   /* word ends here */
+}`,
   btree: `void btree_insert(Node *root, int key, int m) {
     /* walk down to the leaf that should hold key */
     Node *leaf = find_leaf(root, key);
@@ -170,6 +237,35 @@ export const LAB_PSEUDO = {
   walk back up
   if |BF| = 2: rotate (LL / RR / LR / RL)
   return n`,
+  heap: `HEAP-INSERT(a, key):
+  append key at a[n]
+  i ← n
+  while i > 0 and a[i] > a[parent(i)]:
+      swap with parent
+      i ← parent(i)
+
+HEAP-EXTRACT-MAX(a):
+  max ← a[0]
+  a[0] ← a[n-1]; n ← n-1
+  sink a[0] with the larger child`,
+  rbtree: `RB-INSERT(T, key):
+  BST-insert key as a RED leaf
+  while parent is RED:
+      if uncle RED: recolor, climb to grandparent
+      else if triangle: rotate at parent
+      else line: rotate at grandparent, recolor
+  paint root BLACK`,
+  huffman: `HUFFMAN(freqs):
+  forest ← one node per letter
+  while |forest| > 1:
+      merge two lightest trees
+  codes ← 0/1 path from root to each letter`,
+  trie: `TRIE-INSERT(root, word):
+  cur ← root
+  for each letter ch:
+      if no child ch: create it
+      cur ← that child
+  mark cur as END of word`,
   btree: `B-TREE-INSERT(T, k):
   walk to leaf
   insert k in sorted order

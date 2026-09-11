@@ -196,6 +196,24 @@ export function PracticePage() {
           <div>
             <b>B-Tree order m</b>≤ m children, ≤ m−1 keys, leaves at one level
           </div>
+          <div>
+            <b>Heap</b>array IS the tree · parent ≥ kids · swim / sink
+          </div>
+          <div>
+            <b>Red-Black</b>new = RED · no red-red · root BLACK
+          </div>
+          <div>
+            <b>Huffman</b>merge two lightest · left 0 right 1 · prefix-free
+          </div>
+          <div>
+            <b>Trie</b>letter on the edge · time O(L) · END ≠ leaf
+          </div>
+          <div>
+            <b>Threads</b>NULL left → pred · NULL right → succ
+          </div>
+          <div>
+            <b>Rebuild</b>need inorder + (pre or post)
+          </div>
         </div>
       </div>
     </div>
