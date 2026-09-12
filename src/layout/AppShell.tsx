@@ -2,8 +2,7 @@ import { Outlet, NavLink, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
 const LINKS: [string, string, string, string][] = [
-  ['/', 'Home', 'Home', '🏠'],
-  ['/theory', 'Theory', 'Theory', '📘'],
+  ['/', 'Syllabus', 'Syllabus', '📚'],
   ['/lab', 'Visualizer', 'Lab', '🎬'],
   ['/programs', 'Programs', 'Code', '💻'],
   ['/practice', 'Practice', 'Quiz', '📝'],
@@ -61,7 +60,7 @@ export function AppShell() {
           </span>
           <div>
             <h1>Unit IV — Trees</h1>
-            <p>Complete package · theory, every diagram, programs, visualizer, revision</p>
+            <p>Syllabus-first teaching flow · theory → algorithm → visual trace → C program</p>
           </div>
         </div>
       </header>
@@ -79,8 +78,7 @@ export function AppShell() {
         <Outlet />
       </main>
       <footer className="app-footer">
-        <b>Unit IV — Trees.</b> Foundation → core models → advanced models → solved exam problems. Every example is
-        drawn, every program takes its keys from you.
+        <b>Unit IV — Trees.</b> Complete each official syllabus point in order: theory, steps, examples, visual trace and C program.
       </footer>
       <nav className="bottom-nav" aria-label="Mobile">
         {LINKS.map(([to, , short, ico]) => (
