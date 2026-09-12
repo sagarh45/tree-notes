@@ -1,23 +1,37 @@
-import { Outlet, useLocation } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import '../menu.css'
 
 const SYLLABUS_MENU = [
-  ['definition', '1. Definition'],
-  ['traversal', '2. Traversal'],
-  ['linked', '3. Linked Implementation'],
-  ['binary-ops', '4. Binary Tree Operations'],
-  ['bst', '5. BST Operations'],
-  ['multiway', '6. Multiway Trees'],
-  ['btree', '7. B-Trees'],
-  ['avl', '8. AVL Tree'],
-  ['single-rotation', '9. Single Rotation'],
-  ['double-rotation', '10. Double Rotation'],
+  ['/definition', '1. Definition', 'Definition'],
+  ['/traversal', '2. Traversal', 'Traversal'],
+  ['/linked-implementation', '3. Linked Implementation', 'Linked'],
+  ['/binary-tree-operations', '4. Binary Tree Operations', 'BT Ops'],
+  ['/bst-operations', '5. BST Operations', 'BST Ops'],
+  ['/multiway-trees', '6. Multiway Trees', 'Multiway'],
+  ['/b-trees', '7. B-Trees', 'B-Tree'],
+  ['/avl-tree', '8. AVL Tree', 'AVL'],
+  ['/single-rotation', '9. Single Rotation', 'Single'],
+  ['/double-rotation', '10. Double Rotation', 'Double'],
 ] as const
+
+const TOPIC_CLASS: Record<string, string> = {
+  '/definition': 'topic-definition',
+  '/traversal': 'topic-traversal',
+  '/linked-implementation': 'topic-linked',
+  '/binary-tree-operations': 'topic-binary-ops',
+  '/bst-operations': 'topic-bst',
+  '/multiway-trees': 'topic-multiway',
+  '/b-trees': 'topic-btree',
+  '/avl-tree': 'topic-avl',
+  '/single-rotation': 'topic-single-rotation',
+  '/double-rotation': 'topic-double-rotation',
+}
 
 export function AppShell() {
   const [progress, setProgress] = useState(0)
-  const { pathname, hash } = useLocation()
+  const { pathname } = useLocation()
+  const topicClass = TOPIC_CLASS[pathname] ?? ''
 
   useEffect(() => {
     document.documentElement.classList.remove('dark')
@@ -25,14 +39,8 @@ export function AppShell() {
   }, [])
 
   useEffect(() => {
-    if (pathname === '/' && hash) {
-      window.requestAnimationFrame(() => {
-        document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      })
-    } else if (!hash) {
-      window.scrollTo({ top: 0 })
-    }
-  }, [pathname, hash])
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
+  }, [pathname])
 
   useEffect(() => {
     const onScroll = () => {
@@ -48,10 +56,8 @@ export function AppShell() {
     }
   }, [])
 
-  const activeId = pathname === '/' ? (hash ? hash.slice(1) : 'definition') : ''
-
   return (
-    <div className="app-shell">
+    <div className={`app-shell syllabus-app ${topicClass}`}>
       <div className="read-bar" aria-hidden="true">
         <span style={{ width: `${progress}%` }} />
       </div>
@@ -75,24 +81,37 @@ export function AppShell() {
           </span>
           <div>
             <h1>Unit IV — Trees</h1>
-            <p>Select the syllabus point. Inside it: theory → steps → visualization → trace → C program.</p>
+            <p>Select a syllabus point. Everything for that point stays together: theory, steps, visualization, trace and C program.</p>
           </div>
         </div>
       </header>
 
-      <nav className="nav-bar syllabus-menu" aria-label="Unit IV syllabus points">
-        {SYLLABUS_MENU.map(([id, label]) => (
-          <a key={id} href={`/#${id}`} className={activeId === id ? 'active' : undefined}>
+      <nav className="nav-bar syllabus-menu" aria-label="Unit IV syllabus menu">
+        {SYLLABUS_MENU.map(([to, label]) => (
+          <NavLink key={to} to={to} end>
             {label}
-          </a>
+          </NavLink>
         ))}
       </nav>
 
-      <main className="main"><Outlet /></main>
+      <main className="main">
+        <Outlet />
+      </main>
 
       <footer className="app-footer">
-        <b>Unit IV — Trees.</b> Menu = syllabus. Each syllabus point contains its complete theory, algorithm, examples, visualization and code together.
+        <b>Unit IV — Trees.</b> Menu follows the syllabus. Finish one point completely, then move to the next.
+        <div className="footer-tools">
+          <NavLink to="/lab">Live Visualizer</NavLink>
+          <NavLink to="/practice">Practice</NavLink>
+          <NavLink to="/revise">Revision</NavLink>
+        </div>
       </footer>
+
+      <nav className="bottom-nav syllabus-bottom" aria-label="Mobile syllabus menu">
+        {SYLLABUS_MENU.slice(0, 5).map(([to, , short]) => (
+          <NavLink key={to} to={to} end>{short}</NavLink>
+        ))}
+      </nav>
     </div>
   )
 }
