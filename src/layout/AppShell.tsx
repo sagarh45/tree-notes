@@ -2,11 +2,10 @@ import { Outlet, NavLink, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
 const LINKS: [string, string, string, string][] = [
-  ['/', 'Syllabus', 'Syllabus', '📚'],
-  ['/lab', 'Visualizer', 'Lab', '🎬'],
-  ['/programs', 'Programs', 'Code', '💻'],
+  ['/', 'Syllabus Page', 'Syllabus', '📚'],
+  ['/lab', 'Live Lab', 'Lab', '🎬'],
   ['/practice', 'Practice', 'Quiz', '📝'],
-  ['/revise', 'Revise', 'Revise', '⚡'],
+  ['/revise', 'Revision', 'Revise', '⚡'],
 ]
 
 export function AppShell() {
@@ -60,25 +59,21 @@ export function AppShell() {
           </span>
           <div>
             <h1>Unit IV — Trees</h1>
-            <p>Syllabus-first teaching flow · theory → algorithm → visual trace → C program</p>
+            <p>One-page syllabus teaching flow · theory → steps → visualization → C program</p>
           </div>
         </div>
       </header>
       <nav className="nav-bar" aria-label="Primary">
         {LINKS.map(([to, label, , ico]) => (
           <NavLink key={to} to={to} end={to === '/'}>
-            <span className="nav-ico" aria-hidden="true">
-              {ico}
-            </span>
+            <span className="nav-ico" aria-hidden="true">{ico}</span>
             {label}
           </NavLink>
         ))}
       </nav>
-      <main className="main">
-        <Outlet />
-      </main>
+      <main className="main"><Outlet /></main>
       <footer className="app-footer">
-        <b>Unit IV — Trees.</b> Complete each official syllabus point in order: theory, steps, examples, visual trace and C program.
+        <b>Unit IV — Trees.</b> Complete one syllabus point fully before moving to the next: theory, algorithm, visual trace and code together.
       </footer>
       <nav className="bottom-nav" aria-label="Mobile">
         {LINKS.map(([to, , short, ico]) => (
