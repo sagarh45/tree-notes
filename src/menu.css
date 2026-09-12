@@ -12,6 +12,7 @@
   white-space: nowrap;
 }
 
+/* The top navigation IS the syllabus menu. The old duplicate left index is hidden. */
 .theory-rail {
   display: none !important;
 }
@@ -23,6 +24,23 @@
 .theory-main {
   width: 100% !important;
   max-width: none !important;
+}
+
+/* One menu item = one syllabus page. Only the selected point is shown. */
+.theory-main > .theory-article {
+  display: none;
+}
+
+.theory-main > .theory-article:first-of-type {
+  display: block;
+}
+
+.theory-main > .theory-article:target {
+  display: block;
+}
+
+.theory-main:has(.theory-article:target) > .theory-article:first-of-type:not(:target) {
+  display: none;
 }
 
 .theory-article,
