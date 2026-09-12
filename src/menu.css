@@ -49,55 +49,6 @@
   width: 100%;
 }
 
-.course-context-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  align-items: center;
-  margin: 0 0 12px;
-  padding: 10px 14px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: #f8fbff;
-}
-
-.course-context-row > div:first-child {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.course-context-row span {
-  color: var(--muted);
-  font-size: 0.78rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.course-context-row b {
-  color: #1d4ed8;
-  font-size: 1rem;
-}
-
-.course-mini-tools {
-  display: flex;
-  gap: 7px;
-  flex-wrap: wrap;
-}
-
-.course-mini-tools a,
-.footer-tools a {
-  text-decoration: none;
-  color: #1d4ed8;
-  font-weight: 800;
-  border: 1px solid #dbe4f0;
-  background: #fff;
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-size: 0.82rem;
-}
-
 .topic-hero {
   border: 1px solid #dbeafe;
   border-radius: 18px;
@@ -129,6 +80,60 @@
   font-size: 0.88rem;
 }
 
+/* Inside every syllabus point: Theory / Visualization / Program */
+.topic-view-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 14px 0 18px;
+}
+
+.topic-view-tabs a {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 68px;
+  justify-content: center;
+  padding: 12px 16px;
+  border: 1px solid #dbe4f0;
+  border-radius: 14px;
+  background: #fff;
+  color: #0f172a;
+  transition: 0.18s ease;
+}
+
+.topic-view-tabs a:hover {
+  transform: translateY(-1px);
+  border-color: #93b4ff;
+  background: #f8fbff;
+}
+
+.topic-view-tabs a span {
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.topic-view-tabs a small {
+  color: #64748b;
+  font-weight: 650;
+}
+
+.topic-view-tabs a.active {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+}
+
+.topic-view-tabs a.active small {
+  color: #dbeafe;
+}
+
+.topic-view-content {
+  min-height: 340px;
+}
+
 .topic-block {
   border: 1px solid var(--line);
   border-radius: 16px;
@@ -141,7 +146,11 @@
 .topic-block h3 {
   color: #1d4ed8;
   font-size: 1.22rem;
-  margin: 0 0 8px;
+  margin: 14px 0 8px;
+}
+
+.topic-block h3:first-of-type {
+  margin-top: 2px;
 }
 
 .topic-block h4 {
@@ -159,14 +168,6 @@
   font-size: 0.74rem;
   font-weight: 900;
   letter-spacing: 0.07em;
-}
-
-.sub-concept {
-  border-left: 4px solid #2563eb;
-}
-
-.rotation-card {
-  border-left-color: #7c3aed;
 }
 
 .topic-law,
@@ -234,9 +235,50 @@
   margin: 8px 2px 0;
 }
 
+.trace-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.trace-card {
+  position: relative;
+  border: 1px solid #dbe4f0;
+  border-radius: 14px;
+  padding: 16px 16px 14px 52px;
+  background: #fbfdff;
+}
+
+.trace-card h3 {
+  margin-top: 0;
+}
+
+.trace-card ol {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+
+.trace-card li {
+  margin: 5px 0;
+}
+
+.trace-number {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 900;
+}
+
 .code-block pre,
 .topic-program pre {
-  max-height: 520px;
+  max-height: 560px;
   overflow: auto;
   background: #0f172a;
   color: #e2e8f0;
@@ -290,20 +332,33 @@
   margin: 12px 0;
 }
 
-.topic-tools,
-.footer-tools {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 14px;
+.syllabus-next-prev {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 10px;
+  margin: 22px 0 4px;
+}
+
+.syllabus-next-prev a {
+  text-decoration: none;
+  border: 1px solid #dbe4f0;
+  border-radius: 12px;
+  padding: 11px 14px;
+  background: #fff;
+  color: #1d4ed8;
+  font-weight: 850;
+}
+
+.syllabus-next-prev a:last-child {
+  text-align: right;
 }
 
 .course-footer {
   padding-bottom: 30px;
 }
 
-/* Old theory-side navigation is deliberately removed from the new teaching structure. */
+/* Old generic / theory-side navigation is deliberately removed. */
 .theory-rail {
   display: none !important;
 }
@@ -322,7 +377,8 @@
   }
 
   .topic-visual-grid,
-  .topic-two-col {
+  .topic-two-col,
+  .trace-grid {
     grid-template-columns: 1fr;
   }
 
@@ -332,11 +388,6 @@
 }
 
 @media (max-width: 640px) {
-  .course-context-row {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
   .topic-hero,
   .topic-block {
     padding: 15px;
@@ -345,5 +396,28 @@
   .topic-learning-path {
     display: block;
     line-height: 1.5;
+  }
+
+  .topic-view-tabs {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .topic-view-tabs a {
+    min-height: 54px;
+    padding: 10px 12px;
+  }
+
+  .topic-view-tabs a small {
+    font-size: 0.74rem;
+  }
+
+  .syllabus-next-prev {
+    grid-template-columns: 1fr;
+  }
+
+  .syllabus-next-prev a,
+  .syllabus-next-prev a:last-child {
+    text-align: left;
   }
 }
