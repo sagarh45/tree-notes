@@ -1,16 +1,23 @@
-import { Outlet, NavLink, useLocation } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import '../menu.css'
 
-const LINKS: [string, string, string, string][] = [
-  ['/', 'Syllabus Page', 'Syllabus', '📚'],
-  ['/lab', 'Live Lab', 'Lab', '🎬'],
-  ['/practice', 'Practice', 'Quiz', '📝'],
-  ['/revise', 'Revision', 'Revise', '⚡'],
-]
+const SYLLABUS_MENU = [
+  ['definition', '1. Definition'],
+  ['traversal', '2. Traversal'],
+  ['linked', '3. Linked Implementation'],
+  ['binary-ops', '4. Binary Tree Operations'],
+  ['bst', '5. BST Operations'],
+  ['multiway', '6. Multiway Trees'],
+  ['btree', '7. B-Trees'],
+  ['avl', '8. AVL Tree'],
+  ['single-rotation', '9. Single Rotation'],
+  ['double-rotation', '10. Double Rotation'],
+] as const
 
 export function AppShell() {
   const [progress, setProgress] = useState(0)
-  const { pathname } = useLocation()
+  const { pathname, hash } = useLocation()
 
   useEffect(() => {
     document.documentElement.classList.remove('dark')
@@ -18,8 +25,14 @@ export function AppShell() {
   }, [])
 
   useEffect(() => {
-    window.scrollTo({ top: 0 })
-  }, [pathname])
+    if (pathname === '/' && hash) {
+      window.requestAnimationFrame(() => {
+        document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      })
+    } else if (!hash) {
+      window.scrollTo({ top: 0 })
+    }
+  }, [pathname, hash])
 
   useEffect(() => {
     const onScroll = () => {
@@ -35,11 +48,14 @@ export function AppShell() {
     }
   }, [])
 
+  const activeId = pathname === '/' ? (hash ? hash.slice(1) : 'definition') : ''
+
   return (
     <div className="app-shell">
       <div className="read-bar" aria-hidden="true">
         <span style={{ width: `${progress}%` }} />
       </div>
+
       <header className="app-header">
         <div className="brand">
           <span className="brand-mark" aria-hidden="true">
@@ -59,30 +75,24 @@ export function AppShell() {
           </span>
           <div>
             <h1>Unit IV — Trees</h1>
-            <p>One-page syllabus teaching flow · theory → steps → visualization → C program</p>
+            <p>Select the syllabus point. Inside it: theory → steps → visualization → trace → C program.</p>
           </div>
         </div>
       </header>
-      <nav className="nav-bar" aria-label="Primary">
-        {LINKS.map(([to, label, , ico]) => (
-          <NavLink key={to} to={to} end={to === '/'}>
-            <span className="nav-ico" aria-hidden="true">{ico}</span>
+
+      <nav className="nav-bar syllabus-menu" aria-label="Unit IV syllabus points">
+        {SYLLABUS_MENU.map(([id, label]) => (
+          <a key={id} href={`/#${id}`} className={activeId === id ? 'active' : undefined}>
             {label}
-          </NavLink>
+          </a>
         ))}
       </nav>
+
       <main className="main"><Outlet /></main>
+
       <footer className="app-footer">
-        <b>Unit IV — Trees.</b> Complete one syllabus point fully before moving to the next: theory, algorithm, visual trace and code together.
+        <b>Unit IV — Trees.</b> Menu = syllabus. Each syllabus point contains its complete theory, algorithm, examples, visualization and code together.
       </footer>
-      <nav className="bottom-nav" aria-label="Mobile">
-        {LINKS.map(([to, , short, ico]) => (
-          <NavLink key={to} to={to} end={to === '/'}>
-            <span aria-hidden="true">{ico}</span>
-            {short}
-          </NavLink>
-        ))}
-      </nav>
     </div>
   )
 }
