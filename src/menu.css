@@ -1,120 +1,349 @@
-.syllabus-menu {
-  justify-content: flex-start;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scrollbar-width: thin;
-  padding: 10px 14px;
+.syllabus-heading-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
+  padding: 11px 14px;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
 }
 
-.syllabus-menu a {
+.syllabus-heading-tabs a {
   flex: 0 0 auto;
+  text-decoration: none;
   white-space: nowrap;
+  border: 1px solid #dbe4f0;
+  background: #fff;
+  color: #172033;
+  padding: 9px 13px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 0.86rem;
+  transition: 0.18s ease;
 }
 
-.syllabus-menu a.active {
-  background: var(--accent);
-  border-color: var(--accent);
+.syllabus-heading-tabs a:hover {
+  transform: translateY(-1px);
+  border-color: #93b4ff;
+  background: #f7faff;
+}
+
+.syllabus-heading-tabs a.active {
   color: #fff;
-  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.18);
+  background: #2563eb;
+  border-color: #2563eb;
+  box-shadow: 0 7px 18px rgba(37, 99, 235, 0.22);
 }
 
-/* The top menu itself is the syllabus, so the old left section rail is unnecessary. */
-.theory-rail {
-  display: none !important;
+.course-main {
+  width: min(1240px, 100%);
+  padding-top: 18px;
 }
 
-.theory-shell {
-  display: block !important;
+.course-page {
+  width: 100%;
 }
 
-.theory-main {
-  width: 100% !important;
-  max-width: none !important;
+.course-context-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f8fbff;
 }
 
-/* On syllabus routes show the selected topic immediately, not a generic landing/theory page. */
-.syllabus-app[class*="topic-"] #top {
-  display: none !important;
+.course-context-row > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.syllabus-app[class*="topic-"] .theory-main > .theory-article {
-  display: none;
+.course-context-row span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
-.topic-definition #definition,
-.topic-traversal #traversal,
-.topic-linked #linked,
-.topic-binary-ops #binary-ops,
-.topic-bst #bst,
-.topic-multiway #multiway,
-.topic-btree #btree,
-.topic-avl #avl,
-.topic-single-rotation #single-rotation,
-.topic-double-rotation #double-rotation {
-  display: block !important;
+.course-context-row b {
+  color: #1d4ed8;
+  font-size: 1rem;
 }
 
-.theory-article {
-  scroll-margin-top: 88px;
-  margin-top: 18px;
+.course-mini-tools {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
 }
 
+.course-mini-tools a,
+.footer-tools a {
+  text-decoration: none;
+  color: #1d4ed8;
+  font-weight: 800;
+  border: 1px solid #dbe4f0;
+  background: #fff;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.82rem;
+}
+
+.topic-hero {
+  border: 1px solid #dbeafe;
+  border-radius: 18px;
+  padding: 24px;
+  background: linear-gradient(135deg, #f7fbff 0%, #ffffff 58%, #eff6ff 100%);
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+
+.topic-hero h2 {
+  margin: 6px 0 8px;
+  color: #0f172a;
+  font-size: clamp(1.55rem, 3vw, 2.2rem);
+}
+
+.topic-hero p {
+  margin: 0;
+  color: #475569;
+}
+
+.topic-learning-path {
+  display: inline-flex;
+  margin-top: 14px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 800;
+  font-size: 0.88rem;
+}
+
+.topic-block {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
+  margin: 14px 0;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.topic-block h3 {
+  color: #1d4ed8;
+  font-size: 1.22rem;
+  margin: 0 0 8px;
+}
+
+.topic-block h4 {
+  margin: 6px 0 8px;
+  color: #0f172a;
+}
+
+.block-kicker {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: #2563eb;
+  background: #dbeafe;
+  border-radius: 999px;
+  padding: 5px 9px;
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.07em;
+}
+
+.sub-concept {
+  border-left: 4px solid #2563eb;
+}
+
+.rotation-card {
+  border-left-color: #7c3aed;
+}
+
+.topic-law,
+.topic-flow,
+.trace-note {
+  border-radius: 12px;
+  padding: 11px 13px;
+  margin: 12px 0;
+}
+
+.topic-law {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e3a8a;
+}
+
+.topic-flow {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-weight: 650;
+}
+
+.trace-note {
+  background: #ecfeff;
+  border: 1px solid #a5f3fc;
+  color: #155e75;
+}
+
+.topic-two-col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.topic-two-col > div {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  background: #fbfdff;
+}
+
+.topic-visual-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.topic-figure {
+  margin: 0;
+  border: 1px solid #dbe4f0;
+  border-radius: 14px;
+  padding: 12px;
+  background: #fbfdff;
+}
+
+.topic-figure figcaption {
+  margin-bottom: 8px;
+  color: #1e3a8a;
+}
+
+.topic-figure p {
+  color: #64748b;
+  font-size: 0.88rem;
+  margin: 8px 2px 0;
+}
+
+.code-block pre,
+.topic-program pre {
+  max-height: 520px;
+  overflow: auto;
+  background: #0f172a;
+  color: #e2e8f0;
+  border-radius: 12px;
+  padding: 14px;
+  line-height: 1.55;
+  font-size: 0.86rem;
+  white-space: pre;
+}
+
+.topic-program {
+  border: 1px solid #c7d2fe;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin: 14px 0;
+  background: #f8faff;
+}
+
+.topic-program summary {
+  cursor: pointer;
+  color: #1d4ed8;
+  font-weight: 900;
+}
+
+.topic-three-cases {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.topic-three-cases > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  background: #f8fafc;
+}
+
+.node-memory-box {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  text-align: center;
+  border: 2px solid #93c5fd;
+  background: #eff6ff;
+  color: #1e3a8a;
+  padding: 15px;
+  border-radius: 12px;
+  font-weight: 900;
+  margin: 12px 0;
+}
+
+.topic-tools,
 .footer-tools {
   display: flex;
   justify-content: center;
   gap: 8px;
   flex-wrap: wrap;
-  margin-top: 10px;
+  margin-top: 14px;
 }
 
-.footer-tools a {
-  text-decoration: none;
-  color: var(--accent);
-  font-weight: 700;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 6px 10px;
-  background: #fff;
+.course-footer {
+  padding-bottom: 30px;
 }
 
-.syllabus-bottom {
-  overflow-x: auto;
-  justify-content: flex-start;
+/* Old theory-side navigation is deliberately removed from the new teaching structure. */
+.theory-rail {
+  display: none !important;
 }
 
-.syllabus-bottom a {
-  min-width: max-content;
-  padding-inline: 12px;
-}
-
-@media (min-width: 1500px) {
-  .syllabus-menu {
-    justify-content: center;
-  }
-}
-
-@media (max-width: 900px) {
-  .app-header {
-    padding-bottom: 12px;
+@media (max-width: 980px) {
+  .syllabus-heading-tabs {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
   }
 
-  .app-header p {
-    font-size: 0.86rem;
-  }
-
-  .syllabus-menu {
-    gap: 6px;
-    padding: 8px 10px;
-  }
-
-  .syllabus-menu a {
-    padding: 7px 11px;
+  .syllabus-heading-tabs a {
     font-size: 0.82rem;
+    padding: 8px 11px;
   }
 
-  .theory-article {
-    margin-top: 10px;
+  .topic-visual-grid,
+  .topic-two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .topic-three-cases {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .course-context-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .topic-hero,
+  .topic-block {
+    padding: 15px;
+  }
+
+  .topic-learning-path {
+    display: block;
+    line-height: 1.5;
   }
 }
