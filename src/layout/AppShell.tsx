@@ -1,37 +1,23 @@
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Link, Outlet, useLocation, useSearchParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import '../menu.css'
 
-const SYLLABUS_MENU = [
-  ['/definition', '1. Definition', 'Definition'],
-  ['/traversal', '2. Traversal', 'Traversal'],
-  ['/linked-implementation', '3. Linked Implementation', 'Linked'],
-  ['/binary-tree-operations', '4. Binary Tree Operations', 'BT Ops'],
-  ['/bst-operations', '5. BST Operations', 'BST Ops'],
-  ['/multiway-trees', '6. Multiway Trees', 'Multiway'],
-  ['/b-trees', '7. B-Trees', 'B-Tree'],
-  ['/avl-tree', '8. AVL Tree', 'AVL'],
-  ['/single-rotation', '9. Single Rotation', 'Single'],
-  ['/double-rotation', '10. Double Rotation', 'Double'],
+const SYLLABUS_TABS = [
+  ['definition', '1. Definition'],
+  ['traversal', '2. Traversal'],
+  ['linked', '3. Linked Implementation'],
+  ['binary-ops', '4. Binary Tree Operations'],
+  ['bst-ops', '5. BST Operations'],
+  ['multiway', '6. Multiway Trees'],
+  ['btree', '7. B-Trees'],
+  ['avl', '8. AVL Tree & Rotations'],
 ] as const
-
-const TOPIC_CLASS: Record<string, string> = {
-  '/definition': 'topic-definition',
-  '/traversal': 'topic-traversal',
-  '/linked-implementation': 'topic-linked',
-  '/binary-tree-operations': 'topic-binary-ops',
-  '/bst-operations': 'topic-bst',
-  '/multiway-trees': 'topic-multiway',
-  '/b-trees': 'topic-btree',
-  '/avl-tree': 'topic-avl',
-  '/single-rotation': 'topic-single-rotation',
-  '/double-rotation': 'topic-double-rotation',
-}
 
 export function AppShell() {
   const [progress, setProgress] = useState(0)
   const { pathname } = useLocation()
-  const topicClass = TOPIC_CLASS[pathname] ?? ''
+  const [params] = useSearchParams()
+  const selected = pathname === '/' ? (params.get('topic') ?? 'definition') : ''
 
   useEffect(() => {
     document.documentElement.classList.remove('dark')
@@ -40,7 +26,7 @@ export function AppShell() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
-  }, [pathname])
+  }, [pathname, selected])
 
   useEffect(() => {
     const onScroll = () => {
@@ -57,12 +43,12 @@ export function AppShell() {
   }, [])
 
   return (
-    <div className={`app-shell syllabus-app ${topicClass}`}>
+    <div className="app-shell course-shell">
       <div className="read-bar" aria-hidden="true">
         <span style={{ width: `${progress}%` }} />
       </div>
 
-      <header className="app-header">
+      <header className="app-header course-header">
         <div className="brand">
           <span className="brand-mark" aria-hidden="true">
             <svg viewBox="0 0 40 40" width="34" height="34" role="presentation">
@@ -81,37 +67,35 @@ export function AppShell() {
           </span>
           <div>
             <h1>Unit IV — Trees</h1>
-            <p>Select a syllabus point. Everything for that point stays together: theory, steps, visualization, trace and C program.</p>
+            <p>Choose a syllabus heading. The complete teaching material for that point appears below.</p>
           </div>
         </div>
       </header>
 
-      <nav className="nav-bar syllabus-menu" aria-label="Unit IV syllabus menu">
-        {SYLLABUS_MENU.map(([to, label]) => (
-          <NavLink key={to} to={to} end>
+      <nav className="nav-bar syllabus-heading-tabs" aria-label="Unit IV syllabus headings">
+        {SYLLABUS_TABS.map(([id, label]) => (
+          <Link
+            key={id}
+            to={`/?topic=${id}`}
+            className={selected === id ? 'active' : undefined}
+          >
             {label}
-          </NavLink>
+          </Link>
         ))}
       </nav>
 
-      <main className="main">
+      <main className="main course-main">
         <Outlet />
       </main>
 
-      <footer className="app-footer">
-        <b>Unit IV — Trees.</b> Menu follows the syllabus. Finish one point completely, then move to the next.
+      <footer className="app-footer course-footer">
+        <b>Unit IV — Trees.</b> Each syllabus heading contains theory, steps, visualization, worked trace and C program together.
         <div className="footer-tools">
-          <NavLink to="/lab">Live Visualizer</NavLink>
-          <NavLink to="/practice">Practice</NavLink>
-          <NavLink to="/revise">Revision</NavLink>
+          <Link to="/lab">Live Visualizer</Link>
+          <Link to="/practice">Practice</Link>
+          <Link to="/revise">Revision</Link>
         </div>
       </footer>
-
-      <nav className="bottom-nav syllabus-bottom" aria-label="Mobile syllabus menu">
-        {SYLLABUS_MENU.slice(0, 5).map(([to, , short]) => (
-          <NavLink key={to} to={to} end>{short}</NavLink>
-        ))}
-      </nav>
     </div>
   )
 }
