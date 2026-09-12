@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1d4ed8" />
+  <title>Unit IV — Trees | Syllabus Notes</title>
+  <style>
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f6f8fc;color:#0f172a}.wrap{max-width:1220px;margin:auto;padding:0 18px}.hero{background:linear-gradient(135deg,#0f172a 0%,#1d4ed8 65%,#2563eb 100%);color:white;padding:28px 0 22px}.badge{display:inline-block;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:6px 11px;font-size:12px;font-weight:800;letter-spacing:.08em}.hero h1{margin:10px 0 8px;font-size:clamp(28px,5vw,44px)}.hero p{margin:0;max-width:920px;color:#dbeafe;line-height:1.65}.syllabus-line{margin-top:14px;background:rgba(255,255,255,.09);padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.16);font-size:14px}.menu-shell{position:sticky;top:0;z-index:20;background:rgba(246,248,252,.96);backdrop-filter:blur(12px);border-bottom:1px solid #dbe4f0;padding:14px 0}.menu-title{font-size:12px;font-weight:900;color:#64748b;letter-spacing:.12em;margin-bottom:8px}.menu{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.menu button{appearance:none;border:1px solid #dbe4f0;background:white;border-radius:14px;padding:10px 12px;min-height:58px;text-align:left;color:#172033;font-weight:800;cursor:pointer;display:flex;gap:10px;align-items:center;transition:.18s}.menu button:hover{transform:translateY(-1px);border-color:#93b4ff}.menu button.active{background:#1d4ed8;color:white;border-color:#1d4ed8;box-shadow:0 8px 20px rgba(29,78,216,.22)}.num{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:#eff6ff;color:#1d4ed8;font-weight:900;flex:0 0 auto}.menu button.active .num{background:white;color:#1d4ed8}.content{padding:24px 0 60px}.topic-head{background:white;border:1px solid #dbe4f0;border-radius:18px;padding:22px;box-shadow:0 10px 28px rgba(15,23,42,.06)}.topic-pill{display:inline-block;background:#dbeafe;color:#1d4ed8;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:900;letter-spacing:.06em}.topic-head h2{font-size:clamp(24px,4vw,34px);margin:8px 0}.topic-head p{margin:0;color:#64748b}.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}.tabs button{border:1px solid #dbe4f0;background:white;border-radius:14px;padding:13px 16px;text-align:left;cursor:pointer;color:#0f172a}.tabs button b{display:block;font-size:16px}.tabs button small{color:#64748b}.tabs button.active{background:#0f172a;color:white;border-color:#0f172a}.tabs button.active small{color:#cbd5e1}.panel{background:white;border:1px solid #dbe4f0;border-radius:18px;padding:22px;box-shadow:0 10px 28px rgba(15,23,42,.05)}.panel h3{color:#1d4ed8;margin-top:18px}.panel h3:first-child{margin-top:0}.panel p,.panel li{line-height:1.72;color:#334155}.law{background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;border-radius:12px;padding:12px 14px;font-weight:700;margin:12px 0}.flow{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:12px 14px;margin:12px 0;font-weight:700;color:#334155}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{border:1px solid #dbe4f0;background:#fbfdff;border-radius:14px;padding:14px}.diagram{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#0f172a;color:#e2e8f0;border-radius:14px;padding:16px;overflow:auto;white-space:pre;line-height:1.5}.trace{border-left:4px solid #2563eb;background:#f8fbff;border-radius:10px;padding:11px 13px;margin:10px 0}.code{background:#0b1220;color:#dbeafe;border-radius:14px;padding:16px;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre;line-height:1.5;font-size:13px}.compare{width:100%;border-collapse:collapse;margin-top:12px}.compare th,.compare td{border:1px solid #dbe4f0;padding:10px;text-align:left}.compare th{background:#eff6ff;color:#1e3a8a}.footer{padding:24px 0 36px;text-align:center;color:#64748b;font-size:13px}@media(max-width:900px){.menu{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:1fr}.menu-shell{position:static}}@media(max-width:600px){.wrap{padding:0 12px}.hero{padding-top:22px}.menu{grid-template-columns:1fr 1fr}.menu button{padding:9px;min-height:54px;font-size:12px}.num{width:26px;height:26px}.tabs{grid-template-columns:1fr}.topic-head,.panel{padding:16px}.syllabus-line{font-size:13px}}
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <span class="badge">DATA STRUCTURES · UNIT IV · 7 HOURS</span>
+      <h1>Unit IV — Trees</h1>
+      <p>Syllabus-first classroom notes. Select one syllabus point from the menu, then complete its Theory, Visualization and Program before moving to the next point.</p>
+      <div class="syllabus-line"><b>Official syllabus:</b> Definition, traversal, linked implementation, operations on Binary Trees and Binary Search Trees: insert, delete, search operations, Multiway Trees, B trees, AVL Tree: Single and Double rotation of AVL Trees.</div>
+    </div>
+  </header>
+
+  <div class="menu-shell">
+    <div class="wrap">
+      <div class="menu-title">SYLLABUS POINTS</div>
+      <nav class="menu" id="menu"></nav>
+    </div>
+  </div>
+
+  <main class="wrap content">
+    <section class="topic-head">
+      <span class="topic-pill" id="pointPill"></span>
+      <h2 id="topicTitle"></h2>
+      <p id="official"></p>
+    </section>
+
+    <nav class="tabs" id="tabs">
+      <button data-view="theory" class="active"><b>01 · Theory</b><small>Concepts, rules, algorithms and exam points</small></button>
+      <button data-view="visualization"><b>02 · Visualization</b><small>Diagrams, worked examples and real traces</small></button>
+      <button data-view="program"><b>03 · Program</b><small>C code for the selected syllabus point</small></button>
+    </nav>
+
+    <section class="panel" id="panel"></section>
+  </main>
+
+  <footer class="footer"><div class="wrap">Unit IV teaching flow: syllabus point → Theory → Visualization → Program → next syllabus point.</div></footer>
+
+<script>
+const topics = [
+  {id:'definition',no:1,label:'Definition',title:'Tree Definition and Basic Concepts',official:'Definition'},
+  {id:'traversal',no:2,label:'Traversal',title:'Tree Traversal',official:'Traversal'},
+  {id:'linked',no:3,label:'Linked Implementation',title:'Linked Implementation of Binary Tree',official:'Linked implementation'},
+  {id:'binary-ops',no:4,label:'Binary Tree Operations',title:'Operations on Binary Trees',official:'Operations on Binary Trees: insert, delete, search operations'},
+  {id:'bst-ops',no:5,label:'BST Operations',title:'Binary Search Tree Operations',official:'Binary Search Trees: insert, delete, search operations'},
+  {id:'multiway',no:6,label:'Multiway Trees',title:'Multiway Trees',official:'Multiway Trees'},
+  {id:'btree',no:7,label:'B-Trees',title:'B-Trees',official:'B trees'},
+  {id:'avl',no:8,label:'AVL Tree',title:'AVL Tree',official:'AVL Tree'},
+  {id:'single-rotation',no:9,label:'Single Rotation',title:'Single Rotation of AVL Trees',official:'Single rotation of AVL Trees'},
+  {id:'double-rotation',no:10,label:'Double Rotation',title:'Double Rotation of AVL Trees',official:'Double rotation of AVL Trees'}
+];
+
+const data = {
+'definition':{
+ theory:`<h3>What is a Tree?</h3><p>A <b>Tree</b> is a non-linear hierarchical data structure made of nodes connected by edges. One node is called the <b>root</b>. Every other node has exactly one parent and a tree has no cycle.</p><div class="law">Core rule: A tree with <b>n</b> nodes has exactly <b>n − 1</b> edges.</div><h3>Important Terminology</h3><div class="grid2"><div class="card"><b>Root:</b> topmost node<br><b>Parent:</b> node having child nodes<br><b>Child:</b> node directly below a parent<br><b>Sibling:</b> nodes with the same parent</div><div class="card"><b>Leaf:</b> node with no children<br><b>Degree:</b> number of children<br><b>Depth:</b> edges from root<br><b>Height:</b> longest path to a leaf</div></div><h3>Binary Tree</h3><p>A binary tree is a tree in which each node has at most two children, called the left child and right child.</p><div class="flow">Common shapes: Full → Complete → Perfect → Left/Right Skewed.</div>`,
+ visualization:`<h3>Basic Tree</h3><div class="diagram">            A
+          /   \\
+         B     C
+        / \\
+       D   E</div><p><b>A</b> is root. B and C are siblings. D and E are leaf nodes.</p><h3>Binary Tree Shapes</h3><div class="grid2"><div class="card"><b>Perfect</b><div class="diagram">      10
+     /  \\
+   20    30
+  / \\    / \\
+40 50  60 70</div></div><div class="card"><b>Right Skewed</b><div class="diagram">10
+  \\
+   20
+     \\
+      30
+        \\
+         40</div></div></div>`,
+ program:`<h3>C Structure for a Binary Tree Node</h3><pre class="code">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+struct Node {
+    int data;
+    struct Node *left;
+    struct Node *right;
+};
+
+struct Node *createNode(int value) {
+    struct Node *p = (struct Node *)malloc(sizeof(struct Node));
+    p-&gt;data = value;
+    p-&gt;left = NULL;
+    p-&gt;right = NULL;
+    return p;
+}</pre>`},
+'traversal':{
+ theory:`<h3>Traversal</h3><p>Traversal means visiting every node of a tree exactly once in a systematic order.</p><table class="compare"><tr><th>Traversal</th><th>Rule</th><th>Memory line</th></tr><tr><td>Preorder</td><td>Root → Left → Right</td><td>Root first</td></tr><tr><td>Inorder</td><td>Left → Root → Right</td><td>Root in middle</td></tr><tr><td>Postorder</td><td>Left → Right → Root</td><td>Root last</td></tr><tr><td>Level Order</td><td>Level by level</td><td>Use Queue</td></tr></table><h3>Algorithms</h3><div class="flow">Preorder: Visit Root → Preorder(Left) → Preorder(Right)</div><div class="flow">Inorder: Inorder(Left) → Visit Root → Inorder(Right)</div><div class="flow">Postorder: Postorder(Left) → Postorder(Right) → Visit Root</div>`,
+ visualization:`<h3>Use the Same Tree for All Traversals</h3><div class="diagram">              4
+           /     \\
+          2       6
+        /  \\     / \\
+       1    3   5   7</div><div class="trace"><b>Preorder:</b> 4 → 2 → 1 → 3 → 6 → 5 → 7</div><div class="trace"><b>Inorder:</b> 1 → 2 → 3 → 4 → 5 → 6 → 7</div><div class="trace"><b>Postorder:</b> 1 → 3 → 2 → 5 → 7 → 6 → 4</div><div class="trace"><b>Level Order:</b> 4 → 2 → 6 → 1 → 3 → 5 → 7</div>`,
+ program:`<h3>Recursive Traversal Functions</h3><pre class="code">void preorder(struct Node *root) {
+    if (root == NULL) return;
+    printf("%d ", root-&gt;data);
+    preorder(root-&gt;left);
+    preorder(root-&gt;right);
+}
+
+void inorder(struct Node *root) {
+    if (root == NULL) return;
+    inorder(root-&gt;left);
+    printf("%d ", root-&gt;data);
+    inorder(root-&gt;right);
+}
+
+void postorder(struct Node *root) {
+    if (root == NULL) return;
+    postorder(root-&gt;left);
+    postorder(root-&gt;right);
+    printf("%d ", root-&gt;data);
+}</pre>`},
+'linked':{
+ theory:`<h3>Linked Representation</h3><p>Every node stores three logical parts: left-child address, data, and right-child address.</p><div class="law">[ LEFT POINTER | DATA | RIGHT POINTER ]</div><p>A missing child is stored as <b>NULL</b>. Nodes are created dynamically using <code>malloc()</code>.</p><div class="flow">Create node → store data → set left = NULL → set right = NULL → connect it to parent.</div>`,
+ visualization:`<h3>Memory View</h3><div class="diagram">             Node 10
+        +------+----+-------+
+        | left | 10 | right |
+        +---|--+----+---|---+
+            |           |
+            v           v
+         Node20       Node30</div><p>The tree drawing and linked memory representation describe the same structure.</p>`,
+ program:`<h3>Linked Node Creation</h3><pre class="code">struct Node {
+    int data;
+    struct Node *left;
+    struct Node *right;
+};
+
+struct Node *createNode(int value) {
+    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+    newNode-&gt;data = value;
+    newNode-&gt;left = NULL;
+    newNode-&gt;right = NULL;
+    return newNode;
+}</pre>`},
+'binary-ops':{
+ theory:`<h3>Important Difference</h3><p>A normal binary tree has <b>no ordering rule</b>. A smaller value does not have to go left and a larger value does not have to go right.</p><h3>Insert</h3><p>Use level-order insertion to place a new node in the first available position from left to right.</p><h3>Search</h3><p>Because nodes are not ordered, search may visit every node. Worst case: <b>O(n)</b>.</p><h3>Delete</h3><p>One common method is to replace the target node with the deepest-rightmost node and then remove that deepest node.</p>`,
+ visualization:`<h3>Level-order Insert</h3><div class="diagram">Insert: 10,20,30,40,50
+
+       10
+      /  \\
+    20    30
+   /  \\
+ 40   50</div><h3>Delete Example</h3><div class="trace">Delete 20 → deepest-rightmost is 50 → copy 50 into 20 → remove original 50.</div><div class="diagram">Before              After
+   10                 10
+  /  \\               /  \\
+20   30             50   30
+/ \\                 /
+40 50              40</div>`,
+ program:`<h3>Binary Tree Search</h3><pre class="code">struct Node *searchBT(struct Node *root, int key) {
+    if (root == NULL) return NULL;
+    if (root-&gt;data == key) return root;
+
+    struct Node *p = searchBT(root-&gt;left, key);
+    if (p != NULL) return p;
+
+    return searchBT(root-&gt;right, key);
+}</pre><h3>Level-order Insert Idea</h3><pre class="code">/* Use a queue. The first NULL left/right link receives the new node. */</pre>`},
+'bst-ops':{
+ theory:`<h3>BST Rule</h3><div class="law">Every key in LEFT subtree &lt; ROOT &lt; every key in RIGHT subtree.</div><h3>Insert</h3><p>Compare the new key with current node. Smaller → go left. Greater → go right. Repeat until NULL.</p><h3>Search</h3><p>Use the same comparison rule to discard half of the remaining direction at each step in a balanced tree.</p><h3>Delete</h3><div class="grid2"><div class="card"><b>Case 1:</b> Leaf node → remove directly.</div><div class="card"><b>Case 2:</b> One child → connect parent to child.</div><div class="card"><b>Case 3:</b> Two children → replace with inorder successor, then delete successor.</div></div><div class="flow">Balanced BST: O(log n) average. Skewed BST: O(n).</div>`,
+ visualization:`<h3>BST Example</h3><div class="diagram">             50
+           /    \\
+         30      70
+        / \\      / \\
+      20  40    60 80</div><div class="trace"><b>Search 60:</b> 50 → 70 → 60 FOUND</div><div class="trace"><b>Insert 65:</b> 50 → right 70 → left 60 → right NULL → insert 65</div><div class="trace"><b>Delete 50:</b> two children → inorder successor = 60 → replace 50 by 60.</div>`,
+ program:`<h3>BST Insert + Search + Delete</h3><pre class="code">struct Node *insertBST(struct Node *root, int key) {
+    if (root == NULL) return createNode(key);
+    if (key &lt; root-&gt;data)
+        root-&gt;left = insertBST(root-&gt;left, key);
+    else if (key &gt; root-&gt;data)
+        root-&gt;right = insertBST(root-&gt;right, key);
+    return root;
+}
+
+struct Node *searchBST(struct Node *root, int key) {
+    if (root == NULL || root-&gt;data == key) return root;
+    if (key &lt; root-&gt;data) return searchBST(root-&gt;left, key);
+    return searchBST(root-&gt;right, key);
+}</pre>`},
+'multiway':{
+ theory:`<h3>Multiway Tree</h3><p>A multiway tree allows a node to contain multiple keys and more than two children.</p><div class="law">More branching → smaller height → fewer node accesses.</div><p>Multiway trees are useful for database and file-system indexing where reducing the number of levels is important.</p>`,
+ visualization:`<h3>Multiway Node</h3><div class="diagram">              [20 | 40]
+             /    |     \\
+          &lt;20   20..40   &gt;40</div><p>The separator keys divide the key range among multiple children.</p>`,
+ program:`<h3>Simple Multiway Node Representation</h3><pre class="code">#define MAX_KEYS 4
+
+struct MNode {
+    int key[MAX_KEYS];
+    struct MNode *child[MAX_KEYS + 1];
+    int n;
+};</pre>`},
+'btree':{
+ theory:`<h3>B-Tree</h3><p>A B-Tree is a balanced multiway search tree. Nodes can store several sorted keys, and all leaves remain at the same level.</p><h3>Search</h3><p>Compare the key with separators in a node and choose the correct child interval.</p><h3>Insert</h3><p>Insert into a leaf. If the node overflows, split it and promote the middle key to the parent.</p><h3>Delete</h3><p>When deletion causes underflow, repair using <b>borrow</b> or <b>merge</b>.</p>`,
+ visualization:`<h3>B-Tree Example</h3><div class="diagram">             [20 | 40]
+            /    |     \\
+       [5 10] [25 30] [50 60]</div><h3>Order-3 Split Example</h3><div class="trace">Insert 10 → [10]</div><div class="trace">Insert 20 → [10 | 20]</div><div class="trace">Insert 5 → [5 | 10 | 20] overflow</div><div class="diagram">Promote 10
+
+       [10]
+      /    \\
+    [5]    [20]</div>`,
+ program:`<h3>B-Tree Node Skeleton</h3><pre class="code">#define M 3
+
+struct BNode {
+    int n;
+    int key[M - 1];
+    struct BNode *child[M];
+};
+
+/* Search compares key with separators and follows the correct child. */</pre>`},
+'avl':{
+ theory:`<h3>AVL Tree</h3><p>An AVL tree is a self-balancing Binary Search Tree.</p><div class="law">Balance Factor BF = Height(Left) − Height(Right)</div><p>For every AVL node, BF must be <b>-1, 0, or +1</b>. If insertion or deletion makes |BF| &gt; 1, rotations restore balance.</p><h3>Why AVL?</h3><p>A normal BST can become skewed. AVL maintains height close to O(log n), giving predictable search performance.</p>`,
+ visualization:`<h3>Balanced vs Unbalanced</h3><div class="grid2"><div class="card"><b>Skewed BST</b><div class="diagram">10
+  \\
+   20
+     \\
+      30
+        \\
+         40</div></div><div class="card"><b>AVL-style balance</b><div class="diagram">      20
+     /  \\
+   10    30
+           \\
+            40</div></div></div><div class="trace">Allowed BF values: -1, 0, +1</div>`,
+ program:`<h3>Height and Balance Factor</h3><pre class="code">int height(struct Node *n) {
+    if (n == NULL) return 0;
+    return n-&gt;height;
+}
+
+int balance(struct Node *n) {
+    if (n == NULL) return 0;
+    return height(n-&gt;left) - height(n-&gt;right);
+}</pre>`},
+'single-rotation':{
+ theory:`<h3>Single Rotations</h3><p>Single rotation is used when the imbalance follows the same direction twice.</p><div class="grid2"><div class="card"><b>LL Case:</b> insertion in left subtree of left child → <b>Right Rotation</b>.</div><div class="card"><b>RR Case:</b> insertion in right subtree of right child → <b>Left Rotation</b>.</div></div>`,
+ visualization:`<h3>LL Case</h3><div class="diagram">Before               After
+    30                   20
+   /                    /  \\
+  20        =>         10   30
+ /
+10</div><h3>RR Case</h3><div class="diagram">Before               After
+10                       20
+  \\                     /  \\
+   20        =>         10   30
+     \\
+      30</div>`,
+ program:`<h3>Right and Left Rotation</h3><pre class="code">struct Node *rightRotate(struct Node *y) {
+    struct Node *x = y-&gt;left;
+    struct Node *T2 = x-&gt;right;
+    x-&gt;right = y;
+    y-&gt;left = T2;
+    return x;
+}
+
+struct Node *leftRotate(struct Node *x) {
+    struct Node *y = x-&gt;right;
+    struct Node *T2 = y-&gt;left;
+    y-&gt;left = x;
+    x-&gt;right = T2;
+    return y;
+}</pre>`},
+'double-rotation':{
+ theory:`<h3>Double Rotations</h3><p>Double rotation is used when insertion changes direction between parent and child.</p><div class="grid2"><div class="card"><b>LR Case:</b> Left then Right → Left Rotation at child, then Right Rotation at root.</div><div class="card"><b>RL Case:</b> Right then Left → Right Rotation at child, then Left Rotation at root.</div></div>`,
+ visualization:`<h3>LR Case</h3><div class="diagram">30             30              20
+/              /               /  \\
+10     =>      20      =>      10  30
+  \\           /
+   20         10</div><h3>RL Case</h3><div class="diagram">10              10              20
+  \\               \\             /  \\
+   30      =>       20     =>     10  30
+  /                  \\
+ 20                   30</div><div class="law">LR = Left + Right rotation. RL = Right + Left rotation.</div>`,
+ program:`<h3>LR and RL Calls</h3><pre class="code">/* LR case */
+root-&gt;left = leftRotate(root-&gt;left);
+return rightRotate(root);
+
+/* RL case */
+root-&gt;right = rightRotate(root-&gt;right);
+return leftRotate(root);</pre>`}
+};
+
+let currentTopic='definition';
+let currentView='theory';
+const menu=document.getElementById('menu');
+const panel=document.getElementById('panel');
+const pointPill=document.getElementById('pointPill');
+const topicTitle=document.getElementById('topicTitle');
+const official=document.getElementById('official');
+const tabs=[...document.querySelectorAll('#tabs button')];
+
+function topicFromHash(){const h=location.hash.replace('#','');return topics.some(t=>t.id===h)?h:'definition'}
+function renderMenu(){menu.innerHTML=topics.map(t=>`<button data-topic="${t.id}" class="${t.id===currentTopic?'active':''}"><span class="num">${t.no}</span><span>${t.label}</span></button>`).join('');document.querySelectorAll('#menu button').forEach(b=>b.onclick=()=>{currentTopic=b.dataset.topic;currentView='theory';location.hash=currentTopic;render();window.scrollTo({top:0,behavior:'smooth'})})}
+function render(){const t=topics.find(x=>x.id===currentTopic);renderMenu();pointPill.textContent=`SYLLABUS POINT ${t.no}`;topicTitle.textContent=t.title;official.innerHTML=`<b>Official syllabus:</b> ${t.official}`;tabs.forEach(b=>b.classList.toggle('active',b.dataset.view===currentView));panel.innerHTML=data[currentTopic][currentView]}
+tabs.forEach(b=>b.onclick=()=>{currentView=b.dataset.view;render()});window.addEventListener('hashchange',()=>{currentTopic=topicFromHash();currentView='theory';render()});currentTopic=topicFromHash();render();
+</script>
+</body>
+</html>
