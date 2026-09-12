@@ -1,5 +1,35 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "redirects": [
+    { "source": "/theory", "destination": "/?topic=definition", "permanent": false },
+    { "source": "/overview", "destination": "/?topic=definition", "permanent": false },
+    { "source": "/definition", "destination": "/?topic=definition", "permanent": false },
+    { "source": "/traversal", "destination": "/?topic=traversal", "permanent": false },
+    { "source": "/linked-implementation", "destination": "/?topic=linked", "permanent": false },
+    { "source": "/binary-tree-operations", "destination": "/?topic=binary-ops", "permanent": false },
+    { "source": "/bst-operations", "destination": "/?topic=bst-ops", "permanent": false },
+    { "source": "/multiway-trees", "destination": "/?topic=multiway", "permanent": false },
+    { "source": "/b-trees", "destination": "/?topic=btree", "permanent": false },
+    { "source": "/avl-tree", "destination": "/?topic=avl", "permanent": false },
+    { "source": "/single-rotation", "destination": "/?topic=avl", "permanent": false },
+    { "source": "/double-rotation", "destination": "/?topic=avl", "permanent": false }
+  ],
+  "headers": [
+    {
+      "source": "/index.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Tree-Notes-Version", "value": "syllabus-tabs-v4" }
+      ]
+    }
+  ],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
