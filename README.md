@@ -22,3 +22,7 @@ Open [http://localhost:4321](http://localhost:4321).
 | Practice | MCQ, True/False, fill-in-the-blanks + cheatsheet including advanced traps |
 
 Keyboard in the lab: Space play/pause, arrows step, I insert, S search, D delete/extract, R reset.
+
+## Deployment
+
+Production is connected to Vercel from the `main` branch. Deployment refresh triggered on 12 September 2026.
