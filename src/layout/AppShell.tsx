@@ -26,7 +26,7 @@ export function AppShell() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
-  }, [pathname, selected])
+  }, [pathname, selected, params.get('view')])
 
   useEffect(() => {
     const onScroll = () => {
@@ -67,7 +67,7 @@ export function AppShell() {
           </span>
           <div>
             <h1>Unit IV — Trees</h1>
-            <p>Choose a syllabus heading. The complete teaching material for that point appears below.</p>
+            <p>Main menu follows the syllabus. Open one point, then study Theory, Visualization and Program inside it.</p>
           </div>
         </div>
       </header>
@@ -76,7 +76,7 @@ export function AppShell() {
         {SYLLABUS_TABS.map(([id, label]) => (
           <Link
             key={id}
-            to={`/?topic=${id}`}
+            to={`/?topic=${id}&view=theory`}
             className={selected === id ? 'active' : undefined}
           >
             {label}
@@ -89,12 +89,7 @@ export function AppShell() {
       </main>
 
       <footer className="app-footer course-footer">
-        <b>Unit IV — Trees.</b> Each syllabus heading contains theory, steps, visualization, worked trace and C program together.
-        <div className="footer-tools">
-          <Link to="/lab">Live Visualizer</Link>
-          <Link to="/practice">Practice</Link>
-          <Link to="/revise">Revision</Link>
-        </div>
+        <b>Unit IV — Trees.</b> Complete one syllabus point fully: Theory → Visualization → Program, then move to the next point.
       </footer>
     </div>
   )
