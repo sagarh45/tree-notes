@@ -3,55 +3,114 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<meta name="theme-color" content="#173b75" />
+<meta name="theme-color" content="#ffffff" />
 <title>Unit IV — Trees | Syllabus-wise Notes</title>
 <style>
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f4f7fb;color:#10213a}.wrap{max-width:1240px;margin:auto;padding:0 18px}.hero{background:linear-gradient(135deg,#0b1f3a,#173b75 60%,#2458a6);color:#fff;padding:26px 0 22px}.badge{display:inline-block;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900;letter-spacing:.08em}.hero h1{margin:9px 0 6px;font-size:clamp(28px,5vw,44px)}.hero p{margin:0;color:#dce8fb;line-height:1.6}.official{margin-top:13px;padding:12px 14px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);border-radius:12px;font-size:14px;line-height:1.55}.menu-shell{position:sticky;top:0;z-index:30;background:rgba(244,247,251,.97);backdrop-filter:blur(10px);border-bottom:1px solid #d9e2ef;padding:12px 0}.menu-title{font-size:12px;font-weight:900;letter-spacing:.11em;color:#64748b;margin-bottom:8px}.menu{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.menu button{border:1px solid #d7e1ee;background:#fff;border-radius:14px;min-height:60px;padding:9px 10px;display:flex;align-items:center;gap:9px;text-align:left;cursor:pointer;color:#13233a;font-weight:850;transition:.16s}.menu button:hover{transform:translateY(-1px);border-color:#7aa2e3}.menu button.active{background:#173b75;color:#fff;border-color:#173b75;box-shadow:0 8px 20px rgba(23,59,117,.22)}.num{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:#eaf2ff;color:#174d9a;font-weight:950;flex:0 0 auto}.menu button.active .num{background:#fff;color:#173b75}.content{padding:22px 0 50px}.topic-head{background:#fff;border:1px solid #d9e2ef;border-radius:18px;padding:20px;box-shadow:0 10px 28px rgba(15,23,42,.05)}.point-pill{display:inline-block;background:#e7f0ff;color:#174d9a;font-size:12px;font-weight:900;letter-spacing:.06em;border-radius:999px;padding:5px 9px}.topic-head h2{margin:8px 0 5px;font-size:clamp(23px,4vw,34px)}.topic-head p{margin:0;color:#64748b}.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}.tabs button{border:1px solid #d7e1ee;background:#fff;border-radius:14px;padding:12px 14px;text-align:left;cursor:pointer;color:#10213a}.tabs button b{display:block;font-size:16px}.tabs button small{display:block;color:#64748b;margin-top:2px}.tabs button.active{background:#0f2748;color:#fff;border-color:#0f2748}.tabs button.active small{color:#c8d8ef}.panel{background:#fff;border:1px solid #d9e2ef;border-radius:18px;padding:20px;box-shadow:0 10px 28px rgba(15,23,42,.04)}.section{border:1px solid #e0e7f0;border-radius:14px;padding:16px;margin:14px 0;background:#fcfdff}.section:first-child{margin-top:0}.section h3{margin:0 0 8px;color:#174d9a}.section h4{margin:14px 0 6px;color:#10213a}.section p,.section li{line-height:1.67;color:#334155}.flow,.law,.note{padding:11px 13px;border-radius:11px;margin:10px 0}.flow{background:#f6f8fb;border:1px solid #dce4ee;font-weight:750}.law{background:#eef5ff;border:1px solid #bfd6f7;color:#183b72;font-weight:800}.note{background:#fff8e8;border:1px solid #f2d698;color:#6f4a00}.grid2,.grid3{display:grid;gap:12px}.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.card{border:1px solid #dce5ef;border-radius:12px;padding:13px;background:#fbfdff}.card b{color:#173b75}.diagram{background:#0e1c30;color:#dce9fb;border-radius:13px;padding:15px;overflow:auto;white-space:pre;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.trace{border-left:4px solid #2d6cc0;background:#f7fbff;border-radius:10px;padding:10px 12px;margin:9px 0;line-height:1.6}.code{background:#091525;color:#dce9fb;border-radius:14px;padding:16px;overflow:auto;white-space:pre;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.table{width:100%;border-collapse:collapse;margin:10px 0}.table th,.table td{border:1px solid #dce5ef;padding:9px;text-align:left;vertical-align:top}.table th{background:#eef5ff;color:#173b75}.exam{background:#f1f7ff;border-left:4px solid #2d6cc0;padding:11px 13px;border-radius:10px}.footer{text-align:center;color:#64748b;padding:22px 10px 34px;font-size:13px}.algo{margin:8px 0 8px 22px}.algo li{margin:5px 0}.fn{border:1px solid #bfd6f7;background:#fff;border-radius:12px;padding:12px 14px;margin:10px 0}.fn b{color:#174d9a}.io{background:#f6f8fb;border:1px dashed #c5d0de;border-radius:10px;padding:10px 12px;margin:10px 0;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre;overflow:auto}@media(max-width:900px){.menu{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.grid3{grid-template-columns:1fr}.menu-shell{position:static}}@media(max-width:600px){.wrap{padding:0 12px}.hero{padding-top:21px}.menu{grid-template-columns:repeat(2,minmax(0,1fr))}.menu button{font-size:12px;min-height:56px;padding:8px}.num{width:27px;height:27px}.tabs{grid-template-columns:1fr}.topic-head,.panel{padding:15px}.official{font-size:13px}.section{padding:13px}}
-
-.term-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.term{border:1px solid #dce5ef;border-radius:12px;padding:12px 13px;background:#fff}
-.term h4{margin:0 0 6px;color:#173b75;font-size:15px}
+*{box-sizing:border-box}
+html,body{margin:0;background:#fff;color:#222;font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.wrap{max-width:980px;margin:auto;padding:0 16px}
+.hero,.menu-shell,.footer,.topic-head,.official,.badge{display:none!important}
+.bar{background:#fff;border-bottom:1px solid #e6e6e6;padding:8px 0}
+.bar-in{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.points-btn,.tbtn,.lbtn{border:1px solid #d5d5d5;background:#fff;color:#222;border-radius:8px;padding:7px 11px;cursor:pointer;font:600 15px/1.3 system-ui,sans-serif}
+.points-btn{min-width:190px;text-align:left}
+.tbtn.active,.lbtn.active,.points-btn.open,.menu button.active{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tabs button small{display:none}
+.tabs button b{font-size:15px;font-weight:600}
+.lesson-btns{display:flex;align-items:center;gap:6px;margin-left:auto}
+.lesson-btns span{font-size:14px;color:#555}
+.drawer{display:none;background:#fff;border-bottom:1px solid #e6e6e6;padding:12px 0 16px}
+.drawer.show{display:block}
+.drawer-title{font-size:14px;color:#555;margin-bottom:8px}
+.menu{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.menu button{border:1px solid #d5d5d5;background:#fff;border-radius:8px;min-height:44px;padding:7px 8px;display:flex;align-items:center;gap:7px;text-align:left;cursor:pointer;color:#222;font:600 14px/1.25 system-ui,sans-serif}
+.num{width:24px;height:24px;border-radius:6px;display:grid;place-items:center;background:#eef2ff;color:#1d4ed8;font-weight:700;flex:0 0 auto;font-size:13px}
+.menu button.active .num{background:#fff;color:#1d4ed8}
+.content{padding:12px 0 40px}
+.crumb{margin:0 0 8px;color:#555;font-size:15px}
+.panel{background:#fff;padding:0}
+.teach{border:1px solid #dbe4f3;background:#f7f9fc;border-radius:10px;padding:10px 12px;margin:0 0 12px;font-size:15px}
+.section{border:1px solid #e7e7e7;border-radius:10px;padding:14px;margin:12px 0;background:#fff;animation:fadeUp .35s ease both}
+.section.lesson-on{border-color:#1d4ed8;box-shadow:0 0 0 3px #dbe4ff}
+.section h3{margin:0 0 8px;color:#1d4ed8;font-size:17px;font-weight:600}
+.section h4{margin:12px 0 6px;color:#222;font-size:16px;font-weight:600}
+.section p,.section li{line-height:1.65;color:#333}
+.flow,.law,.note{padding:10px 12px;border-radius:8px;margin:10px 0;font-weight:500}
+.flow{background:#f6f6f6;border:1px solid #e4e4e4}
+.law{background:#eef4ff;border:1px solid #c9d7f2;color:#1e3a8a}
+.note{background:#fff8e8;border:1px solid #eed9a0;color:#6b4e00}
+.grid2,.grid3{display:grid;gap:10px}
+.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{border:1px solid #e5e5e5;border-radius:10px;padding:12px;background:#fff}
+.card b{color:#1d4ed8}
+.diagram{background:#fafafa;color:#222;border:1px solid #e5e5e5;border-radius:10px;padding:14px;overflow:auto;white-space:pre;font:14px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.trace{border-left:3px solid #1d4ed8;background:#f7f9fc;border-radius:8px;padding:10px 12px;margin:9px 0}
+.code{background:#f7f7f7;color:#222;border:1px solid #e5e5e5;border-radius:10px;padding:14px;overflow:auto;white-space:pre;font:14px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.table{width:100%;border-collapse:collapse;margin:10px 0;font-size:15px}
+.table th,.table td{border:1px solid #e5e5e5;padding:8px;text-align:left;vertical-align:top}
+.table th{background:#f4f6f8;color:#222;font-weight:600}
+.exam{background:#f7f9fc;border-left:3px solid #1d4ed8;padding:10px 12px;border-radius:8px}
+.algo{margin:8px 0 8px 22px}
+.algo li{margin:5px 0}
+.algo li.hot{background:#eef4ff;border-radius:6px;padding:2px 6px}
+.fn{border:1px solid #d5d5d5;background:#fff;border-radius:10px;padding:12px;margin:10px 0}
+.fn b{color:#1d4ed8}
+.io{background:#fafafa;border:1px dashed #ccc;border-radius:8px;padding:10px 12px;margin:10px 0;font:14px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre;overflow:auto}
+.term-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.term{border:1px solid #e5e5e5;border-radius:10px;padding:12px;background:#fff}
+.term h4{margin:0 0 6px;color:#1d4ed8;font-size:16px}
 .term p{margin:0 0 8px}
-.tv{border:1px solid #bfd6f7;border-radius:14px;padding:14px;background:#f7fbff}
+.tv{border:1px solid #d5d5d5;border-radius:10px;padding:12px;background:#fff}
 .tv-chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
-.tv-chips button{border:1px solid #c5d4e8;background:#fff;border-radius:999px;padding:6px 10px;cursor:pointer;font-weight:750;color:#173b75}
-.tv-chips button.active{background:#173b75;color:#fff;border-color:#173b75}
-.tv-svg{width:100%;max-width:420px;height:auto;display:block;margin:0 auto;background:#0e1c30;border-radius:13px}
-.tv-svg line{stroke:#7aa2e3;stroke-width:2}
-.tv-svg circle{fill:#24466f;stroke:#7aa2e3;stroke-width:2}
-.tv-svg text{fill:#dce9fb;font:700 13px Inter,system-ui,sans-serif;text-anchor:middle}
-.tv-svg .on circle{fill:#f4c14a;stroke:#f4c14a}
-.tv-svg .on text.node{fill:#10213a}
-.tv-svg text.tag{font:800 10px Inter,system-ui,sans-serif;fill:#9cc0ea}
-.tv-svg .on text.tag{fill:#f4c14a}
-.tv-svg .dim circle{fill:#1a2d48;stroke:#3d5a7a}
-.tv-svg .dim text.node{fill:#6d8198}
-.tv-legend{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 0;font-size:13px;color:#475569}
+.tv-chips button{border:1px solid #d5d5d5;background:#fff;border-radius:999px;padding:6px 10px;cursor:pointer;font:600 14px system-ui,sans-serif;color:#222}
+.tv-chips button.active{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
+.tv-svg{width:100%;max-width:420px;height:auto;display:block;margin:0 auto;background:#fafafa;border:1px solid #e5e5e5;border-radius:10px}
+.tv-svg line{stroke:#94a3b8;stroke-width:2}
+.tv-svg circle{fill:#fff;stroke:#64748b;stroke-width:2;transition:fill .35s,stroke .35s,r .35s}
+.tv-svg text{fill:#222;font:600 13px system-ui,sans-serif;text-anchor:middle}
+.tv-svg .on circle{fill:#f4c14a;stroke:#d4a017}
+.tv-svg .on text.node{fill:#222}
+.tv-svg text.tag{font:600 10px system-ui,sans-serif;fill:#64748b}
+.tv-svg .on text.tag{fill:#1d4ed8}
+.tv-svg .dim circle{fill:#fff;stroke:#cbd5e1}
+.tv-svg .dim text.node{fill:#94a3b8}
+.tv-legend{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 0;font-size:14px;color:#555}
 .tv-legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px;vertical-align:-1px}
-.gold{background:#f4c14a}.blue{background:#24466f;border:1px solid #7aa2e3}
-@media(max-width:900px){.term-grid{grid-template-columns:1fr}}
+.gold{background:#f4c14a}.blue{background:#fff;border:1px solid #64748b}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
+@media(max-width:900px){.menu{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.grid3,.term-grid{grid-template-columns:1fr}.lesson-btns{margin-left:0}.bar-in{align-items:stretch}}
+@media(max-width:600px){.wrap{padding:0 12px}.tabs{width:100%}.tabs button{flex:1}}
 </style>
 </head>
 <body>
-<header class="hero"><div class="wrap">
-<span class="badge">DATA STRUCTURES · UNIT IV · 7 HOURS</span>
-<h1>Unit IV — Trees</h1>
-<p>One syllabus point at a time. Complete its Theory, Visualization and Program before moving to the next point.</p>
-<div class="official"><b>Official syllabus:</b> Definition, traversal, linked implementation, operations on Binary Trees and Binary Search Trees: insert, delete, search operations, Multiway Trees, B trees, AVL Tree: Single and Double rotation of AVL Trees.</div>
-</div></header>
-
-<div class="menu-shell"><div class="wrap"><div class="menu-title">SYLLABUS POINTS</div><nav class="menu" id="menu"></nav></div></div>
-
-<main class="wrap content">
-<section class="topic-head"><span class="point-pill" id="pointPill"></span><h2 id="topicTitle"></h2><p id="officialLine"></p></section>
+<div class="bar"><div class="wrap bar-in">
+<button type="button" class="points-btn" id="pointsBtn">Point <span id="barNo">1</span> · <span id="barName">Definition</span></button>
 <nav class="tabs" id="tabs">
-<button class="active" data-view="theory"><b>01 · Theory</b><small>Definition, rules, algorithms, complexity and exam points</small></button>
-<button data-view="visualization"><b>02 · Visualization</b><small>Diagrams, worked examples and step-by-step traces</small></button>
-<button data-view="program"><b>03 · Program</b><small>Relevant C program for this syllabus point</small></button>
+<button class="tbtn active" data-view="theory"><b>Theory</b></button>
+<button class="tbtn" data-view="visualization"><b>Visualizer</b></button>
+<button class="tbtn" data-view="program"><b>Program</b></button>
 </nav>
+<div class="lesson-btns">
+<button type="button" class="lbtn" id="lessonPrev">Prev</button>
+<button type="button" class="lbtn" id="lessonPlay">Play</button>
+<button type="button" class="lbtn" id="lessonNext">Next</button>
+<span id="lessonStat">Step 1</span>
+</div>
+</div></div>
+<div class="drawer" id="drawer"><div class="wrap">
+<div class="drawer-title">Choose a syllabus point — then read Theory → Visualizer → Program</div>
+<nav class="menu" id="menu"></nav>
+</div></div>
+<main class="wrap content">
+<p class="crumb" id="officialLine"></p>
+<h2 id="topicTitle" hidden></h2>
+<span id="pointPill" hidden></span>
 <section class="panel" id="panel"></section>
 </main>
-<footer class="footer">Unit IV teaching flow: syllabus point → Theory → Visualization → Program → next syllabus point.</footer>
+
 
 <script>
 const topics=[
@@ -1089,11 +1148,26 @@ const TERM_MODES=[
 {id:'forest',label:'Forest',hi:'BCDEFG',tags:{B:'root 1',C:'root 2'},exam:'A forest is a collection of trees.',cap:'Delete A. Two separate trees remain: B(D, E(G)) and C(F). That pair is a forest.'},
 {id:'weight',label:'Weight',hi:'DFG',tags:{D:'leaf',F:'leaf',G:'leaf'},exam:'Weight of a tree = number of leaves.',cap:'Three leaves D, G, F → weight = 3.'}
 ];
+
+const TEACH={
+definition:{theory:'Point 1 Theory — definition, then every term, then binary types, then formulas.',visualization:'Point 1 Visualizer — press Play. The same A–G tree teaches one term at a time.',program:'Point 1 Program — createNode, insert, inorder.'},
+traversal:{theory:'Point 2 Theory — NLR, LNR, LRN, then level-order, then rebuild.',visualization:'Point 2 Visualizer — one tree, four traces. Press Play and walk each example.',program:'Point 2 Program — user input plus all four traversals.'},
+linked:{theory:'Point 3 Theory — node box, n+1 NULLs, array vs linked.',visualization:'Point 3 Visualizer — logical tree vs memory boxes vs array.',program:'Point 3 Program — create and link nodes.'},
+'binary-ops':{theory:'Point 4 Theory — insert, delete, search when there is no BST rule.',visualization:'Point 4 Visualizer — level-order insert and deepest-node delete.',program:'Point 4 Program — complete binary-tree operations.'},
+'bst-ops':{theory:'Point 5 Theory — whole-subtree rule, then insert, search, three delete cases.',visualization:'Point 5 Visualizer — build 50…80, insert 65, delete 50.',program:'Point 5 Program — complete BST operations.'},
+multiway:{theory:'Point 6 Theory — order m, keys and children.',visualization:'Point 6 Visualizer — fat node and the search path.',program:'Point 6 Program — order-4 node.'},
+btree:{theory:'Point 7 Theory — B-Tree rules, search, split, borrow/merge.',visualization:'Point 7 Visualizer — order-3 dry run, key by key.',program:'Point 7 Program — node and search skeleton.'},
+avl:{theory:'Point 8 Theory — BF, why AVL, the four insert cases.',visualization:'Point 8 Visualizer — skewed stick vs balanced tree.',program:'Point 8 Program — height and balance factor.'},
+'single-rotation':{theory:'Point 9 Theory — LL is right rotate, RR is left rotate.',visualization:'Point 9 Visualizer — 30-20-10 and 10-20-30.',program:'Point 9 Program — rotateRight and rotateLeft.'},
+'double-rotation':{theory:'Point 10 Theory — LR and RL, child first then the node.',visualization:'Point 10 Visualizer — 30-10-20 and 10-30-20.',program:'Point 10 Program — full AVL insert, all four cases.'}
+};
+let lessonI=0, lessonTimer=null, termI=0, termTimer=null, applyTermFn=null;
 function bindTermViz(){
   const board=document.getElementById('termBoard');
   const chips=document.getElementById('termChips');
   const exam=document.getElementById('termExam');
   const cap=document.getElementById('termCap');
+  applyTermFn=null;
   if(!board||!chips) return;
   chips.innerHTML='';
   TERM_MODES.forEach(m=>{
@@ -1106,6 +1180,7 @@ function bindTermViz(){
   });
   function applyTerm(id){
     const m=TERM_MODES.find(x=>x.id===id)||TERM_MODES[0];
+    termI=TERM_MODES.indexOf(m);
     board.querySelectorAll('g[data-id]').forEach(g=>{
       const nid=g.getAttribute('data-id');
       const on=m.hi.indexOf(nid)>=0;
@@ -1117,16 +1192,88 @@ function bindTermViz(){
     [...chips.querySelectorAll('button')].forEach(b=>b.classList.toggle('active',b.dataset.term===id));
     exam.textContent=m.exam;
     cap.textContent=m.cap;
+    document.getElementById('lessonStat').textContent='Term '+(termI+1)+' / '+TERM_MODES.length+' · '+m.label;
   }
+  applyTermFn=applyTerm;
+  board.querySelectorAll('g[data-id]').forEach((g,i)=>{
+    g.style.opacity='0';
+    g.style.transform='scale(.7)';
+    g.style.transformOrigin='center';
+    g.style.transition='opacity .35s ease, transform .35s ease';
+    setTimeout(()=>{g.style.opacity='1';g.style.transform='scale(1)';},90*i);
+  });
   applyTerm('root');
 }
-
+function steps(){ return [...panel.querySelectorAll('.section')]; }
+function showStep(i){
+  const s=steps();
+  if(!s.length) return;
+  lessonI=((i%s.length)+s.length)%s.length;
+  s.forEach((el,k)=>el.classList.toggle('lesson-on',k===lessonI));
+  s[lessonI].querySelectorAll('.algo li').forEach((li,k)=>{
+    li.classList.toggle('hot',k===0);
+  });
+  s[lessonI].scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('lessonStat').textContent='Step '+(lessonI+1)+' / '+s.length;
+}
+function stopPlay(){
+  if(lessonTimer){clearInterval(lessonTimer);lessonTimer=null;}
+  if(termTimer){clearInterval(termTimer);termTimer=null;}
+  document.getElementById('lessonPlay').textContent='Play';
+}
+function playTeach(){
+  if(lessonTimer||termTimer){stopPlay();return;}
+  document.getElementById('lessonPlay').textContent='Pause';
+  if(applyTermFn){
+    termI=-1;
+    termTimer=setInterval(()=>{
+      termI++;
+      if(termI>=TERM_MODES.length){stopPlay();return;}
+      applyTermFn(TERM_MODES[termI].id);
+    },1600);
+    return;
+  }
+  const s=steps();
+  if(!s.length) return;
+  showStep(lessonI);
+  lessonTimer=setInterval(()=>{
+    if(lessonI>=s.length-1){stopPlay();return;}
+    showStep(lessonI+1);
+  },2200);
+}
+function bindLesson(){
+  document.getElementById('lessonPrev').onclick=()=>{stopPlay(); if(applyTermFn){termI=Math.max(0,termI-1);applyTermFn(TERM_MODES[termI].id);} else showStep(lessonI-1);};
+  document.getElementById('lessonNext').onclick=()=>{stopPlay(); if(applyTermFn){termI=Math.min(TERM_MODES.length-1,termI+1);applyTermFn(TERM_MODES[termI].id);} else showStep(lessonI+1);};
+  document.getElementById('lessonPlay').onclick=playTeach;
+}
 let currentTopic='definition'; let currentView='theory';
 const menu=document.getElementById('menu'); const panel=document.getElementById('panel');
-function buildMenu(){ menu.innerHTML=''; topics.forEach(t=>{ const b=document.createElement('button'); b.dataset.id=t.id; b.innerHTML=`<span class="num">${t.no}</span><span>${t.label}</span>`; b.onclick=()=>{currentTopic=t.id;currentView='theory';location.hash=t.id;render();}; menu.appendChild(b); }); }
-function render(){ const t=topics.find(x=>x.id===currentTopic)||topics[0]; document.getElementById('pointPill').textContent=`SYLLABUS POINT ${t.no}`; document.getElementById('topicTitle').textContent=t.title; document.getElementById('officialLine').innerHTML=`<b>Official syllabus:</b> ${t.official}`; [...menu.querySelectorAll('button')].forEach(b=>b.classList.toggle('active',b.dataset.id===currentTopic)); [...document.querySelectorAll('#tabs button')].forEach(b=>b.classList.toggle('active',b.dataset.view===currentView)); panel.innerHTML=data[currentTopic][currentView]; bindTermViz(); window.scrollTo({top:document.querySelector('.topic-head').offsetTop-10,behavior:'smooth'}); }
+const drawer=document.getElementById('drawer'); const pointsBtn=document.getElementById('pointsBtn');
+function buildMenu(){ menu.innerHTML=''; topics.forEach(t=>{ const b=document.createElement('button'); b.dataset.id=t.id; b.innerHTML='<span class="num">'+t.no+'</span><span>'+t.label+'</span>'; b.onclick=()=>{currentTopic=t.id;currentView='theory';location.hash=t.id;drawer.classList.remove('show');pointsBtn.classList.remove('open');render();}; menu.appendChild(b); }); }
+function render(){
+  stopPlay();
+  const t=topics.find(x=>x.id===currentTopic)||topics[0];
+  document.getElementById('pointPill').textContent='SYLLABUS POINT '+t.no;
+  document.getElementById('topicTitle').textContent=t.title;
+  document.getElementById('barNo').textContent=t.no;
+  document.getElementById('barName').textContent=t.label;
+  document.getElementById('officialLine').innerHTML='<b>Point '+t.no+' / 10 — '+t.title+'.</b> Official: '+t.official;
+  [...menu.querySelectorAll('button')].forEach(b=>b.classList.toggle('active',b.dataset.id===currentTopic));
+  [...document.querySelectorAll('#tabs button')].forEach(b=>b.classList.toggle('active',b.dataset.view===currentView));
+  const tip=(TEACH[currentTopic]||{})[currentView]||'';
+  panel.innerHTML='<div class="teach">'+tip+' Press <b>Play</b> for step-by-step.</div>'+data[currentTopic][currentView];
+  panel.querySelectorAll('.section').forEach((s,i)=>{s.style.animationDelay=(i*70)+'ms';});
+  bindTermViz();
+  lessonI=0;
+  const s=steps();
+  if(s[0]&&!applyTermFn) s[0].classList.add('lesson-on');
+  document.getElementById('lessonStat').textContent=applyTermFn?('Term 1 / '+TERM_MODES.length):('Step 1 / '+Math.max(s.length,1));
+}
+pointsBtn.onclick=()=>{drawer.classList.toggle('show');pointsBtn.classList.toggle('open');};
 document.getElementById('tabs').addEventListener('click',e=>{ const b=e.target.closest('button[data-view]'); if(!b)return; currentView=b.dataset.view; render(); });
-buildMenu(); const initial=location.hash.replace('#',''); if(topics.some(t=>t.id===initial)) currentTopic=initial; render();
+buildMenu(); bindLesson();
+const initial=location.hash.replace('#',''); if(topics.some(t=>t.id===initial)) currentTopic=initial; render();
+
 </script>
 </body>
 </html>
