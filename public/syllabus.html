@@ -7,6 +7,29 @@
 <title>Unit IV — Trees | Syllabus-wise Notes</title>
 <style>
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f4f7fb;color:#10213a}.wrap{max-width:1240px;margin:auto;padding:0 18px}.hero{background:linear-gradient(135deg,#0b1f3a,#173b75 60%,#2458a6);color:#fff;padding:26px 0 22px}.badge{display:inline-block;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900;letter-spacing:.08em}.hero h1{margin:9px 0 6px;font-size:clamp(28px,5vw,44px)}.hero p{margin:0;color:#dce8fb;line-height:1.6}.official{margin-top:13px;padding:12px 14px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);border-radius:12px;font-size:14px;line-height:1.55}.menu-shell{position:sticky;top:0;z-index:30;background:rgba(244,247,251,.97);backdrop-filter:blur(10px);border-bottom:1px solid #d9e2ef;padding:12px 0}.menu-title{font-size:12px;font-weight:900;letter-spacing:.11em;color:#64748b;margin-bottom:8px}.menu{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.menu button{border:1px solid #d7e1ee;background:#fff;border-radius:14px;min-height:60px;padding:9px 10px;display:flex;align-items:center;gap:9px;text-align:left;cursor:pointer;color:#13233a;font-weight:850;transition:.16s}.menu button:hover{transform:translateY(-1px);border-color:#7aa2e3}.menu button.active{background:#173b75;color:#fff;border-color:#173b75;box-shadow:0 8px 20px rgba(23,59,117,.22)}.num{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:#eaf2ff;color:#174d9a;font-weight:950;flex:0 0 auto}.menu button.active .num{background:#fff;color:#173b75}.content{padding:22px 0 50px}.topic-head{background:#fff;border:1px solid #d9e2ef;border-radius:18px;padding:20px;box-shadow:0 10px 28px rgba(15,23,42,.05)}.point-pill{display:inline-block;background:#e7f0ff;color:#174d9a;font-size:12px;font-weight:900;letter-spacing:.06em;border-radius:999px;padding:5px 9px}.topic-head h2{margin:8px 0 5px;font-size:clamp(23px,4vw,34px)}.topic-head p{margin:0;color:#64748b}.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}.tabs button{border:1px solid #d7e1ee;background:#fff;border-radius:14px;padding:12px 14px;text-align:left;cursor:pointer;color:#10213a}.tabs button b{display:block;font-size:16px}.tabs button small{display:block;color:#64748b;margin-top:2px}.tabs button.active{background:#0f2748;color:#fff;border-color:#0f2748}.tabs button.active small{color:#c8d8ef}.panel{background:#fff;border:1px solid #d9e2ef;border-radius:18px;padding:20px;box-shadow:0 10px 28px rgba(15,23,42,.04)}.section{border:1px solid #e0e7f0;border-radius:14px;padding:16px;margin:14px 0;background:#fcfdff}.section:first-child{margin-top:0}.section h3{margin:0 0 8px;color:#174d9a}.section h4{margin:14px 0 6px;color:#10213a}.section p,.section li{line-height:1.67;color:#334155}.flow,.law,.note{padding:11px 13px;border-radius:11px;margin:10px 0}.flow{background:#f6f8fb;border:1px solid #dce4ee;font-weight:750}.law{background:#eef5ff;border:1px solid #bfd6f7;color:#183b72;font-weight:800}.note{background:#fff8e8;border:1px solid #f2d698;color:#6f4a00}.grid2,.grid3{display:grid;gap:12px}.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.card{border:1px solid #dce5ef;border-radius:12px;padding:13px;background:#fbfdff}.card b{color:#173b75}.diagram{background:#0e1c30;color:#dce9fb;border-radius:13px;padding:15px;overflow:auto;white-space:pre;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.trace{border-left:4px solid #2d6cc0;background:#f7fbff;border-radius:10px;padding:10px 12px;margin:9px 0;line-height:1.6}.code{background:#091525;color:#dce9fb;border-radius:14px;padding:16px;overflow:auto;white-space:pre;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.table{width:100%;border-collapse:collapse;margin:10px 0}.table th,.table td{border:1px solid #dce5ef;padding:9px;text-align:left;vertical-align:top}.table th{background:#eef5ff;color:#173b75}.exam{background:#f1f7ff;border-left:4px solid #2d6cc0;padding:11px 13px;border-radius:10px}.footer{text-align:center;color:#64748b;padding:22px 10px 34px;font-size:13px}.algo{margin:8px 0 8px 22px}.algo li{margin:5px 0}.fn{border:1px solid #bfd6f7;background:#fff;border-radius:12px;padding:12px 14px;margin:10px 0}.fn b{color:#174d9a}.io{background:#f6f8fb;border:1px dashed #c5d0de;border-radius:10px;padding:10px 12px;margin:10px 0;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre;overflow:auto}@media(max-width:900px){.menu{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.grid3{grid-template-columns:1fr}.menu-shell{position:static}}@media(max-width:600px){.wrap{padding:0 12px}.hero{padding-top:21px}.menu{grid-template-columns:repeat(2,minmax(0,1fr))}.menu button{font-size:12px;min-height:56px;padding:8px}.num{width:27px;height:27px}.tabs{grid-template-columns:1fr}.topic-head,.panel{padding:15px}.official{font-size:13px}.section{padding:13px}}
+
+.term-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.term{border:1px solid #dce5ef;border-radius:12px;padding:12px 13px;background:#fff}
+.term h4{margin:0 0 6px;color:#173b75;font-size:15px}
+.term p{margin:0 0 8px}
+.tv{border:1px solid #bfd6f7;border-radius:14px;padding:14px;background:#f7fbff}
+.tv-chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.tv-chips button{border:1px solid #c5d4e8;background:#fff;border-radius:999px;padding:6px 10px;cursor:pointer;font-weight:750;color:#173b75}
+.tv-chips button.active{background:#173b75;color:#fff;border-color:#173b75}
+.tv-svg{width:100%;max-width:420px;height:auto;display:block;margin:0 auto;background:#0e1c30;border-radius:13px}
+.tv-svg line{stroke:#7aa2e3;stroke-width:2}
+.tv-svg circle{fill:#24466f;stroke:#7aa2e3;stroke-width:2}
+.tv-svg text{fill:#dce9fb;font:700 13px Inter,system-ui,sans-serif;text-anchor:middle}
+.tv-svg .on circle{fill:#f4c14a;stroke:#f4c14a}
+.tv-svg .on text.node{fill:#10213a}
+.tv-svg text.tag{font:800 10px Inter,system-ui,sans-serif;fill:#9cc0ea}
+.tv-svg .on text.tag{fill:#f4c14a}
+.tv-svg .dim circle{fill:#1a2d48;stroke:#3d5a7a}
+.tv-svg .dim text.node{fill:#6d8198}
+.tv-legend{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 0;font-size:13px;color:#475569}
+.tv-legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.gold{background:#f4c14a}.blue{background:#24466f;border:1px solid #7aa2e3}
+@media(max-width:900px){.term-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -47,57 +70,338 @@ const data={
 'definition':{
 theory:`<div class="section"><h3>1.1 Definition of a Tree (write this in the exam)</h3><p>A <b>Tree</b> is a <b>non-linear, hierarchical</b> data structure made of <b>nodes</b> connected by <b>edges</b>, such that there is <b>exactly one path</b> between any two nodes. It starts from a special node called the <b>root</b> and has <b>no cycles</b>.</p><div class="law">n nodes ⇒ exactly <b>n − 1</b> edges. Every node except the root brings exactly one edge (the link to its parent).</div><p>Think of a family tree or a company chart: one person at the top, children below, nobody has two bosses, nobody is their own grand-boss. In CS we draw the tree <b>upside down</b>: root at the top, leaves at the bottom.</p><table class="table"><tr><th>Picture</th><th>Tree?</th><th>Reason</th></tr><tr><td>A→B, A→C, B→D</td><td><b>Yes</b></td><td>One root, one parent each, no loop, 4 nodes 3 edges</td></tr><tr><td>A→B, A→C, B→D, C→D</td><td><b>No</b></td><td>D has two parents — this is a graph</td></tr><tr><td>A→B→C→A</td><td><b>No</b></td><td>Cycle. Trees never loop</td></tr><tr><td>A→B and a separate C→D</td><td><b>No</b> (it is a <b>forest</b>)</td><td>Two roots</td></tr></table></div>
 <div class="section"><h3>1.2 Why trees?</h3><p>Two reasons: (1) the data itself is a hierarchy (folders, HTML, organisation). (2) Speed — a balanced tree of 1,000,000 keys needs about 20 comparisons (log₂ n), not 1,000,000.</p><div class="grid2"><div class="card"><b>File system</b><br>C:\\ → Notes → DS → Trees</div><div class="card"><b>HTML / XML DOM</b><br>&lt;html&gt; is the root, tags nest</div><div class="card"><b>Expression trees</b><br>(a + b) * c in a compiler</div><div class="card"><b>Databases</b><br>indexes are B-Trees / B+ Trees</div></div></div>
-<div class="section"><h3>1.3 Terminology (same sample tree for every word)</h3><p>Sample: A at the top; B and C under A; D and E under B; F under C; G under E.</p><table class="table"><tr><th>Term</th><th>Meaning</th><th>On the sample</th></tr><tr><td>Root</td><td>Only node with no parent</td><td>A</td></tr><tr><td>Edge</td><td>Link between parent and child</td><td>A–B, A–C, … (6 edges)</td></tr><tr><td>Parent / Child</td><td>Directly above / directly below</td><td>Parent of D is B, not A</td></tr><tr><td>Siblings</td><td>Same parent</td><td>B,C · D,E. E and F are NOT siblings</td></tr><tr><td>Leaf / External</td><td>No children (degree 0)</td><td>D, G, F</td></tr><tr><td>Internal</td><td>At least one child</td><td>A, B, C, E</td></tr><tr><td>Degree of a node</td><td>Number of children</td><td>A=2, C=1, D=0</td></tr><tr><td>Degree of the tree</td><td>Maximum node degree</td><td>2</td></tr><tr><td>Level / Depth</td><td>Edges from the root (root = 0)</td><td>A=0, B=C=1, G=3</td></tr><tr><td>Height of a node</td><td>Longest downward path in edges (leaf = 0)</td><td>height(B)=2, height(A)=3</td></tr><tr><td>Height of tree</td><td>Height of the root = max level</td><td>3</td></tr><tr><td>Path</td><td>Sequence of edges; length = edges</td><td>A→B→E→G length 3</td></tr><tr><td>Ancestor / Descendant</td><td>Up to root / everything below</td><td>Ancestors of G: E,B,A</td></tr><tr><td>Subtree</td><td>A node plus all its descendants</td><td>Subtree of B = {B,D,E,G}</td></tr><tr><td>Forest</td><td>A set of disjoint trees</td><td>Delete A → forest {B…, C…}</td></tr><tr><td>Weight</td><td>Number of leaves</td><td>3</td></tr></table><div class="note"><b>Convention:</b> these notes count height in <b>edges</b> (leaf = 0). If your teacher counts nodes (leaf = 1), every height becomes +1 — write which one you use.</div></div>
+<div class="section"><h3>1.3 Terminology (same sample tree for every word)</h3><p>Sample: A at the top; B and C under A; D and E under B; F under C; G under E.</p><table class="table"><tr><th>Term</th><th>Meaning</th><th>On the sample</th></tr><tr><td>Node</td><td>One box of data plus links to children</td><td>A,B,C,D,E,F,G — 7 nodes</td></tr><tr><td>Root</td><td>Only node with no parent</td><td>A</td></tr><tr><td>Edge</td><td>Link between parent and child</td><td>A–B, A–C, … (6 edges)</td></tr><tr><td>Parent / Child</td><td>Directly above / directly below</td><td>Parent of D is B, not A</td></tr><tr><td>Siblings</td><td>Same parent</td><td>B,C · D,E. E and F are NOT siblings</td></tr><tr><td>Leaf / External</td><td>No children (degree 0)</td><td>D, G, F</td></tr><tr><td>Internal</td><td>At least one child</td><td>A, B, C, E</td></tr><tr><td>Degree of a node</td><td>Number of children</td><td>A=2, C=1, D=0</td></tr><tr><td>Degree of the tree</td><td>Maximum node degree</td><td>2</td></tr><tr><td>Level</td><td>Edges from the root (root = 0)</td><td>A=0, B=C=1, D=E=F=2, G=3</td></tr><tr><td>Depth</td><td>Same number as level when root = 0; measured from the root down</td><td>depth(G)=3 via A→B→E→G</td></tr><tr><td>Height of a node</td><td>Longest downward path in edges (leaf = 0)</td><td>height(B)=2, height(A)=3</td></tr><tr><td>Height of tree</td><td>Height of the root = max level</td><td>3</td></tr><tr><td>Path</td><td>Sequence of edges; length = edges</td><td>A→B→E→G length 3</td></tr><tr><td>Ancestor / Descendant</td><td>Up to root / everything below</td><td>Ancestors of G: E,B,A</td></tr><tr><td>Subtree</td><td>A node plus all its descendants</td><td>Subtree of B = {B,D,E,G}</td></tr><tr><td>Forest</td><td>A set of disjoint trees</td><td>Delete A → forest {B…, C…}</td></tr><tr><td>Weight</td><td>Number of leaves</td><td>3</td></tr></table><div class="note"><b>Convention:</b> these notes count height in <b>edges</b> (leaf = 0). If your teacher counts nodes (leaf = 1), every height becomes +1 — write which one you use.</div></div>
 <div class="section"><h3>1.4 Binary Tree — definition</h3><p>A <b>binary tree</b> is a finite set of nodes that is either <b>empty</b>, or consists of a <b>root</b> and two disjoint binary trees called the <b>left subtree</b> and the <b>right subtree</b>. Every node has <b>0, 1 or 2</b> children, and the two sides have names.</p><div class="law">“Only a left child” and “only a right child” are <b>different</b> binary trees, even if the values are the same.</div><div class="fn"><b>Function — node of a binary tree</b><pre class="code">struct Node {
     int data;
     struct Node *left;
     struct Node *right;
 };</pre></div></div>
 <div class="section"><h3>1.5 Types of binary tree</h3><table class="table"><tr><th>Type</th><th>Rule</th></tr><tr><td>Full / Strictly binary</td><td>Every node has 0 or 2 children (never one)</td></tr><tr><td>Complete / Almost complete</td><td>All levels full except possibly the last, which fills <b>left to right</b></td></tr><tr><td>Perfect</td><td>Every internal node has 2 children and all leaves are on one level</td></tr><tr><td>Skewed (left / right)</td><td>Every node has only one child — becomes a stick</td></tr><tr><td>Extended</td><td>Replace every NULL by an external square node; used in Huffman / path-length proofs</td></tr></table></div>
-<div class="section"><h3>1.6 Formulas (every numerical they can ask)</h3><table class="table"><tr><th>Fact</th><th>Formula</th></tr><tr><td>Edges in any tree</td><td>n − 1</td></tr><tr><td>NULL pointers in a linked binary tree</td><td>n + 1</td></tr><tr><td>Max nodes at level i (root = 0)</td><td>2<sup>i</sup></td></tr><tr><td>Max nodes of height h</td><td>2<sup>h+1</sup> − 1 (perfect)</td></tr><tr><td>Min nodes of height h</td><td>h + 1 (skewed)</td></tr><tr><td>Full binary tree</td><td>Leaves L = Internal I + 1</td></tr><tr><td>Minimum height for n nodes</td><td>⌈log₂(n+1)⌉ − 1</td></tr><tr><td>Distinct binary trees on n nodes</td><td>Catalan C<sub>n</sub> = (2n)! / ((n+1)! n!)</td></tr></table><div class="exam"><b>Exam 3-mark:</b> A full binary tree has 20 internal nodes. Leaves = 21. Total n = 41. Min height (edges) = ⌈log₂ 42⌉ − 1 = 5.</div></div>`,
-visualization:`<div class="section"><h3>Class-notes tree — mark every term</h3><div class="diagram">              A          ← root, level 0, height 3, degree 2
-            /   \\
-           B     C       ← siblings, level 1
-         /  \\     \\
-        D    E     F     ← D,F leaves; E internal (has G)
-              \\
-               G         ← leaf, level 3</div>
-<div class="trace">7 nodes, 6 edges. Leaves D,G,F. Internal A,B,C,E. Ancestors of G = E, B, A. Height(B)=2 because B→E→G.</div>
-<table class="table"><tr><th>Node</th><th>Level</th><th>Height</th><th>Degree</th></tr><tr><td>A</td><td>0</td><td>3</td><td>2</td></tr><tr><td>B</td><td>1</td><td>2</td><td>2</td></tr><tr><td>C</td><td>1</td><td>1</td><td>1</td></tr><tr><td>D</td><td>2</td><td>0</td><td>0</td></tr><tr><td>E</td><td>2</td><td>1</td><td>1</td></tr><tr><td>F</td><td>2</td><td>0</td><td>0</td></tr><tr><td>G</td><td>3</td><td>0</td><td>0</td></tr></table></div>
-<div class="section"><h3>Linear vs non-linear</h3><div class="grid2"><div class="card"><b>Array / Linked list</b><div class="diagram">10 → 20 → 30 → 40</div><p>Every element has one next.</p></div><div class="card"><b>Tree</b><div class="diagram">        10
-       /  \\
+<div class="section"><h3>1.6 Formulas (every numerical they can ask)</h3><table class="table"><tr><th>Fact</th><th>Formula</th></tr><tr><td>Edges in any tree</td><td>n − 1</td></tr><tr><td>NULL pointers in a linked binary tree</td><td>n + 1</td></tr><tr><td>Max nodes at level i (root = 0)</td><td>2<sup>i</sup></td></tr><tr><td>Max nodes of height h</td><td>2<sup>h+1</sup> − 1 (perfect)</td></tr><tr><td>Min nodes of height h</td><td>h + 1 (skewed)</td></tr><tr><td>Full binary tree</td><td>Leaves L = Internal I + 1</td></tr><tr><td>Minimum height for n nodes</td><td>⌈log₂(n+1)⌉ − 1</td></tr><tr><td>Leaves vs 2-child nodes (any binary tree)</td><td>n₀ = n₂ + 1</td></tr><tr><td>Distinct binary trees on n nodes</td><td>Catalan C<sub>n</sub> = (2n)! / ((n+1)! n!)</td></tr></table><div class="exam"><b>Exam 3-mark:</b> A full binary tree has 20 internal nodes. Leaves = 21. Total n = 41. Min height (edges) = ⌈log₂ 42⌉ − 1 = 5.</div></div>`,
+visualization:`<div class="section"><h3>Interactive terminology visualizer</h3>
+<p>One sample tree is used for <b>every</b> basic term. Click a word — only that idea lights up in gold. This is the same tree as Theory 1.3.</p>
+<div class="tv">
+<div class="tv-chips" id="termChips"></div>
+<svg class="tv-svg" id="termBoard" viewBox="0 0 360 268" aria-label="Sample tree A to G">
+  <line x1="180" y1="36" x2="90" y2="92"/><line x1="180" y1="36" x2="270" y2="92"/>
+  <line x1="90" y1="100" x2="40" y2="156"/><line x1="90" y1="100" x2="140" y2="156"/>
+  <line x1="270" y1="100" x2="310" y2="156"/><line x1="140" y1="164" x2="140" y2="216"/>
+  <g data-id="A"><circle cx="180" cy="28" r="18"/><text class="node" x="180" y="33">A</text><text class="tag" x="180" y="58"></text></g>
+  <g data-id="B"><circle cx="90" cy="100" r="18"/><text class="node" x="90" y="105">B</text><text class="tag" x="90" y="130"></text></g>
+  <g data-id="C"><circle cx="270" cy="100" r="18"/><text class="node" x="270" y="105">C</text><text class="tag" x="270" y="130"></text></g>
+  <g data-id="D"><circle cx="40" cy="164" r="18"/><text class="node" x="40" y="169">D</text><text class="tag" x="40" y="194"></text></g>
+  <g data-id="E"><circle cx="140" cy="164" r="18"/><text class="node" x="140" y="169">E</text><text class="tag" x="140" y="194"></text></g>
+  <g data-id="F"><circle cx="310" cy="164" r="18"/><text class="node" x="310" y="169">F</text><text class="tag" x="310" y="194"></text></g>
+  <g data-id="G"><circle cx="140" cy="228" r="18"/><text class="node" x="140" y="233">G</text><text class="tag" x="140" y="258"></text></g>
+</svg>
+<div class="tv-legend"><span><i class="gold"></i>highlighted term</span><span><i class="blue"></i>other nodes of the same tree</span></div>
+<div class="law" id="termExam">Click a term above.</div>
+<div class="trace" id="termCap"></div>
+</div>
+<div class="note">Convention in these notes: root = level 0, leaf height = 0, height counted in <b>edges</b>. If your teacher starts level at 1 or counts nodes, write that in line 1 of the answer.</div></div>
+
+<div class="section"><h3>Class-notes tree — every number on one picture</h3>
+<div class="diagram">              A          root, level 0, height 3, degree 2
+            /   \
+           B     C       siblings, level 1
+         /  \     \
+        D    E     F     D and F are leaves; E is internal (has G)
+              \
+               G         leaf, level 3, depth 3</div>
+<div class="trace">7 nodes, 6 edges (n − 1). Leaves D, G, F. Internal A, B, C, E. Weight = 3. Ancestors of G = E, B, A. Path A→B→E→G length 3. Height(B)=2 because B→E→G.</div>
+<table class="table"><tr><th>Node</th><th>Parent</th><th>Children</th><th>Level / Depth</th><th>Height</th><th>Degree</th><th>Leaf?</th></tr>
+<tr><td>A</td><td>—</td><td>B, C</td><td>0</td><td>3</td><td>2</td><td>no</td></tr>
+<tr><td>B</td><td>A</td><td>D, E</td><td>1</td><td>2</td><td>2</td><td>no</td></tr>
+<tr><td>C</td><td>A</td><td>F</td><td>1</td><td>1</td><td>1</td><td>no</td></tr>
+<tr><td>D</td><td>B</td><td>—</td><td>2</td><td>0</td><td>0</td><td>yes</td></tr>
+<tr><td>E</td><td>B</td><td>G</td><td>2</td><td>1</td><td>1</td><td>no</td></tr>
+<tr><td>F</td><td>C</td><td>—</td><td>2</td><td>0</td><td>0</td><td>yes</td></tr>
+<tr><td>G</td><td>E</td><td>—</td><td>3</td><td>0</td><td>0</td><td>yes</td></tr>
+</table></div>
+
+<div class="section"><h3>17 terminology cards — one drawing each</h3>
+<p>Same sample. Gold labels in the ASCII picture are the ones that belong to that word.</p>
+<div class="term-grid">
+
+<div class="term"><h4>1. Node</h4><p>One box of data. In memory: DATA plus pointers to children.</p>
+<div class="diagram">     A
+    / \
+   B   C     every circle is a node
+  / \   \    n = 7 : A B C D E F G
+ D   E   F
+      \
+       G</div>
+<div class="exam">Exam: a node is the basic unit that stores data and links to children.</div></div>
+
+<div class="term"><h4>2. Root</h4><p>The only node with no parent. The whole tree is known by a pointer to the root.</p>
+<div class="diagram">    [A]   ← ROOT
+    / \
+   B   C</div>
+<div class="exam">Exam: root is the unique node with no parent.</div></div>
+
+<div class="term"><h4>3. Parent and child</h4><p>If there is an edge from X down to Y, X is the parent and Y is the child. Only the immediate neighbour counts.</p>
+<div class="diagram">      A
+     / \
+   [B]  C     B = parent of D and E
+   / \         A is NOT the parent of D
+  D   E        A is the grandparent</div>
+<div class="exam">Exam: parent = immediate node above; child = immediate node below.</div></div>
+
+<div class="term"><h4>4. Edge / branch</h4><p>The link between a parent and a child. n nodes ⇒ exactly n − 1 edges.</p>
+<div class="diagram"> A —— B     one edge
+  the other 5 edges: A-C, B-D, B-E, C-F, E-G
+  7 nodes − 1 = 6 edges</div>
+<div class="exam">Exam: a tree with n nodes has exactly n − 1 edges.</div></div>
+
+<div class="term"><h4>5. Siblings</h4><p>Nodes that share the <b>same</b> parent.</p>
+<div class="diagram">      A
+     / \
+    B   C      B and C are siblings
+   / \   \     D and E are siblings
+  D   E   F    E and F are NOT — different parents</div>
+<div class="exam">Exam: siblings have the same parent.</div></div>
+
+<div class="term"><h4>6. Leaf / terminal / external</h4><p>A node with no children. Degree 0. Both pointers NULL.</p>
+<div class="diagram">      A
+     / \
+    B   C
+   / \   \
+ [D]  E  [F]     leaves = D, G, F
+       \
+      [G]</div>
+<div class="exam">Exam: a leaf has degree 0.</div></div>
+
+<div class="term"><h4>7. Internal node (non-leaf)</h4><p>A node that has at least one child. These notes keep the root as internal too.</p>
+<div class="diagram">    [A]
+    / \
+  [B] [C]
+  / \   \
+ D  [E]  F
+     \
+      G</div>
+<div class="exam">Exam: internal nodes have one or more children.</div></div>
+
+<div class="term"><h4>8. Subtree</h4><p>A node plus everything hanging under it. That smaller picture is itself a tree.</p>
+<div class="diagram">Subtree of B:        Subtree of C:     Subtree of D:
+      B                    C                 D
+     / \                    \
+    D   E                    F
+         \
+          G</div>
+<div class="exam">Exam: left / right subtree of a node = the tree rooted at its left / right child.</div></div>
+
+<div class="term"><h4>9. Degree of a node</h4><p>How many children that one node has — not grandchildren.</p>
+<div class="diagram">A=2  B=2  C=1  D=0  E=1  F=0  G=0
+C is the interesting one: only a right child, degree still 1.</div>
+<div class="exam">Exam: degree of a node = number of children.</div></div>
+
+<div class="term"><h4>10. Degree of the tree</h4><p>The maximum node-degree in the whole tree.</p>
+<div class="diagram">Max of {2,2,1,0,1,0,0} = 2
+so this is a tree of degree 2 (a binary tree).</div>
+<div class="exam">Exam: degree of the tree = max node-degree. Not the same as degree of a node.</div></div>
+
+<div class="term"><h4>11. Level</h4><p>How far from the root, counting edges. Root = level 0 in these notes.</p>
+<div class="diagram">Level 0: A
+Level 1: B C
+Level 2: D E F
+Level 3: G
+F is on the same floor as D and E even though C has no left child.</div>
+<div class="exam">Exam: level(root)=0; child level = parent level + 1.</div></div>
+
+<div class="term"><h4>12. Depth of a node</h4><p>Number of edges from the root down to that node. Same number as level when root = 0.</p>
+<div class="diagram">A → B → E → G
+depth(A)=0  depth(B)=1  depth(E)=2  depth(G)=3</div>
+<div class="exam">Exam: depth is measured from the root downward.</div></div>
+
+<div class="term"><h4>13. Height of a node</h4><p>Longest path downward from that node to a leaf. Count edges. Leaf height = 0. height(NULL) = −1.</p>
+<div class="diagram">h(D)=h(F)=h(G)=0
+h(E)=1   h(C)=1   h(B)=2   h(A)=3
+height(n) = 1 + max(height(left), height(right))</div>
+<div class="exam">Exam: write the recursive formula. Stay consistent with leaf = 0.</div></div>
+
+<div class="term"><h4>14. Height of the tree</h4><p>Height of the root. How tall the whole tree is.</p>
+<div class="diagram">Longest root-to-leaf: A → B → E → G  (3 edges)
+Height of tree = height(A) = 3 = max level.</div>
+<div class="exam">Exam: height of the tree = height of the root.</div></div>
+
+<div class="term"><h4>15. Path</h4><p>The sequence of nodes you walk from one node to another. A tree has no extra routes.</p>
+<div class="diagram">Only path A to G:  A → B → E → G
+You cannot go A → C → … to reach G.
+Length of a path = number of edges = 3.</div>
+<div class="exam">Exam: in a tree there is exactly one simple path between any two nodes.</div></div>
+
+<div class="term"><h4>16. Ancestor and descendant</h4><p>If you can walk down from X to Y, X is an ancestor of Y and Y is a descendant of X.</p>
+<div class="diagram">For G: ancestors = E, B, A
+Descendants of B = D, E, G
+F is NOT a descendant of B — it hangs under C.</div>
+<div class="exam">Exam: parent is the immediate ancestor; child is the immediate descendant.</div></div>
+
+<div class="term"><h4>17. Forest</h4><p>A set of disjoint trees — many trees, not joined by one common root.</p>
+<div class="diagram">Delete root A. What remains:
+
+  Tree 1              Tree 2
+    B                   C
+   / \                   \
+  D   E                   F
+       \
+        G
+
+Together these two trees are a forest.</div>
+<div class="exam">Exam: a forest is a collection of trees.</div></div>
+
+<div class="term"><h4>18. Weight</h4><p>Number of leaf (external) nodes.</p>
+<div class="diagram">Leaves = D, G, F  →  weight = 3</div>
+<div class="exam">Exam: weight of a tree = number of leaves.</div></div>
+</div></div>
+
+<div class="section"><h3>Real-life tree: a company</h3>
+<div class="diagram">        President                 ← root
+       /          \
+  Vice-Pres A    Vice-Pres B      ← level 1
+     /     \           |
+    PM      PM         PM         ← level 2
+    |        |         |
+ Engineer Engineer  Engineer      ← leaves</div>
+<div class="trace">Every employee reports to exactly one boss. That "exactly one parent" rule is what makes it a tree, not a graph.</div></div>
+
+<div class="section"><h3>Is this a tree? Draw and decide</h3>
+<div class="grid2">
+<div class="card"><b>YES — a tree</b>
+<div class="diagram">    A
+   / \
+  B   C
+ /
+D
+4 nodes, 3 edges, one root, no loop</div></div>
+<div class="card"><b>NO — two parents (graph)</b>
+<div class="diagram">    A
+   / \
+  B   C
+   \ /
+    D     D has two parents</div></div>
+<div class="card"><b>NO — a cycle</b>
+<div class="diagram">A → B → C → A
+Trees never loop</div></div>
+<div class="card"><b>NO — a forest</b>
+<div class="diagram">A → B     C → D
+two roots, not joined</div></div>
+</div></div>
+
+<div class="section"><h3>Linear vs non-linear</h3>
+<div class="grid2"><div class="card"><b>Array / Linked list</b><div class="diagram">10 → 20 → 30 → 40</div><p>Every element has one next.</p></div>
+<div class="card"><b>Tree</b><div class="diagram">        10
+       /  \
      20    30
     /
   40</div><p>One element can have many next (children).</p></div></div></div>
-<div class="section"><h3>These two are DIFFERENT binary trees</h3><div class="grid2"><div class="card"><b>B as LEFT child</b><div class="diagram">    A
+
+<div class="section"><h3>These two are DIFFERENT binary trees</h3>
+<div class="grid2"><div class="card"><b>B as LEFT child</b><div class="diagram">    A
    /
   B</div></div><div class="card"><b>B as RIGHT child</b><div class="diagram">  A
-   \\
-    B</div></div></div><div class="trace">Same values, different tree. In a general tree they would be the same.</div></div>
-<div class="section"><h3>Shapes</h3><div class="grid2"><div class="card"><b>Perfect height 2</b><div class="diagram">        10
-      /    \\
+   \
+    B</div></div></div>
+<div class="trace">Same values, different tree. Left and right are named sides. In a general (non-binary) tree they would be the same.</div></div>
+
+<div class="section"><h3>Shapes of a binary tree</h3>
+<div class="grid2">
+<div class="card"><b>Perfect / complete (all levels full)</b>
+<div class="diagram">        10
+      /    \
     20      30
-   / \\     / \\
- 40  50  60  70</div><p>7 = 2³−1 nodes. All leaves on one level.</p></div><div class="card"><b>Complete (last level left-filled)</b><div class="diagram">        10
-      /    \\
+   / \     / \
+ 40  50  60  70</div>
+<p>7 = 2³−1 nodes. All leaves on one level. Heap-size formula starts here.</p></div>
+<div class="card"><b>Almost complete (heap shape)</b>
+<div class="diagram">        10
+      /    \
     20      30
-   / \\
- 40  50</div></div><div class="card"><b>Full / strictly binary</b><div class="diagram">      A
-     / \\
+   / \
+ 40  50</div>
+<p>Last level filled left to right. 30 has no children — that is allowed.</p></div>
+<div class="card"><b>Full / strictly binary</b>
+<div class="diagram">      A
+     / \
     B   C
-   / \\
-  D   E</div><p>No node has exactly one child.</p></div><div class="card"><b>Right-skewed</b><div class="diagram">10
-  \\
+   / \
+  D   E</div>
+<p>Every node has 0 or 2 children. Never exactly one. Leaves L = Internal I + 1.</p></div>
+<div class="card"><b>NOT almost complete</b>
+<div class="diagram">      1
+     / \
+    2   3
+         \
+          6</div>
+<p>Gap on the left of the last level. So not a heap shape.</p></div>
+<div class="card"><b>Right-skewed</b>
+<div class="diagram">10
+  \
    20
-     \\
+     \
       30
-        \\
-         40</div><p>n nodes, height n−1. Search becomes O(n).</p></div></div></div>
-<div class="section"><h3>Expression tree for (a + b) * c</h3><div class="diagram">        *
-       / \\
+        \
+         40</div>
+<p>n nodes, height n−1. Search becomes O(n). This is why AVL exists.</p></div>
+<div class="card"><b>Left-skewed</b>
+<div class="diagram">      40
+     /
+   30
+   /
+ 20
+ /
+10</div>
+<p>Same stick in the other direction.</p></div>
+<div class="card"><b>Extended binary tree</b>
+<div class="diagram">        A
+      /   \
+     B     C
+    / \   / \
+   D  □  □   □
+  / \
+ □   □</div>
+<p>□ = external / NULL. External = Internal + 1. Used in Huffman and path-length proofs.</p></div>
+<div class="card"><b>Empty tree</b>
+<div class="diagram">root = NULL</div>
+<p>A valid binary tree. Height of NULL = −1 (or 0 if you count nodes — say which).</p></div>
+</div></div>
+
+<div class="section"><h3>Folder tree and expression tree</h3>
+<div class="grid2">
+<div class="card"><b>Folders</b>
+<div class="diagram">        C:
+       /  \
+   Notes   Games
+   /  \
+  DS   OS</div>
+<p>Every folder has one parent folder. You cannot put a folder inside itself (no cycle).</p></div>
+<div class="card"><b>Expression (a + b) * c</b>
+<div class="diagram">        *
+       / \
       +   c
-     / \\
-    a   b</div><div class="trace">Operators inside, operands at leaves. In-order = a + b * c (add brackets). Post-order = a b + c * (postfix).</div></div>`,
+     / \
+    a   b</div>
+<p>Operators inside, operands at leaves. In-order = a + b * c (add brackets). Post-order = a b + c * (postfix).</p></div>
+</div></div>
+
+<div class="section"><h3>Exam drill on the sample tree</h3>
+<table class="table"><tr><th>Question</th><th>Answer</th><th>How</th></tr>
+<tr><td>Root</td><td>A</td><td>Only node with no parent</td></tr>
+<tr><td>Leaves / weight</td><td>D, G, F / 3</td><td>No children</td></tr>
+<tr><td>Internal nodes</td><td>A, B, C, E</td><td>At least one child</td></tr>
+<tr><td>Siblings of D</td><td>E</td><td>Same parent B. E and F are not siblings</td></tr>
+<tr><td>Parent of G / of D</td><td>E / B</td><td>Immediate node above. A is not the parent of D</td></tr>
+<tr><td>Degree of B / C / E</td><td>2 / 1 / 1</td><td>Count children only</td></tr>
+<tr><td>Degree of the tree</td><td>2</td><td>Maximum node degree</td></tr>
+<tr><td>Level and depth of G</td><td>3</td><td>A→B→E→G is 3 edges</td></tr>
+<tr><td>Height of B / of tree</td><td>2 / 3</td><td>B→E→G ; height of A</td></tr>
+<tr><td>Ancestors of G</td><td>E, B, A</td><td>Walk up to the root</td></tr>
+<tr><td>Descendants of B</td><td>D, E, G</td><td>Everything below B</td></tr>
+<tr><td>Subtree of C</td><td>{C, F}</td><td>C plus descendants</td></tr>
+<tr><td>Number of edges</td><td>6</td><td>n − 1 = 7 − 1</td></tr>
+<tr><td>NULL pointers if linked</td><td>8</td><td>n + 1 = 8</td></tr>
+<tr><td>Forest if A is deleted</td><td>tree(B) and tree(C)</td><td>Two roots, no join</td></tr>
+</table>
+<div class="exam"><b>Common mistakes:</b> calling A the parent of D (A is the grandparent). Mixing degree of a node with degree of the tree. Switching level 0 and level 1 in the same answer.</div></div>`,
 program:`<div class="section"><h3>Syntax — node + createNode()</h3><div class="fn"><b>Algorithm createNode(value)</b><ol class="algo"><li>Allocate memory of size struct Node.</li><li>Store value in data.</li><li>Set left = NULL and right = NULL.</li><li>Return the pointer.</li></ol></div></div>
 <div class="section"><h3>Complete C Program: build a tree from user keys (BST insert) and print inorder</h3><pre class="code">#include &lt;stdio.h&gt;
 #include &lt;stdlib.h&gt;
@@ -764,10 +1068,63 @@ Final inorder: 10 20 25 30 40 50</div>
 <div class="exam">rotateLeft / rotateRight are the same helpers from syllabus point 9. Double rotation = child first, then the unbalanced node.</div></div>`}
 };
 
+
+const TERM_MODES=[
+{id:'node',label:'Node',hi:'ABCDEFG',tags:{A:'node',B:'node',C:'node',D:'node',E:'node',F:'node',G:'node'},exam:'A node is the basic unit that stores data and links to children.',cap:'Every gold circle is a node. This sample has 7 nodes: A B C D E F G.'},
+{id:'root',label:'Root',hi:'A',tags:{A:'ROOT'},exam:'Root is the unique node with no parent.',cap:'Gold A is the only root. The whole tree is known by a pointer to A.'},
+{id:'parent',label:'Parent / Child',hi:'BDE',tags:{B:'parent',D:'child',E:'child'},exam:'Parent is the immediate node above; child is the immediate node below.',cap:'B is the parent of D and E. A is the grandparent of D — do not call A the parent of D.'},
+{id:'edge',label:'Edge',hi:'AB',tags:{A:'end',B:'end'},exam:'A tree with n nodes has exactly n − 1 edges.',cap:'Gold marks the edge A—B. The other edges are A—C, B—D, B—E, C—F, E—G. Total 6 = 7 − 1.'},
+{id:'sib',label:'Siblings',hi:'DE',tags:{D:'sibling',E:'sibling'},exam:'Siblings have the same parent.',cap:'D and E share parent B. B and C are another sibling pair. E and F are NOT siblings.'},
+{id:'leaf',label:'Leaf',hi:'DFG',tags:{D:'leaf',F:'leaf',G:'leaf'},exam:'A leaf has degree 0.',cap:'Gold D, F, G have no children. E is not a leaf because it has G.'},
+{id:'internal',label:'Internal',hi:'ABCE',tags:{A:'internal',B:'internal',C:'internal',E:'internal'},exam:'Internal nodes have one or more children.',cap:'Gold A, B, C, E each have a child. Leaves stay dim.'},
+{id:'subtree',label:'Subtree',hi:'BDEG',tags:{B:'subtree root',D:'in',E:'in',G:'in'},exam:'Left / right subtree of a node = the tree rooted at its left / right child.',cap:'Subtree of B = {B, D, E, G}. Subtree of C = {C, F}. Subtree of D is the single node D.'},
+{id:'deg',label:'Degree (node)',hi:'C',tags:{A:'deg 2',B:'deg 2',C:'deg 1',D:'deg 0',E:'deg 1',F:'deg 0',G:'deg 0'},exam:'Degree of a node = number of children.',cap:'Badges show each node degree. C has only a right child, so deg(C)=1.'},
+{id:'degtree',label:'Degree (tree)',hi:'AB',tags:{A:'max 2',B:'max 2'},exam:'Degree of the tree = maximum node-degree.',cap:'A and B both have two children, so the tree degree is 2. This sample is a binary tree.'},
+{id:'level',label:'Level',hi:'ABCDEFG',tags:{A:'L0',B:'L1',C:'L1',D:'L2',E:'L2',F:'L2',G:'L3'},exam:'Level of root = 0; child level = parent level + 1.',cap:'Same badge = same floor. F is level 2 with D and E even though C has no left child.'},
+{id:'depth',label:'Depth',hi:'ABEG',tags:{A:'d=0',B:'d=1',E:'d=2',G:'d=3'},exam:'Depth is measured from the root downward.',cap:'Walk A → B → E → G. Three edges, so depth(G)=3. Depth equals level when root = 0.'},
+{id:'hnode',label:'Height (node)',hi:'ABCDEFG',tags:{A:'h=3',B:'h=2',C:'h=1',D:'h=0',E:'h=1',F:'h=0',G:'h=0'},exam:'height(n) = 1 + max(height(left), height(right)), height(NULL) = −1.',cap:'Leaves show 0. Longest way down from B is B→E→G, so height(B)=2.'},
+{id:'htree',label:'Height (tree)',hi:'ABEG',tags:{A:'tree h=3'},exam:'Height of the tree = height of the root.',cap:'Longest root-to-leaf path A→B→E→G has 3 edges. Height of tree = 3 = max level.'},
+{id:'path',label:'Path',hi:'ABEG',tags:{A:'start',B:'via',E:'via',G:'end'},exam:'In a tree there is exactly one simple path between any two nodes.',cap:'The only path from A to G is A → B → E → G. Length = 3 edges. You cannot go via C.'},
+{id:'anc',label:'Ancestor',hi:'ABEG',tags:{A:'ancestor',B:'ancestor',E:'ancestor',G:'node'},exam:'Parent is the immediate ancestor; child is the immediate descendant.',cap:'Ancestors of G are E, B, A. Descendants of B are D, E, G. F is not under B.'},
+{id:'forest',label:'Forest',hi:'BCDEFG',tags:{B:'root 1',C:'root 2'},exam:'A forest is a collection of trees.',cap:'Delete A. Two separate trees remain: B(D, E(G)) and C(F). That pair is a forest.'},
+{id:'weight',label:'Weight',hi:'DFG',tags:{D:'leaf',F:'leaf',G:'leaf'},exam:'Weight of a tree = number of leaves.',cap:'Three leaves D, G, F → weight = 3.'}
+];
+function bindTermViz(){
+  const board=document.getElementById('termBoard');
+  const chips=document.getElementById('termChips');
+  const exam=document.getElementById('termExam');
+  const cap=document.getElementById('termCap');
+  if(!board||!chips) return;
+  chips.innerHTML='';
+  TERM_MODES.forEach(m=>{
+    const b=document.createElement('button');
+    b.type='button';
+    b.textContent=m.label;
+    b.dataset.term=m.id;
+    b.onclick=()=>applyTerm(m.id);
+    chips.appendChild(b);
+  });
+  function applyTerm(id){
+    const m=TERM_MODES.find(x=>x.id===id)||TERM_MODES[0];
+    board.querySelectorAll('g[data-id]').forEach(g=>{
+      const nid=g.getAttribute('data-id');
+      const on=m.hi.indexOf(nid)>=0;
+      g.classList.toggle('on',on);
+      g.classList.toggle('dim',!on);
+      const tag=g.querySelector('text.tag');
+      if(tag) tag.textContent=m.tags[nid]||'';
+    });
+    [...chips.querySelectorAll('button')].forEach(b=>b.classList.toggle('active',b.dataset.term===id));
+    exam.textContent=m.exam;
+    cap.textContent=m.cap;
+  }
+  applyTerm('root');
+}
+
 let currentTopic='definition'; let currentView='theory';
 const menu=document.getElementById('menu'); const panel=document.getElementById('panel');
 function buildMenu(){ menu.innerHTML=''; topics.forEach(t=>{ const b=document.createElement('button'); b.dataset.id=t.id; b.innerHTML=`<span class="num">${t.no}</span><span>${t.label}</span>`; b.onclick=()=>{currentTopic=t.id;currentView='theory';location.hash=t.id;render();}; menu.appendChild(b); }); }
-function render(){ const t=topics.find(x=>x.id===currentTopic)||topics[0]; document.getElementById('pointPill').textContent=`SYLLABUS POINT ${t.no}`; document.getElementById('topicTitle').textContent=t.title; document.getElementById('officialLine').innerHTML=`<b>Official syllabus:</b> ${t.official}`; [...menu.querySelectorAll('button')].forEach(b=>b.classList.toggle('active',b.dataset.id===currentTopic)); [...document.querySelectorAll('#tabs button')].forEach(b=>b.classList.toggle('active',b.dataset.view===currentView)); panel.innerHTML=data[currentTopic][currentView]; window.scrollTo({top:document.querySelector('.topic-head').offsetTop-10,behavior:'smooth'}); }
+function render(){ const t=topics.find(x=>x.id===currentTopic)||topics[0]; document.getElementById('pointPill').textContent=`SYLLABUS POINT ${t.no}`; document.getElementById('topicTitle').textContent=t.title; document.getElementById('officialLine').innerHTML=`<b>Official syllabus:</b> ${t.official}`; [...menu.querySelectorAll('button')].forEach(b=>b.classList.toggle('active',b.dataset.id===currentTopic)); [...document.querySelectorAll('#tabs button')].forEach(b=>b.classList.toggle('active',b.dataset.view===currentView)); panel.innerHTML=data[currentTopic][currentView]; bindTermViz(); window.scrollTo({top:document.querySelector('.topic-head').offsetTop-10,behavior:'smooth'}); }
 document.getElementById('tabs').addEventListener('click',e=>{ const b=e.target.closest('button[data-view]'); if(!b)return; currentView=b.dataset.view; render(); });
 buildMenu(); const initial=location.hash.replace('#',''); if(topics.some(t=>t.id===initial)) currentTopic=initial; render();
 </script>
