@@ -15,9 +15,8 @@ html,body{margin:0;background:#fff;color:#222;font:16px/1.65 system-ui,-apple-sy
 .points-btn,.tbtn,.lbtn{border:1px solid #d5d5d5;background:#fff;color:#222;border-radius:8px;padding:7px 11px;cursor:pointer;font:600 15px/1.3 system-ui,sans-serif}
 .points-btn{min-width:190px;text-align:left}
 .tbtn.active,.lbtn.active,.points-btn.open,.menu button.active{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
-.tabs{display:flex;flex-wrap:wrap;gap:6px}
-.tabs button small{display:none}
-.tabs button b{font-size:15px;font-weight:600}
+.tabs{display:none}
+.part{margin:18px 0 8px;padding:6px 0;border-bottom:1px solid #e6e6e6;color:#1d4ed8;font:600 15px/1.3 system-ui,sans-serif}
 .lesson-btns{display:flex;align-items:center;gap:6px;margin-left:auto}
 .lesson-btns span{font-size:14px;color:#555}
 .drawer{display:none;background:#fff;border-bottom:1px solid #e6e6e6;padding:12px 0 16px}
@@ -88,11 +87,6 @@ html,body{margin:0;background:#fff;color:#222;font:16px/1.65 system-ui,-apple-sy
 <body>
 <div class="bar"><div class="wrap bar-in">
 <button type="button" class="points-btn" id="pointsBtn">Point <span id="barNo">1</span> · <span id="barName">Definition</span></button>
-<nav class="tabs" id="tabs">
-<button class="tbtn active" data-view="theory"><b>Theory</b></button>
-<button class="tbtn" data-view="visualization"><b>Visualizer</b></button>
-<button class="tbtn" data-view="program"><b>Program</b></button>
-</nav>
 <div class="lesson-btns">
 <button type="button" class="lbtn" id="lessonPrev">Prev</button>
 <button type="button" class="lbtn" id="lessonPlay">Play</button>
@@ -101,7 +95,7 @@ html,body{margin:0;background:#fff;color:#222;font:16px/1.65 system-ui,-apple-sy
 </div>
 </div></div>
 <div class="drawer" id="drawer"><div class="wrap">
-<div class="drawer-title">Choose a syllabus point — then read Theory → Visualizer → Program</div>
+<div class="drawer-title">Choose a syllabus point. Theory, visualization and program are together inside that point.</div>
 <nav class="menu" id="menu"></nav>
 </div></div>
 <main class="wrap content">
@@ -1150,16 +1144,16 @@ const TERM_MODES=[
 ];
 
 const TEACH={
-definition:{theory:'Point 1 Theory — definition, then every term, then binary types, then formulas.',visualization:'Point 1 Visualizer — press Play. The same A–G tree teaches one term at a time.',program:'Point 1 Program — createNode, insert, inorder.'},
-traversal:{theory:'Point 2 Theory — NLR, LNR, LRN, then level-order, then rebuild.',visualization:'Point 2 Visualizer — one tree, four traces. Press Play and walk each example.',program:'Point 2 Program — user input plus all four traversals.'},
-linked:{theory:'Point 3 Theory — node box, n+1 NULLs, array vs linked.',visualization:'Point 3 Visualizer — logical tree vs memory boxes vs array.',program:'Point 3 Program — create and link nodes.'},
-'binary-ops':{theory:'Point 4 Theory — insert, delete, search when there is no BST rule.',visualization:'Point 4 Visualizer — level-order insert and deepest-node delete.',program:'Point 4 Program — complete binary-tree operations.'},
-'bst-ops':{theory:'Point 5 Theory — whole-subtree rule, then insert, search, three delete cases.',visualization:'Point 5 Visualizer — build 50…80, insert 65, delete 50.',program:'Point 5 Program — complete BST operations.'},
-multiway:{theory:'Point 6 Theory — order m, keys and children.',visualization:'Point 6 Visualizer — fat node and the search path.',program:'Point 6 Program — order-4 node.'},
-btree:{theory:'Point 7 Theory — B-Tree rules, search, split, borrow/merge.',visualization:'Point 7 Visualizer — order-3 dry run, key by key.',program:'Point 7 Program — node and search skeleton.'},
-avl:{theory:'Point 8 Theory — BF, why AVL, the four insert cases.',visualization:'Point 8 Visualizer — skewed stick vs balanced tree.',program:'Point 8 Program — height and balance factor.'},
-'single-rotation':{theory:'Point 9 Theory — LL is right rotate, RR is left rotate.',visualization:'Point 9 Visualizer — 30-20-10 and 10-20-30.',program:'Point 9 Program — rotateRight and rotateLeft.'},
-'double-rotation':{theory:'Point 10 Theory — LR and RL, child first then the node.',visualization:'Point 10 Visualizer — 30-10-20 and 10-30-20.',program:'Point 10 Program — full AVL insert, all four cases.'}
+definition:'Point 1 — first read the definition and terms, then watch the A–G tree, then write the program.',
+traversal:'Point 2 — first the four traversal rules, then the traces, then the full C program.',
+linked:'Point 3 — first the node box, then memory vs array pictures, then the createNode program.',
+'binary-ops':'Point 4 — first insert/delete/search without a BST rule, then the pictures, then the program.',
+'bst-ops':'Point 5 — first the BST rule and 3 delete cases, then the traces, then the program.',
+multiway:'Point 6 — first order m, then the fat-node picture, then the node program.',
+btree:'Point 7 — first B-Tree rules, then the order-3 dry run, then the search skeleton.',
+avl:'Point 8 — first BF and why AVL, then skewed vs balanced, then height/BF code.',
+'single-rotation':'Point 9 — first LL/RR rules, then 30-20-10 and 10-20-30, then rotate helpers.',
+'double-rotation':'Point 10 — first LR/RL, then the two traces, then complete AVL insert.'
 };
 let lessonI=0, lessonTimer=null, termI=0, termTimer=null, applyTermFn=null;
 function bindTermViz(){
@@ -1224,15 +1218,6 @@ function stopPlay(){
 function playTeach(){
   if(lessonTimer||termTimer){stopPlay();return;}
   document.getElementById('lessonPlay').textContent='Pause';
-  if(applyTermFn){
-    termI=-1;
-    termTimer=setInterval(()=>{
-      termI++;
-      if(termI>=TERM_MODES.length){stopPlay();return;}
-      applyTermFn(TERM_MODES[termI].id);
-    },1600);
-    return;
-  }
   const s=steps();
   if(!s.length) return;
   showStep(lessonI);
@@ -1242,35 +1227,37 @@ function playTeach(){
   },2200);
 }
 function bindLesson(){
-  document.getElementById('lessonPrev').onclick=()=>{stopPlay(); if(applyTermFn){termI=Math.max(0,termI-1);applyTermFn(TERM_MODES[termI].id);} else showStep(lessonI-1);};
-  document.getElementById('lessonNext').onclick=()=>{stopPlay(); if(applyTermFn){termI=Math.min(TERM_MODES.length-1,termI+1);applyTermFn(TERM_MODES[termI].id);} else showStep(lessonI+1);};
+  document.getElementById('lessonPrev').onclick=()=>{stopPlay(); showStep(lessonI-1);};
+  document.getElementById('lessonNext').onclick=()=>{stopPlay(); showStep(lessonI+1);};
   document.getElementById('lessonPlay').onclick=playTeach;
 }
-let currentTopic='definition'; let currentView='theory';
+let currentTopic='definition';
 const menu=document.getElementById('menu'); const panel=document.getElementById('panel');
 const drawer=document.getElementById('drawer'); const pointsBtn=document.getElementById('pointsBtn');
-function buildMenu(){ menu.innerHTML=''; topics.forEach(t=>{ const b=document.createElement('button'); b.dataset.id=t.id; b.innerHTML='<span class="num">'+t.no+'</span><span>'+t.label+'</span>'; b.onclick=()=>{currentTopic=t.id;currentView='theory';location.hash=t.id;drawer.classList.remove('show');pointsBtn.classList.remove('open');render();}; menu.appendChild(b); }); }
+function buildMenu(){ menu.innerHTML=''; topics.forEach(t=>{ const b=document.createElement('button'); b.dataset.id=t.id; b.innerHTML='<span class="num">'+t.no+'</span><span>'+t.label+'</span>'; b.onclick=()=>{currentTopic=t.id;location.hash=t.id;drawer.classList.remove('show');pointsBtn.classList.remove('open');render();}; menu.appendChild(b); }); }
 function render(){
   stopPlay();
   const t=topics.find(x=>x.id===currentTopic)||topics[0];
+  const block=data[t.id]||{};
   document.getElementById('pointPill').textContent='SYLLABUS POINT '+t.no;
   document.getElementById('topicTitle').textContent=t.title;
   document.getElementById('barNo').textContent=t.no;
   document.getElementById('barName').textContent=t.label;
   document.getElementById('officialLine').innerHTML='<b>Point '+t.no+' / 10 — '+t.title+'.</b> Official: '+t.official;
   [...menu.querySelectorAll('button')].forEach(b=>b.classList.toggle('active',b.dataset.id===currentTopic));
-  [...document.querySelectorAll('#tabs button')].forEach(b=>b.classList.toggle('active',b.dataset.view===currentView));
-  const tip=(TEACH[currentTopic]||{})[currentView]||'';
-  panel.innerHTML='<div class="teach">'+tip+' Press <b>Play</b> for step-by-step.</div>'+data[currentTopic][currentView];
+  const tip=TEACH[currentTopic]||'';
+  panel.innerHTML='<div class="teach">'+tip+' Scroll one point fully. Press <b>Play</b> for step-by-step.</div>'
+    +'<div class="part">Theory</div>'+(block.theory||'')
+    +'<div class="part">Visualization</div>'+(block.visualization||'')
+    +'<div class="part">Program</div>'+(block.program||'');
   panel.querySelectorAll('.section').forEach((s,i)=>{s.style.animationDelay=(i*70)+'ms';});
   bindTermViz();
   lessonI=0;
   const s=steps();
-  if(s[0]&&!applyTermFn) s[0].classList.add('lesson-on');
-  document.getElementById('lessonStat').textContent=applyTermFn?('Term 1 / '+TERM_MODES.length):('Step 1 / '+Math.max(s.length,1));
+  if(s[0]) s[0].classList.add('lesson-on');
+  document.getElementById('lessonStat').textContent='Step 1 / '+Math.max(s.length,1);
 }
 pointsBtn.onclick=()=>{drawer.classList.toggle('show');pointsBtn.classList.toggle('open');};
-document.getElementById('tabs').addEventListener('click',e=>{ const b=e.target.closest('button[data-view]'); if(!b)return; currentView=b.dataset.view; render(); });
 buildMenu(); bindLesson();
 const initial=location.hash.replace('#',''); if(topics.some(t=>t.id===initial)) currentTopic=initial; render();
 
