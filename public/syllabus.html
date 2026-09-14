@@ -580,7 +580,7 @@ visualization:`<div class="section"><h3>Full dry run — order 3, insert 10, 20,
        /    \\        /     \\
     [5]     [7]  [12 17]   [30]</div>
 <div class="trace">All leaves on one level. Every node has ≤ 2 keys. Search 17: root 10 → go right to 20 → go left → [12 17] FOUND.</div></div>
-<div class="section"><h3>Delete sketch (order 3)</h3><div class="trace">Start from [10|20] with leaves [5 6], [12], [30]. Delete 6 → leaf has a spare → [5]. Delete 12 → empty leaf, no sibling spare → merge with 10 → root [20], children [5 10] and [30].</div></div>`
+<div class="section"><h3>Delete sketch (order 3)</h3><div class="trace">Start from [10|20] with leaves [5 6], [12], [30]. Delete 6 → leaf has a spare → [5]. Delete 12 → empty leaf, no sibling spare → merge with 10 → root [20], children [5 10] and [30].</div></div>`,
 program:`<div class="section"><h3>C Program: B-Tree Search Skeleton and Node Representation</h3><pre class="code">#include &lt;stdio.h&gt;
 #define MAX_KEYS 3
 
