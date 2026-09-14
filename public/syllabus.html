@@ -108,8 +108,8 @@ html,body{margin:0;background:#fff;color:#1a1a1a;font:20px/1.7 system-ui,-apple-
 
 <script>
 const topics=[
-{id:'basics',no:1,label:'Tree Basics',title:'Tree Basics',official:'All tree definitions and terminology',keys:['definition']},
-{id:'binary',no:2,label:'Binary Tree',title:'Binary Tree',official:'Binary tree, traversal, linked/array, insert delete search',keys:['traversal','linked','binary-ops']},
+{id:'basics',no:1,label:'Tree Basics',title:'Tree Basics',official:'Tree definition and terminology',keys:['definition'],keep:['1.2 Why trees','Interactive terminology','Class-notes tree','Real-life tree','Is this a tree','Linear vs']},
+{id:'binary',no:2,label:'Binary Tree',title:'Binary Tree',official:'Binary tree, traversal, linked/array, insert delete search',keys:['definition','traversal','linked','binary-ops'],skip:['1.1 Definition','1.2 Why trees','1.3 Terminology','Interactive terminology','Class-notes tree','17 terminology','Real-life tree','Is this a tree','Linear vs','Exam drill']},
 {id:'bst',no:3,label:'Binary Search Tree',title:'Binary Search Tree',official:'BST insert, delete, search',keys:['bst-ops']},
 {id:'multiway',no:4,label:'Multiway Tree',title:'Multiway Tree',official:'m-way search trees',keys:['multiway']},
 {id:'btree',no:5,label:'B-Tree',title:'B-Tree',official:'B trees',keys:['btree']},
@@ -1240,36 +1240,11 @@ function sectionsOf(htmlStr){
   return [...d.querySelectorAll('.section')];
 }
 const TAB_INTRO={
-basics:`<div class="section"><h3>Tree Basics — every definition with key points</h3>
-<p>Read this first. The <b>same class-notes examples</b> you already have come in the next steps.</p>
-<div class="law">A <b>Tree</b> is a non-linear, hierarchical structure of nodes and edges. Exactly one path between any two nodes. One root. No cycles. n nodes ⇒ n − 1 edges.</div>
-<table class="table"><tr><th>Term</th><th>Key point</th></tr>
-<tr><td>Node</td><td>One data box plus links to children</td></tr>
-<tr><td>Root</td><td>Only node with no parent</td></tr>
-<tr><td>Edge</td><td>Parent–child link. Total edges = n − 1</td></tr>
-<tr><td>Parent / Child</td><td>Immediate above / immediate below. A is not the parent of its grandchild</td></tr>
-<tr><td>Siblings</td><td>Same parent. Different parents ⇒ not siblings</td></tr>
-<tr><td>Leaf</td><td>No children. Degree 0</td></tr>
-<tr><td>Internal</td><td>At least one child</td></tr>
-<tr><td>Degree of a node</td><td>Number of children</td></tr>
-<tr><td>Degree of the tree</td><td>Maximum node degree</td></tr>
-<tr><td>Level / Depth</td><td>Edges from the root. Root = 0 in these notes</td></tr>
-<tr><td>Height of a node</td><td>Longest downward path in edges. Leaf = 0</td></tr>
-<tr><td>Height of tree</td><td>Height of the root</td></tr>
-<tr><td>Path</td><td>Exactly one simple path between two nodes</td></tr>
-<tr><td>Ancestor / Descendant</td><td>Up to root / everything below</td></tr>
-<tr><td>Subtree</td><td>A node plus all its descendants</td></tr>
-<tr><td>Forest</td><td>A set of disjoint trees</td></tr>
-<tr><td>Weight</td><td>Number of leaves</td></tr>
-</table>
-<table class="table"><tr><th>Kind of tree</th><th>One-line definition</th><th>Key point</th></tr>
-<tr><td>Binary tree</td><td>Every node has 0, 1 or 2 children. Left and right are named</td><td>Left-only and right-only are different trees</td></tr>
-<tr><td>BST</td><td>Binary tree + whole left subtree &lt; node &lt; whole right subtree</td><td>In-order is sorted</td></tr>
-<tr><td>Multiway / m-way</td><td>A node may have more than 2 children</td><td>Order m ⇒ at most m children and m − 1 keys</td></tr>
-<tr><td>B-Tree</td><td>Height-balanced multiway search tree used on disk</td><td>All leaves on the same level. Root splits to grow height</td></tr>
-<tr><td>AVL</td><td>BST that stays balanced</td><td>|BF| ≤ 1. Fix with single or double rotation</td></tr>
-</table>
-<div class="note">Open the other tabs for the full story of that tree. Examples on the next steps are the same A–G / class-notes pictures.</div></div>`,
+basics:`<div class="section"><h3>Tree Definition</h3>
+<p>A <b>Tree</b> is a <b>non-linear, hierarchical</b> data structure made of <b>nodes</b> connected by <b>edges</b>, such that there is <b>exactly one path</b> between any two nodes. It starts from a special node called the <b>root</b> and has <b>no cycles</b>.</p>
+<div class="law">n nodes ⇒ exactly <b>n − 1</b> edges. One root. No loops. Every node except the root has exactly one parent.</div>
+<p>Think of a family tree or a company chart. In CS we draw it <b>upside down</b>: root at the top, leaves at the bottom.</p>
+<div class="note">Binary Tree, BST, Multiway, B-Tree and AVL have their own tabs. This tab is only the general tree and its terms.</div></div>`,
 binary:`<div class="section"><h3>Binary Tree — what this tab covers</h3>
 <div class="law">A binary tree is empty, or a root plus two disjoint binary trees: left and right. At most two children. Sides have names.</div>
 <p><b>Key points</b></p>
@@ -1292,16 +1267,51 @@ avl:`<div class="section"><h3>AVL Tree — what this tab covers</h3>
 <p><b>Key points</b></p>
 <ol class="algo"><li>Insert like a BST, then walk up and rotate if |BF| = 2.</li><li>Single rotation: LL → right rotate, RR → left rotate.</li><li>Double rotation: LR → left then right, RL → right then left.</li><li>Insert needs at most one rotation. Search stays O(log n).</li></ol></div>`
 };
+const TAB_END={
+basics:`<div class="section"><h3>Terminology summary</h3>
+<p>Same sample: A at the top; B and C under A; D and E under B; F under C; G under E.</p>
+<table class="table"><tr><th>Term</th><th>Definition</th><th>Example on A–G</th></tr>
+<tr><td>Node</td><td>One data box plus links to children</td><td>A, B, C, D, E, F, G — 7 nodes</td></tr>
+<tr><td>Root</td><td>Only node with no parent</td><td>A</td></tr>
+<tr><td>Edge</td><td>Parent–child link. n nodes ⇒ n − 1 edges</td><td>6 edges</td></tr>
+<tr><td>Parent / Child</td><td>Immediate above / immediate below</td><td>Parent of D is B, not A</td></tr>
+<tr><td>Siblings</td><td>Same parent</td><td>B and C; D and E. E and F are not</td></tr>
+<tr><td>Leaf</td><td>No children. Degree 0</td><td>D, G, F</td></tr>
+<tr><td>Internal</td><td>At least one child</td><td>A, B, C, E</td></tr>
+<tr><td>Degree of a node</td><td>Number of children</td><td>A=2, C=1, D=0</td></tr>
+<tr><td>Degree of the tree</td><td>Maximum node degree</td><td>2</td></tr>
+<tr><td>Level / Depth</td><td>Edges from the root. Root = 0</td><td>A=0, G=3</td></tr>
+<tr><td>Height of a node</td><td>Longest downward path in edges. Leaf = 0</td><td>height(B)=2, height(A)=3</td></tr>
+<tr><td>Height of tree</td><td>Height of the root</td><td>3</td></tr>
+<tr><td>Path</td><td>Exactly one simple route</td><td>A→B→E→G length 3</td></tr>
+<tr><td>Ancestor / Descendant</td><td>Up to root / everything below</td><td>Ancestors of G: E, B, A</td></tr>
+<tr><td>Subtree</td><td>A node plus all its descendants</td><td>Subtree of B = {B, D, E, G}</td></tr>
+<tr><td>Forest</td><td>A set of disjoint trees</td><td>Delete A → tree(B) and tree(C)</td></tr>
+<tr><td>Weight</td><td>Number of leaves</td><td>3</td></tr>
+</table></div>`
+};
 function mixPoint(block){
   const T=sectionsOf(block.theory), V=sectionsOf(block.visualization), P=sectionsOf(block.program);
   const out=[], n=Math.max(T.length,V.length,P.length);
   for(let i=0;i<n;i++){ if(T[i]) out.push(T[i]); if(V[i]) out.push(V[i]); if(P[i]) out.push(P[i]); }
   return out;
 }
+function titleOf(el){ return ((el.querySelector('h3')||{}).textContent||''); }
+function filterSections(els, keep, skip){
+  return els.filter(function(el){
+    const t=titleOf(el);
+    if(skip && skip.some(function(s){ return t.indexOf(s)>=0; })) return false;
+    if(keep) return keep.some(function(s){ return t.indexOf(s)>=0; });
+    return true;
+  });
+}
 function mixTab(tab){
   const out=[];
   if(TAB_INTRO[tab.id]) out.push.apply(out, sectionsOf(TAB_INTRO[tab.id]));
-  (tab.keys||[]).forEach(function(k){ out.push.apply(out, mixPoint(data[k]||{})); });
+  (tab.keys||[]).forEach(function(k){
+    out.push.apply(out, filterSections(mixPoint(data[k]||{}), tab.keep, tab.skip));
+  });
+  if(TAB_END[tab.id]) out.push.apply(out, sectionsOf(TAB_END[tab.id]));
   return out;
 }
 function enhanceCard(card, topicId){
