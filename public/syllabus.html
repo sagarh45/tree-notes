@@ -108,7 +108,7 @@ html,body{margin:0;background:#fff;color:#1a1a1a;font:20px/1.7 system-ui,-apple-
 
 <script>
 const topics=[
-{id:'basics',no:1,label:'Tree Basics',title:'Tree Basics',official:'Tree definition and terminology',keys:['definition'],keep:['1.2 Why trees','Interactive terminology','Class-notes tree','Real-life tree','Is this a tree','Linear vs']},
+{id:'basics',no:1,label:'Tree Basics',title:'Tree Basics',official:'Tree definition and terminology',keys:['definition'],keep:['1.1 Definition','1.2 Why trees','Interactive terminology','Class-notes tree','Real-life tree','Is this a tree','Linear vs','Exam drill']},
 {id:'binary',no:2,label:'Binary Tree',title:'Binary Tree',official:'Binary tree, traversal, linked/array, insert delete search',keys:['definition','traversal','linked','binary-ops'],skip:['1.1 Definition','1.2 Why trees','1.3 Terminology','Interactive terminology','Class-notes tree','17 terminology','Real-life tree','Is this a tree','Linear vs','Exam drill']},
 {id:'bst',no:3,label:'Binary Search Tree',title:'Binary Search Tree',official:'BST insert, delete, search',keys:['bst-ops']},
 {id:'multiway',no:4,label:'Multiway Tree',title:'Multiway Tree',official:'m-way search trees',keys:['multiway']},
@@ -1206,6 +1206,9 @@ function treeForTitle(title, topicId){
   if(t.includes('78')||t.includes('four answers')) return '78(26(23,43),94(,97))';
   if(t.includes('a–g')||t.includes('a-g')||t.includes('perfect a')) return 'A(B(D,E),C(F,G))';
   if(t.includes('rebuild')) return 'A(B(D,E),C(F,G))';
+  if(t.includes('lcrs')||t.includes('left-child')||t.includes('right-sibling')||t.includes('general tree stored')) return 'A(B(E(,F),C(,D(G,))))';
+  if(t.includes('forest stored')||t.includes('forest stored as')) return 'B(D(,E(,G)),C(F,))';
+  if(t.includes('empty tree')||t.includes('recursive idea')||t.includes('tree vs graph')) return 'A(B(D,E(,G)),C(,F))';
   if(t.includes('sample')||t.includes('class-notes')||t.includes('terminology')||t.includes('master tree')||t.includes('exam drill')) return 'A(B(D,E(,G)),C(,F))';
   if(t.includes('linked')||t.includes('memory')||t.includes('logical')) return '10(20(40,),30)';
   if(t.includes('array')) return '10(20(40,50),30)';
@@ -1240,32 +1243,209 @@ function sectionsOf(htmlStr){
   return [...d.querySelectorAll('.section')];
 }
 const TAB_INTRO={
-basics:`<div class="section"><h3>Tree Definition</h3>
-<p>A <b>Tree</b> is a <b>non-linear, hierarchical</b> data structure made of <b>nodes</b> connected by <b>edges</b>, such that there is <b>exactly one path</b> between any two nodes. It starts from a special node called the <b>root</b> and has <b>no cycles</b>.</p>
-<div class="law">n nodes ⇒ exactly <b>n − 1</b> edges. One root. No loops. Every node except the root has exactly one parent.</div>
-<p>Think of a family tree or a company chart. In CS we draw it <b>upside down</b>: root at the top, leaves at the bottom.</p>
-<div class="note">Binary Tree, BST, Multiway, B-Tree and AVL have their own tabs. This tab is only the general tree and its terms.</div></div>`,
-binary:`<div class="section"><h3>Binary Tree — what this tab covers</h3>
-<div class="law">A binary tree is empty, or a root plus two disjoint binary trees: left and right. At most two children. Sides have names.</div>
-<p><b>Key points</b></p>
-<ol class="algo"><li>0, 1 or 2 children — never more.</li><li>Left child ≠ right child even if the value is the same.</li><li>Types: full / strict, complete / almost complete, perfect, skewed, extended.</li><li>Traversal: pre NLR, in LNR, post LRN, level-order with a queue.</li><li>Linked form: [left | data | right]. Array form: left = 2i, right = 2i+1 (complete trees / heaps).</li><li>No key-order rule → insert / delete / search are O(n) level-order jobs.</li></ol>
-<div class="exam">Advanced here: rebuild from two traversals, iterative in-order, n₀ = n₂ + 1, Catalan count.</div></div>`,
-bst:`<div class="section"><h3>Binary Search Tree — what this tab covers</h3>
-<div class="law">For every node: whole left subtree &lt; node &lt; whole right subtree. Both sides are BSTs. In-order is sorted.</div>
-<p><b>Key points</b></p>
-<ol class="algo"><li>Search / insert walk left or right like binary search.</li><li>Delete has 3 cases: leaf, one child, two children (replace by in-order successor).</li><li>Balanced: O(log n). Sorted inserts make a stick: O(n). That is why AVL exists.</li></ol></div>`,
-multiway:`<div class="section"><h3>Multiway Tree — what this tab covers</h3>
-<div class="law">Order m ⇒ at most m children and at most m − 1 keys. A node with r keys has r+1 children.</div>
-<p><b>Key points</b></p>
-<ol class="algo"><li>Keys inside a node are sorted and act as separators.</li><li>Search compares inside the fat node, then picks one child.</li><li>Implementation: arrays of keys and child pointers in one node.</li><li>Advanced: B-Tree is the balanced, disk-friendly multiway tree — next tab.</li></ol></div>`,
-btree:`<div class="section"><h3>B-Tree — what this tab covers</h3>
-<div class="law">Height-balanced multiway search tree. All leaves on one level. Height grows only when the root splits.</div>
-<p><b>Key points</b></p>
-<ol class="algo"><li>Max m children, max m − 1 keys. Except root, at least ceil(m/2) children.</li><li>Search: from root, pick the child range, stop in a node.</li><li>Insert: add in a leaf; overflow → split at median; median goes up.</li><li>Delete: borrow from a sibling, or merge.</li><li>Advanced: B vs B+ (records only in leaves, leaves linked).</li></ol></div>`,
-avl:`<div class="section"><h3>AVL Tree — what this tab covers</h3>
-<div class="law">AVL = BST + |height(left) − height(right)| ≤ 1 for every node. BF is −1, 0 or +1.</div>
-<p><b>Key points</b></p>
-<ol class="algo"><li>Insert like a BST, then walk up and rotate if |BF| = 2.</li><li>Single rotation: LL → right rotate, RR → left rotate.</li><li>Double rotation: LR → left then right, RL → right then left.</li><li>Insert needs at most one rotation. Search stays O(log n).</li></ol></div>`
+basics:`<div class="section"><h3>Tree Basics — every general-tree concept</h3>
+<p>This tab covers the <b>general tree</b> only. Other tabs cover Binary, BST, Multiway, B-Tree and AVL in full.</p>
+<div class="law">Concepts here: definition · tree vs graph vs forest · why trees · all terms · empty tree · recursive subtree · LCRS storage · applications · exam drill · summary table.</div>
+<ol class="algo">
+<li><b>Definition:</b> non-linear, hierarchical, one root, no cycle, exactly one path between any two nodes.</li>
+<li><b>Count:</b> n nodes ⇒ n − 1 edges. Every non-root has exactly one parent.</li>
+<li><b>Tree vs graph:</b> two parents or a loop ⇒ graph. Two roots ⇒ forest.</li>
+<li><b>Empty tree:</b> no nodes. Still a valid tree. root = NULL.</li>
+<li><b>Recursive:</b> every node is the root of its own subtree.</li>
+<li><b>Terminology:</b> root, parent, child, sibling, leaf, degree, level, height, path, subtree, forest — one picture, then one table.</li>
+<li><b>Storage:</b> general tree → binary tree by left-child / right-sibling (LCRS).</li>
+<li><b>Applications:</b> folders, HTML, expressions, databases, Huffman, decision / game trees.</li>
+<li><b>General tree:</b> any number of children. Binary / BST / Multiway / B-Tree / AVL add extra rules in later tabs.</li>
+</ol></div>`,
+binary:`<div class="section"><h3>Binary Tree — every concept in this tab</h3>
+<div class="law">Empty, or root + left binary tree + right binary tree. At most two named children.</div>
+<ol class="algo">
+<li>Definition and left ≠ right.</li>
+<li>Types: full, complete / almost complete, perfect, skewed, extended.</li>
+<li>Formulas: max/min nodes, n₀ = n₂ + 1, n+1 NULLs, Catalan.</li>
+<li>Traversals: NLR, LNR, LRN, level-order, iterative in-order, rebuild from two lists.</li>
+<li>Linked [L|data|R] and array (2i, 2i+1).</li>
+<li>Insert / delete / search with no key order (O(n)).</li>
+<li>Expression tree, copy via pre-order, count/height functions.</li>
+</ol></div>`,
+bst:`<div class="section"><h3>BST — every concept in this tab</h3>
+<div class="law">Whole left subtree &lt; node &lt; whole right subtree. In-order is sorted.</div>
+<ol class="algo">
+<li>Definition and the “not a BST” trap (local child OK, whole subtree wrong).</li>
+<li>Search, insert (new key is always a leaf).</li>
+<li>Min / max, predecessor, successor.</li>
+<li>Delete: leaf, one child, two children (successor).</li>
+<li>Duplicates: forbid, or always one fixed side.</li>
+<li>Complexity: O(log n) balanced, O(n) skewed. AVL is the fix.</li>
+</ol></div>`,
+multiway:`<div class="section"><h3>Multiway Tree — every concept in this tab</h3>
+<div class="law">Order m ⇒ ≤ m children and ≤ m − 1 keys. r keys ⇒ r+1 children.</div>
+<ol class="algo">
+<li>Definition of a general / m-way search tree.</li>
+<li>Keys as separators, search inside a fat node.</li>
+<li>Linked implementation: key array + child pointer array.</li>
+<li>Why fat nodes beat BST on disk (height log_m n).</li>
+<li>2-3 tree = order-3 multiway search tree (leads to B-Tree).</li>
+</ol></div>`,
+btree:`<div class="section"><h3>B-Tree — every concept in this tab</h3>
+<div class="law">Balanced multiway search tree. All leaves on one level. Height grows only on a root split.</div>
+<ol class="algo">
+<li>Order m properties (max / min children and keys).</li>
+<li>Search path through ranges, not “left or right” only.</li>
+<li>Insert + median split. Root split increases height.</li>
+<li>Delete: spare in leaf, borrow, merge.</li>
+<li>B vs B+. Why databases use these on disk.</li>
+<li>Full order-3 dry run (same example as before).</li>
+</ol></div>`,
+avl:`<div class="section"><h3>AVL Tree — every concept in this tab</h3>
+<div class="law">BST + |BF| ≤ 1 at every node. BF = height(left) − height(right).</div>
+<ol class="algo">
+<li>Why AVL: sorted inserts make a BST stick.</li>
+<li>Height and BF functions. Legal BF: −1, 0, +1.</li>
+<li>Single rotation: LL (right), RR (left).</li>
+<li>Double rotation: LR, RL.</li>
+<li>Insert: at most one rotation. Delete: up to O(log n) rotations.</li>
+<li>Worst height ≈ 1.44 log₂ n. Search always O(log n).</li>
+</ol></div>`
+};
+const TAB_EXTRA={
+basics:`<div class="section"><h3>Tree vs graph vs forest — properties</h3>
+<table class="table"><tr><th>Property</th><th>Tree</th><th>Graph</th><th>Forest</th></tr>
+<tr><td>Roots</td><td>Exactly one</td><td>None required</td><td>One or more</td></tr>
+<tr><td>Cycles</td><td>Never</td><td>Allowed</td><td>Never (each piece is a tree)</td></tr>
+<tr><td>Edges</td><td>Exactly n − 1</td><td>Any number</td><td>n − k if k trees</td></tr>
+<tr><td>Path between two nodes</td><td>Exactly one</td><td>Zero or more</td><td>One if same tree, none if different trees</td></tr>
+<tr><td>Parents</td><td>Every non-root has exactly one</td><td>A node may have many</td><td>Same as a tree, per piece</td></tr>
+</table>
+<div class="law">Two parents or a loop ⇒ graph. Two roots and no shared nodes ⇒ forest. A forest of 1 tree is just a tree.</div></div>
+<div class="section"><h3>Empty tree, forest, recursive idea</h3>
+<div class="grid2">
+<div class="card"><b>Empty tree</b><p>Zero nodes. <code>root = NULL</code>. It is a valid tree. Height of NULL = −1 if you count edges (say which convention you use).</p></div>
+<div class="card"><b>Forest</b><p>Many trees, no shared root. Delete the root of a tree → its children become roots of a forest.</p></div>
+</div>
+<div class="diagram">Delete A from the class-notes tree:
+
+  Tree 1              Tree 2
+    B                   C
+   / \\                   \\
+  D   E                   F
+       \\
+        G
+Together = a forest.</div>
+<div class="law">Recursive: a tree = a root + a list of subtrees. Every child starts a smaller tree. Algorithms on trees are almost always recursive for this reason.</div></div>
+<div class="section"><h3>General tree stored as binary — LCRS</h3>
+<p>A general-tree node may have many children. To store it with only two pointers: <b>left = first child</b>, <b>right = next sibling</b>. This is <b>left-child right-sibling (LCRS)</b> or natural correspondence.</p>
+<div class="diagram">General: A has children B, C, D. B has E, F. D has G.
+
+        A
+     /  |  \\
+    B   C   D
+   / \\      |
+  E   F     G
+
+LCRS binary: left = first child, right = next brother/sister.
+
+        A
+       /
+      B
+     / \\
+    E   C
+     \\   \\
+      F   D
+         /
+        G</div>
+<ol class="algo">
+<li>Keep the root.</li>
+<li>First child becomes the left child.</li>
+<li>The remaining children hang as a right chain under that first child.</li>
+</ol>
+<div class="exam">Pre-order of the general tree = pre-order of the LCRS binary tree. Post-order of the general tree = in-order of the LCRS binary tree. A general tree has no natural in-order.</div></div>
+<div class="section"><h3>Forest stored as one binary tree</h3>
+<p>Convert each tree with LCRS, then join the roots as a right-sibling chain: root(T1)→right = root(T2), and so on.</p>
+<div class="diagram">Forest after deleting A:
+
+   B          C
+  / \\         |
+ D   E        F
+      \\
+       G
+
+Join B→right = C. That is one binary tree.</div>
+<div class="exam">Exam line: forest = many trees. Binary form = first root as the binary root, remaining roots hanging to the right.</div></div>
+<div class="section"><h3>Applications of trees (4-mark list)</h3>
+<table class="table"><tr><th>Use</th><th>Why a tree</th></tr>
+<tr><td>File system / folders</td><td>One parent folder, no cycle</td></tr>
+<tr><td>HTML / XML DOM</td><td>Tags nest; &lt;html&gt; is the root</td></tr>
+<tr><td>Expression / compiler</td><td>Operators inside, operands at leaves</td></tr>
+<tr><td>Database index</td><td>B-Tree / B+ Tree, height log_m n</td></tr>
+<tr><td>Huffman coding</td><td>Extended binary tree of codes</td></tr>
+<tr><td>Decision / game tree</td><td>Each move opens child positions</td></tr>
+<tr><td>Routing / org chart</td><td>Hierarchy, one boss</td></tr>
+</table>
+<table class="table"><tr><th>n keys</th><th>List (worst)</th><th>Balanced tree ≈ log₂ n</th></tr>
+<tr><td>1,000</td><td>1,000</td><td>10</td></tr>
+<tr><td>1,000,000</td><td>1,000,000</td><td>20</td></tr>
+<tr><td>1,000,000,000</td><td>1,000,000,000</td><td>30</td></tr>
+</table></div>
+<div class="section"><h3>Syntax — create a node (algorithm)</h3>
+<div class="fn"><b>Algorithm createNode(value)</b>
+<ol class="algo">
+<li>Allocate memory for one node.</li>
+<li>Store value in data.</li>
+<li>Set every child pointer to NULL (binary: left and right).</li>
+<li>Return the pointer. An empty tree is just root = NULL.</li>
+</ol></div>
+<pre class="code">struct Node {
+    int data;
+    struct Node *left;
+    struct Node *right;
+};
+struct Node *createNode(int value) {
+    struct Node *n = (struct Node*)malloc(sizeof(struct Node));
+    n-&gt;data = value;
+    n-&gt;left = n-&gt;right = NULL;
+    return n;
+}</pre>
+<div class="io">Node 10 created. left = NULL, right = NULL. This is a one-node tree.</div></div>`,
+binary:`<div class="section"><h3>More binary concepts: count, copy, threads, expression</h3>
+<div class="fn"><b>Algorithm count(n)</b> — if n is NULL return 0, else 1 + count(left) + count(right).</div>
+<div class="fn"><b>Algorithm height(n)</b> — if n is NULL return −1 (or 0), else 1 + max(height(left), height(right)).</div>
+<div class="fn"><b>Copy a tree</b> — pre-order: create the node, then copy left, then copy right.</div>
+<p><b>Threaded binary tree (advanced):</b> a linked binary tree has n+1 NULL pointers. A thread uses a NULL to point to the in-order predecessor or successor so in-order needs no stack. Mention this when asked “how to use the unused pointers”.</p>
+<p><b>Expression tree:</b> operators inside, operands at leaves. In-order = infix, post-order = postfix, pre-order = prefix. Same A–G rebuild idea applies.</p>
+<div class="exam">Heap is a complete binary tree stored in an array (2i, 2i+1). It is a shape rule, not a BST rule.</div></div>`,
+bst:`<div class="section"><h3>More BST concepts: predecessor, duplicates, check</h3>
+<p><b>In-order predecessor</b> of a node with a left child = maximum of the left subtree (keep going right). Successor = minimum of the right subtree.</p>
+<p><b>Duplicates:</b> either reject equal keys, or always send equals to one fixed side. Say which in the exam.</p>
+<div class="exam"><b>NOT a BST:</b> 30 with left 20 and right 40, and 40 has left 25. Locally 25&lt;40 looks fine, but 25 sits in the right of 30 while 25&lt;30. In-order 20 30 25 40 is not sorted.</div>
+<p><b>Check BST:</b> do in-order. If the sequence is strictly increasing, it is a BST. Or check every node’s whole-subtree range [low, high].</p>
+<p><b>Use:</b> sets, maps, symbol tables. If data arrives sorted, the BST becomes a stick — use AVL (next tabs).</p></div>`,
+multiway:`<div class="section"><h3>More multiway concepts: 2-3 tree and formation</h3>
+<p>A <b>2-3 tree</b> is an order-3 multiway search tree: a node is a 2-node (1 key, 2 children) or a 3-node (2 keys, 3 children). All leaves at one level if we also keep it balanced — that balanced version is a B-Tree of order 3.</p>
+<div class="diagram">Formation of an order-4 node while inserting 10, 20, 40, 5:
+
+[10] → [10 20] → [10 20 40]  (full: max 3 keys)
+Insert 5 → overflow if we forced max 3. In a plain m-way tree the node may grow
+until we add B-Tree min/max rules. Search 20 still: look inside the sorted keys.</div>
+<p><b>Implementation:</b> one struct, two arrays — <code>keys[m-1]</code> and <code>child[m]</code>. Missing child = NULL. This is the linked form of a multiway node (the “linked list” idea is “node + pointers”, not a 1-D list).</p></div>`,
+btree:`<div class="section"><h3>More B-Tree concepts: order table, disk, B*</h3>
+<table class="table"><tr><th>Order m</th><th>Max keys</th><th>Min keys (non-root)</th><th>Max children</th><th>Min children (non-root)</th></tr>
+<tr><td>3 (2-3 tree)</td><td>2</td><td>1</td><td>3</td><td>2</td></tr>
+<tr><td>4 (2-3-4 tree)</td><td>3</td><td>1</td><td>4</td><td>2</td></tr>
+<tr><td>5</td><td>4</td><td>2</td><td>5</td><td>3</td></tr>
+</table>
+<p><b>Why disk:</b> one node = one page. Binary height ~20 page faults for a million keys. B-Tree height ~3.</p>
+<p><b>B* tree (advanced):</b> nodes stay at least 2/3 full, overflow prefers redistributing to a sibling before a split. Same search idea.</p>
+<div class="exam">Do not say “B-Tree is a binary tree”. It is multiway. Do not search with only left/right — a node has many ranges.</div></div>`,
+avl:`<div class="section"><h3>More AVL concepts: delete, height bound, vs others</h3>
+<p><b>Delete:</b> BST delete first, then walk up. Unlike insert, several ancestors can go unbalanced, so up to O(log n) rotations.</p>
+<p><b>Height bound:</b> worst AVL of height h has Fibonacci-many nodes. Height ≤ 1.44 log₂(n+2) − 0.33. Still O(log n).</p>
+<table class="table"><tr><th></th><th>BST</th><th>AVL</th><th>B-Tree</th></tr>
+<tr><td>Children</td><td>2</td><td>2</td><td>up to m</td></tr>
+<tr><td>Balance</td><td>none</td><td>|BF|≤1</td><td>all leaves same level</td></tr>
+<tr><td>Search</td><td>O(h), h can be n</td><td>O(log n)</td><td>O(log_m n) disk hops</td></tr>
+<tr><td>Use</td><td>memory, small n</td><td>memory, guaranteed log n</td><td>databases, disk</td></tr>
+</table></div>`
 };
 const TAB_END={
 basics:`<div class="section"><h3>Terminology summary</h3>
@@ -1311,6 +1491,7 @@ function mixTab(tab){
   (tab.keys||[]).forEach(function(k){
     out.push.apply(out, filterSections(mixPoint(data[k]||{}), tab.keep, tab.skip));
   });
+  if(TAB_EXTRA[tab.id]) out.push.apply(out, sectionsOf(TAB_EXTRA[tab.id]));
   if(TAB_END[tab.id]) out.push.apply(out, sectionsOf(TAB_END[tab.id]));
   return out;
 }
