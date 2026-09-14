@@ -108,7 +108,7 @@ html,body{margin:0;background:#fff;color:#1a1a1a;font:20px/1.7 system-ui,-apple-
 
 <script>
 const topics=[
-{id:'basics',no:1,label:'Tree Basics',title:'Tree Basics',official:'Tree definition and terminology',keys:['definition'],keep:['1.1 Definition','1.2 Why trees','Interactive terminology','Class-notes tree','Real-life tree','Is this a tree','Linear vs','Exam drill']},
+{id:'basics',no:1,label:'Tree Basics',title:'Tree Basics',official:'Tree definition and terminology',keys:[]},
 {id:'binary',no:2,label:'Binary Tree',title:'Binary Tree',official:'Binary tree, traversal, linked/array, insert delete search',keys:['definition','traversal','linked','binary-ops'],skip:['1.1 Definition','1.2 Why trees','1.3 Terminology','Interactive terminology','Class-notes tree','17 terminology','Real-life tree','Is this a tree','Linear vs','Exam drill']},
 {id:'bst',no:3,label:'Binary Search Tree',title:'Binary Search Tree',official:'BST insert, delete, search',keys:['bst-ops']},
 {id:'multiway',no:4,label:'Multiway Tree',title:'Multiway Tree',official:'m-way search trees',keys:['multiway']},
@@ -1197,10 +1197,10 @@ function treeForTitle(title, topicId){
   if(t.includes('expression')||t.includes('(a + b)')) return '*(+(a,b),c)';
   if(t.includes('folder')) return 'C:(Notes(DS,OS),Games)';
   if(t.includes('company')||t.includes('president')) return 'P(VA(PM,PM),VB(PM,))';
-  if(t.includes('ll')||t.includes('30, 20, 10')||t.includes('insert 30, 20, 10')) return '20(10,30)';
-  if(t.includes('rr')||t.includes('10, 20, 30')) return '20(10,30)';
-  if(t.includes('lr')||t.includes('30, 10, 20')) return '20(10,30)';
-  if(t.includes('rl')||t.includes('10, 30, 20')) return '20(10,30)';
+  if(t.includes('ll case')||t.includes('ll:')||t.includes('insert 30, 20, 10')) return '20(10,30)';
+  if(t.includes('rr case')||t.includes('rr:')||t.includes('insert 10, 20, 30')) return '20(10,30)';
+  if(t.includes('lr case')||t.includes('lr:')||t.includes('insert 30, 10, 20')) return '20(10,30)';
+  if(t.includes('rl case')||t.includes('rl:')||t.includes('insert 10, 30, 20')) return '20(10,30)';
   if(t.includes('delete 20')||t.includes('delete example')) return '10(50(40,),30)';
   if(t.includes('insert 50')||t.includes('insert example')) return '10(20(40,50),30)';
   if(t.includes('78')||t.includes('four answers')) return '78(26(23,43),94(,97))';
@@ -1242,21 +1242,433 @@ function sectionsOf(htmlStr){
   d.innerHTML=htmlStr||'';
   return [...d.querySelectorAll('.section')];
 }
-const TAB_INTRO={
-basics:`<div class="section"><h3>Tree Basics — every general-tree concept</h3>
-<p>This tab covers the <b>general tree</b> only. Other tabs cover Binary, BST, Multiway, B-Tree and AVL in full.</p>
-<div class="law">Concepts here: definition · tree vs graph vs forest · why trees · all terms · empty tree · recursive subtree · LCRS storage · applications · exam drill · summary table.</div>
+const TAB_BASICS=`<div class="section"><h3>Step 1 — How this lesson works</h3>
+<p>This tab is only <b>Tree Basics</b>: the general tree. Click <b>Next</b> after you finish each card. One idea per card. The same sample tree A–G is used everywhere.</p>
+<div class="law">A tree is a hierarchy with one root, no loops, and exactly one path between any two nodes.</div>
 <ol class="algo">
-<li><b>Definition:</b> non-linear, hierarchical, one root, no cycle, exactly one path between any two nodes.</li>
-<li><b>Count:</b> n nodes ⇒ n − 1 edges. Every non-root has exactly one parent.</li>
-<li><b>Tree vs graph:</b> two parents or a loop ⇒ graph. Two roots ⇒ forest.</li>
-<li><b>Empty tree:</b> no nodes. Still a valid tree. root = NULL.</li>
-<li><b>Recursive:</b> every node is the root of its own subtree.</li>
-<li><b>Terminology:</b> root, parent, child, sibling, leaf, degree, level, height, path, subtree, forest — one picture, then one table.</li>
-<li><b>Storage:</b> general tree → binary tree by left-child / right-sibling (LCRS).</li>
-<li><b>Applications:</b> folders, HTML, expressions, databases, Huffman, decision / game trees.</li>
-<li><b>General tree:</b> any number of children. Binary / BST / Multiway / B-Tree / AVL add extra rules in later tabs.</li>
-</ol></div>`,
+<li>First we write the exam definition and look at the sample tree.</li>
+<li>Then we decide: tree, graph, or forest?</li>
+<li>Then every terminology word, one group at a time, plus the clickable picture.</li>
+<li>Then formulas, exam drill, how a general tree is stored, and a small C program.</li>
+<li>Binary / BST / Multiway / B-Tree / AVL are later tabs. Do not mix their extra rules here.</li>
+</ol>
+<div class="note">Convention in these notes: root = level 0, leaf height = 0, height counted in <b>edges</b>. If your teacher starts level at 1 or counts nodes, write that in line 1 of the answer.</div></div>
+
+<div class="section"><h3>Step 2 — Exam definition of a tree</h3>
+<p>A <b>Tree</b> is a <b>non-linear, hierarchical</b> data structure made of <b>nodes</b> connected by <b>edges</b>, such that there is <b>exactly one path</b> between any two nodes. It starts from a special node called the <b>root</b> and has <b>no cycles</b>.</p>
+<div class="law">n nodes ⇒ exactly <b>n − 1</b> edges. Every node except the root has exactly one parent, so it brings exactly one edge.</div>
+<p>Think of a family tree or a company chart: one person at the top, children below, nobody has two bosses, nobody is their own grand-boss. In CS we draw the tree <b>upside down</b>: root at the top, leaves at the bottom.</p>
+<ol class="algo">
+<li><b>Non-linear:</b> not one straight line like an array or a linked list.</li>
+<li><b>Hierarchical:</b> parent → child (one-to-many).</li>
+<li><b>One root.</b> Every other node has exactly one parent.</li>
+<li><b>No cycles.</b> You can never walk in a loop.</li>
+<li><b>Exactly one path</b> between any two nodes. Two paths ⇒ graph, not a tree.</li>
+</ol>
+<div class="exam">Start every tree answer with this definition, then draw one small tree and label the root.</div></div>
+
+<div class="section"><h3>Step 3 — Our sample tree A to G</h3>
+<p>Remember this picture. Every later word uses only this tree.</p>
+<div class="diagram">              A          root, level 0, height 3, degree 2
+            /   \\
+           B     C       siblings, level 1
+         /  \\     \\
+        D    E     F     D and F are leaves; E is internal (has G)
+              \\
+               G         leaf, level 3, depth 3</div>
+<div class="trace">7 nodes, 6 edges (n − 1). Leaves D, G, F. Internal A, B, C, E. Weight = 3. Path A→B→E→G length 3. Height(B)=2 because B→E→G.</div>
+<table class="table"><tr><th>Node</th><th>Parent</th><th>Children</th><th>Level / Depth</th><th>Height</th><th>Degree</th><th>Leaf?</th></tr>
+<tr><td>A</td><td>—</td><td>B, C</td><td>0</td><td>3</td><td>2</td><td>no</td></tr>
+<tr><td>B</td><td>A</td><td>D, E</td><td>1</td><td>2</td><td>2</td><td>no</td></tr>
+<tr><td>C</td><td>A</td><td>F</td><td>1</td><td>1</td><td>1</td><td>no</td></tr>
+<tr><td>D</td><td>B</td><td>—</td><td>2</td><td>0</td><td>0</td><td>yes</td></tr>
+<tr><td>E</td><td>B</td><td>G</td><td>2</td><td>1</td><td>1</td><td>no</td></tr>
+<tr><td>F</td><td>C</td><td>—</td><td>2</td><td>0</td><td>0</td><td>yes</td></tr>
+<tr><td>G</td><td>E</td><td>—</td><td>3</td><td>0</td><td>0</td><td>yes</td></tr>
+</table>
+<div class="exam">A is NOT the parent of D. A is the grandparent. Parent means the node immediately above.</div></div>
+
+<div class="section"><h3>Step 4 — Linear vs non-linear</h3>
+<div class="grid2">
+<div class="card"><b>Linear: array / linked list</b>
+<div class="diagram">10 → 20 → 30 → 40</div>
+<p>Every element has one next. To reach 40 you must pass 10, 20, 30.</p></div>
+<div class="card"><b>Non-linear: tree</b>
+<div class="diagram">        10
+       /  \\
+     20    30
+    /
+  40</div>
+<p>One element can have many next (children). 10 has two children.</p></div>
+</div>
+<div class="law">Linear = one sequence. Tree = a hierarchy. Graph = a general network (cycles allowed).</div></div>
+
+<div class="section"><h3>Step 5 — Is this a tree?</h3>
+<table class="table"><tr><th>Picture</th><th>Tree?</th><th>Reason</th></tr>
+<tr><td>A→B, A→C, B→D</td><td><b>Yes</b></td><td>One root, one parent each, no loop, 4 nodes 3 edges</td></tr>
+<tr><td>A→B, A→C, B→D, C→D</td><td><b>No</b></td><td>D has two parents — this is a graph. Two paths from A to D</td></tr>
+<tr><td>A→B→C→A</td><td><b>No</b></td><td>Cycle. Trees never loop</td></tr>
+<tr><td>A→B and a separate C→D</td><td><b>No</b> (it is a <b>forest</b>)</td><td>Two roots, not joined</td></tr>
+</table>
+<div class="grid2">
+<div class="card"><b>YES — a tree</b>
+<div class="diagram">    A
+   / \\
+  B   C
+ /
+D</div></div>
+<div class="card"><b>NO — two parents</b>
+<div class="diagram">    A
+   / \\
+  B   C
+   \\ /
+    D</div></div>
+<div class="card"><b>NO — a cycle</b>
+<div class="diagram">A → B → C → A</div></div>
+<div class="card"><b>NO — a forest</b>
+<div class="diagram">A → B     C → D</div></div>
+</div>
+<div class="exam">If they ask “difference between tree and graph”: tree = no cycle, one root, n−1 edges, exactly one path. Graph = cycles allowed, any number of edges.</div></div>
+
+<div class="section"><h3>Step 6 — Tree vs graph vs forest</h3>
+<table class="table"><tr><th>Property</th><th>Tree</th><th>Graph</th><th>Forest</th></tr>
+<tr><td>Roots</td><td>Exactly one</td><td>None required</td><td>One or more</td></tr>
+<tr><td>Cycles</td><td>Never</td><td>Allowed</td><td>Never (each piece is a tree)</td></tr>
+<tr><td>Edges</td><td>Exactly n − 1</td><td>Any number</td><td>n − k if there are k trees</td></tr>
+<tr><td>Path between two nodes</td><td>Exactly one</td><td>Zero or more</td><td>One if same tree, none if different trees</td></tr>
+<tr><td>Parents</td><td>Every non-root has exactly one</td><td>A node may have many</td><td>Same as a tree, per piece</td></tr>
+</table>
+<div class="law">Two parents or a loop ⇒ graph. Two roots and no shared nodes ⇒ forest. A forest of 1 tree is just a tree.</div></div>
+
+<div class="section no-auto-tree"><h3>Step 7 — Empty tree</h3>
+<p>Zero nodes. In code: <code>root = NULL</code>. This is still a valid tree. Many recursive functions stop here.</p>
+<div class="fn"><b>Convention</b>
+<ol class="algo">
+<li>Empty tree has 0 nodes and 0 edges.</li>
+<li>Height of NULL = <b>−1</b> if you count edges (leaf height = 0).</li>
+<li>If your book counts nodes (leaf height = 1), height of empty = 0. Write which one you use.</li>
+</ol></div>
+<div class="exam">Do not say “NULL is not a tree”. The empty tree is the base case of the recursive definition.</div></div>
+
+<div class="section"><h3>Step 8 — Recursive idea: every node is a tree</h3>
+<div class="law">A tree = a root + a list of subtrees. Every child starts a smaller tree. That is why tree algorithms are almost always recursive.</div>
+<p>On the sample: subtree of B = {B, D, E, G}. Subtree of C = {C, F}. Subtree of D = {D} only.</p>
+<div class="diagram">Whole tree rooted at A
+
+Subtree of B:        Subtree of C:
+      B                    C
+     / \\                    \\
+    D   E                    F
+         \\
+          G</div>
+<div class="exam">A general tree allows any number of children. A binary tree later adds the rule “at most two named sides: left and right”.</div></div>
+
+<div class="section"><h3>Step 9 — Tree ADT (what you can do)</h3>
+<p>ADT means the operations, not the drawing. For a general tree the usual set is:</p>
+<table class="table"><tr><th>Operation</th><th>Meaning</th></tr>
+<tr><td>create / empty</td><td>root = NULL</td></tr>
+<tr><td>isEmpty</td><td>root is NULL?</td></tr>
+<tr><td>insert child</td><td>hang a new node under a given parent</td></tr>
+<tr><td>delete</td><td>usually a leaf, or a whole subtree</td></tr>
+<tr><td>search</td><td>walk nodes until the key is found (no order yet, so O(n))</td></tr>
+<tr><td>traverse</td><td>visit every node once (pre / post / level). General trees have no natural in-order</td></tr>
+</table>
+<div class="note">BST insert/delete rules are not basics. They need a key-order law. That is the BST tab.</div></div>
+
+<div class="section"><h3>Step 10 — Why trees exist</h3>
+<p>Two reasons only:</p>
+<ol class="algo">
+<li><b>The data is a hierarchy.</b> Folder inside folder, tag inside tag, manager above employee.</li>
+<li><b>Speed.</b> A balanced tree of 1,000,000 keys needs about 20 comparisons (log₂ n), not 1,000,000.</li>
+</ol>
+<table class="table"><tr><th>n keys</th><th>Linked list (worst)</th><th>Balanced tree ≈ log₂ n</th></tr>
+<tr><td>1,000</td><td>1,000 steps</td><td>10 steps</td></tr>
+<tr><td>1,000,000</td><td>1,000,000 steps</td><td>20 steps</td></tr>
+<tr><td>1,000,000,000</td><td>1,000,000,000 steps</td><td>30 steps</td></tr>
+</table>
+<div class="law">Each level of a balanced tree throws away about half the keys. That is why BST, AVL and B-Tree exist — they are taught in later tabs.</div></div>
+
+<div class="section"><h3>Step 11 — Applications of trees (4-mark list)</h3>
+<table class="table"><tr><th>Use</th><th>Why a tree</th></tr>
+<tr><td>File system / folders</td><td>One parent folder, no cycle</td></tr>
+<tr><td>HTML / XML DOM</td><td>Tags nest; &lt;html&gt; is the root</td></tr>
+<tr><td>Expression / compiler</td><td>Operators inside, operands at leaves. Full picture in Binary tab</td></tr>
+<tr><td>Database index</td><td>B-Tree / B+ Tree — later tab</td></tr>
+<tr><td>Huffman coding</td><td>Extended binary tree of codes</td></tr>
+<tr><td>Decision / game tree</td><td>Each choice opens child positions</td></tr>
+<tr><td>Routing / org chart</td><td>Hierarchy, one boss</td></tr>
+</table>
+<div class="grid2">
+<div class="card"><b>Folders</b>
+<div class="diagram">        C:
+       /  \\
+   Notes   Games
+   /  \\
+  DS   OS</div>
+<p>Every folder has one parent. You cannot put a folder inside itself.</p></div>
+<div class="card"><b>Expression (a + b) * c</b>
+<div class="diagram">        *
+       / \\
+      +   c
+     / \\
+    a   b</div>
+<p>In-order ≈ infix. Post-order = postfix a b + c *. Details in Binary Tree tab.</p></div>
+</div>
+<div class="exam">Write 5–6 bullets with one line each. That is a standard 4-mark question.</div></div>
+
+<div class="section"><h3>Step 11b — Folder tree</h3>
+<p>Every folder has exactly one parent folder. You cannot put a folder inside itself (that would be a cycle, so not a tree).</p>
+<div class="trace">C: is the root. Notes and Games are siblings. DS and OS hang under Notes. Same laws: one parent, n − 1 edges.</div></div>
+
+<div class="section"><h3>Step 11c — Expression tree preview</h3>
+<p>Operators sit inside. Operands sit at the leaves. This is still a tree: one root <code>*</code>, no cycle.</p>
+<div class="trace">In-order ≈ a + b * c (add brackets). Post-order = postfix a b + c *. Full traversal rules are in the Binary Tree tab.</div></div>
+
+<div class="section"><h3>Step 12 — Real-life: company chart</h3>
+<div class="diagram">        President                 ← root
+       /          \\
+  Vice-Pres A    Vice-Pres B      ← level 1
+     /     \\           |
+    PM      PM         PM         ← level 2
+    |        |         |
+ Engineer Engineer  Engineer      ← leaves</div>
+<div class="trace">Every employee reports to exactly one boss. That “exactly one parent” rule is what makes it a tree, not a graph. If two bosses manage the same engineer, it becomes a graph.</div></div>
+
+<div class="section"><h3>Step 13 — Click every term on one picture</h3>
+<p>Same A–G sample. Click a word — only that idea lights up in gold.</p>
+<div class="tv">
+<div class="tv-chips" id="termChips"></div>
+<svg class="tv-svg" id="termBoard" viewBox="0 0 360 268" aria-label="Sample tree A to G">
+  <line x1="180" y1="36" x2="90" y2="92"/><line x1="180" y1="36" x2="270" y2="92"/>
+  <line x1="90" y1="100" x2="40" y2="156"/><line x1="90" y1="100" x2="140" y2="156"/>
+  <line x1="270" y1="100" x2="310" y2="156"/><line x1="140" y1="164" x2="140" y2="216"/>
+  <g data-id="A"><circle cx="180" cy="28" r="18"/><text class="node" x="180" y="33">A</text><text class="tag" x="180" y="58"></text></g>
+  <g data-id="B"><circle cx="90" cy="100" r="18"/><text class="node" x="90" y="105">B</text><text class="tag" x="90" y="130"></text></g>
+  <g data-id="C"><circle cx="270" cy="100" r="18"/><text class="node" x="270" y="105">C</text><text class="tag" x="270" y="130"></text></g>
+  <g data-id="D"><circle cx="40" cy="164" r="18"/><text class="node" x="40" y="169">D</text><text class="tag" x="40" y="194"></text></g>
+  <g data-id="E"><circle cx="140" cy="164" r="18"/><text class="node" x="140" y="169">E</text><text class="tag" x="140" y="194"></text></g>
+  <g data-id="F"><circle cx="310" cy="164" r="18"/><text class="node" x="310" y="169">F</text><text class="tag" x="310" y="194"></text></g>
+  <g data-id="G"><circle cx="140" cy="228" r="18"/><text class="node" x="140" y="233">G</text><text class="tag" x="140" y="258"></text></g>
+</svg>
+<div class="tv-legend"><span><i class="gold"></i>highlighted term</span><span><i class="blue"></i>other nodes of the same tree</span></div>
+<div class="law" id="termExam">Click a term above.</div>
+<div class="trace" id="termCap"></div>
+</div></div>
+
+<div class="section"><h3>Step 14 — Family words: root, parent, child, sibling</h3>
+<table class="table"><tr><th>Term</th><th>Meaning</th><th>On A–G</th></tr>
+<tr><td>Node</td><td>One data box plus links to children</td><td>A, B, C, D, E, F, G — 7 nodes</td></tr>
+<tr><td>Root</td><td>Only node with no parent. The tree is known by a pointer to the root</td><td>A</td></tr>
+<tr><td>Parent</td><td>Immediate node above</td><td>Parent of D is B, not A</td></tr>
+<tr><td>Child</td><td>Immediate node below</td><td>Children of B are D and E</td></tr>
+<tr><td>Siblings</td><td>Same parent</td><td>B and C; D and E. E and F are not siblings</td></tr>
+</table>
+<div class="exam">Parent = directly above. Calling A the parent of D is a common 1-mark loss.</div></div>
+
+<div class="section"><h3>Step 15 — Leaf, internal node, subtree</h3>
+<table class="table"><tr><th>Term</th><th>Meaning</th><th>On A–G</th></tr>
+<tr><td>Leaf / terminal / external</td><td>No children. Degree 0. Both pointers NULL</td><td>D, G, F</td></tr>
+<tr><td>Internal / non-leaf</td><td>At least one child. These notes also count the root as internal</td><td>A, B, C, E</td></tr>
+<tr><td>Subtree</td><td>A node plus all its descendants. That picture is itself a tree</td><td>Subtree of B = {B, D, E, G}</td></tr>
+</table>
+<div class="exam">A leaf has degree 0. E is not a leaf because it has G.</div></div>
+
+<div class="section"><h3>Step 16 — Node, edge, degree, weight</h3>
+<table class="table"><tr><th>Term</th><th>Meaning</th><th>On A–G</th></tr>
+<tr><td>Edge / branch</td><td>Parent–child link</td><td>6 edges. Law: n − 1</td></tr>
+<tr><td>Degree of a node</td><td>Number of children only — not grandchildren</td><td>A=2, C=1, D=0</td></tr>
+<tr><td>Degree of the tree</td><td>Maximum node-degree in the whole tree</td><td>2</td></tr>
+<tr><td>Weight</td><td>Number of leaves</td><td>3</td></tr>
+</table>
+<div class="law">Degree of a <b>node</b> ≠ degree of the <b>tree</b>. Tree degree is the maximum.</div>
+<div class="exam">C has only a right child, so deg(C)=1. Do not say 2.</div></div>
+
+<div class="section"><h3>Step 17 — Level, depth, height, path</h3>
+<table class="table"><tr><th>Term</th><th>Meaning</th><th>On A–G</th></tr>
+<tr><td>Level</td><td>Edges from the root. Root = 0. Child = parent + 1</td><td>A=0, B=C=1, D=E=F=2, G=3</td></tr>
+<tr><td>Depth</td><td>Edges from the root down to that node. Same number as level when root = 0</td><td>depth(G)=3 via A→B→E→G</td></tr>
+<tr><td>Height of a node</td><td>Longest downward path in edges. Leaf = 0. height(NULL)= −1</td><td>height(B)=2, height(E)=1, height(D)=0</td></tr>
+<tr><td>Height of the tree</td><td>Height of the root = max level</td><td>3</td></tr>
+<tr><td>Path</td><td>The only simple route. Length = number of edges</td><td>A→B→E→G length 3. You cannot go via C to reach G</td></tr>
+</table>
+<div class="fn"><b>Formulas</b>
+<ol class="algo">
+<li>level(root) = 0, level(child) = level(parent) + 1.</li>
+<li>height(n) = 1 + max(height of children). height(leaf) = 0.</li>
+<li>height(tree) = height(root).</li>
+</ol></div>
+<div class="exam">Depth is from the root down. Height is from the node down to a leaf. Do not swap them.</div></div>
+
+<div class="section"><h3>Step 18 — Ancestor, descendant, forest</h3>
+<table class="table"><tr><th>Term</th><th>Meaning</th><th>On A–G</th></tr>
+<tr><td>Ancestor</td><td>Any node on the path up to the root</td><td>Ancestors of G: E, B, A</td></tr>
+<tr><td>Descendant</td><td>Any node in the subtree below</td><td>Descendants of B: D, E, G. F is not under B</td></tr>
+<tr><td>Forest</td><td>A set of disjoint trees (many roots)</td><td>Delete A → tree(B) and tree(C)</td></tr>
+</table>
+<div class="diagram">Delete A. What remains is a forest:
+
+  Tree 1              Tree 2
+    B                   C
+   / \\                   \\
+  D   E                   F
+       \\
+        G</div>
+<div class="exam">Parent is the immediate ancestor. Child is the immediate descendant. Forest = collection of trees.</div></div>
+
+<div class="section"><h3>Step 19 — Formulas you must write</h3>
+<table class="table"><tr><th>Fact</th><th>Formula</th></tr>
+<tr><td>Edges in any tree</td><td>n − 1</td></tr>
+<tr><td>Edges in a forest of k trees</td><td>n − k</td></tr>
+<tr><td>Level of child</td><td>level(parent) + 1</td></tr>
+<tr><td>Height of a node (edges)</td><td>1 + max(height of children); leaf = 0; NULL = −1</td></tr>
+<tr><td>Height of tree</td><td>height(root) = max level</td></tr>
+<tr><td>Path length</td><td>number of edges on the path</td></tr>
+<tr><td>Weight</td><td>number of leaves</td></tr>
+<tr><td>If this tree were stored as a linked binary tree</td><td>n + 1 NULL pointers (shown again in Binary tab)</td></tr>
+</table>
+<div class="exam">3-mark: 7 nodes ⇒ 6 edges. Height of sample = 3. Weight = 3. If A is deleted, forest has 2 trees and 6 nodes ⇒ 4 edges (6 − 2).</div></div>
+
+<div class="section"><h3>Step 20 — Terminology table (exam copy)</h3>
+<p>Write this table in the exam. Same sample: A at the top; B and C under A; D and E under B; F under C; G under E.</p>
+<table class="table"><tr><th>Term</th><th>Definition</th><th>Example on A–G</th></tr>
+<tr><td>Node</td><td>One data box plus links to children</td><td>A, B, C, D, E, F, G — 7 nodes</td></tr>
+<tr><td>Root</td><td>Only node with no parent</td><td>A</td></tr>
+<tr><td>Edge</td><td>Parent–child link. n nodes ⇒ n − 1 edges</td><td>6 edges</td></tr>
+<tr><td>Parent / Child</td><td>Immediate above / immediate below</td><td>Parent of D is B, not A</td></tr>
+<tr><td>Siblings</td><td>Same parent</td><td>B and C; D and E. E and F are not</td></tr>
+<tr><td>Leaf</td><td>No children. Degree 0</td><td>D, G, F</td></tr>
+<tr><td>Internal</td><td>At least one child</td><td>A, B, C, E</td></tr>
+<tr><td>Degree of a node</td><td>Number of children</td><td>A=2, C=1, D=0</td></tr>
+<tr><td>Degree of the tree</td><td>Maximum node degree</td><td>2</td></tr>
+<tr><td>Level / Depth</td><td>Edges from the root. Root = 0</td><td>A=0, G=3</td></tr>
+<tr><td>Height of a node</td><td>Longest downward path in edges. Leaf = 0</td><td>height(B)=2, height(A)=3</td></tr>
+<tr><td>Height of tree</td><td>Height of the root</td><td>3</td></tr>
+<tr><td>Path</td><td>Exactly one simple route</td><td>A→B→E→G length 3</td></tr>
+<tr><td>Ancestor / Descendant</td><td>Up to root / everything below</td><td>Ancestors of G: E, B, A</td></tr>
+<tr><td>Subtree</td><td>A node plus all its descendants</td><td>Subtree of B = {B, D, E, G}</td></tr>
+<tr><td>Forest</td><td>A set of disjoint trees</td><td>Delete A → tree(B) and tree(C)</td></tr>
+<tr><td>Weight</td><td>Number of leaves</td><td>3</td></tr>
+</table></div>
+
+<div class="section"><h3>Step 21 — Exam drill on A–G</h3>
+<table class="table"><tr><th>Question</th><th>Answer</th><th>How</th></tr>
+<tr><td>Root</td><td>A</td><td>Only node with no parent</td></tr>
+<tr><td>Leaves / weight</td><td>D, G, F / 3</td><td>No children</td></tr>
+<tr><td>Internal nodes</td><td>A, B, C, E</td><td>At least one child</td></tr>
+<tr><td>Siblings of D</td><td>E</td><td>Same parent B. E and F are not siblings</td></tr>
+<tr><td>Parent of G / of D</td><td>E / B</td><td>Immediate node above</td></tr>
+<tr><td>Degree of B / C / E</td><td>2 / 1 / 1</td><td>Count children only</td></tr>
+<tr><td>Degree of the tree</td><td>2</td><td>Maximum node degree</td></tr>
+<tr><td>Level and depth of G</td><td>3</td><td>A→B→E→G is 3 edges</td></tr>
+<tr><td>Height of B / of tree</td><td>2 / 3</td><td>B→E→G ; height of A</td></tr>
+<tr><td>Ancestors of G</td><td>E, B, A</td><td>Walk up to the root</td></tr>
+<tr><td>Descendants of B</td><td>D, E, G</td><td>Everything below B</td></tr>
+<tr><td>Subtree of C</td><td>{C, F}</td><td>C plus descendants</td></tr>
+<tr><td>Number of edges</td><td>6</td><td>n − 1 = 7 − 1</td></tr>
+<tr><td>Forest if A is deleted</td><td>tree(B) and tree(C)</td><td>Two roots, no join</td></tr>
+</table></div>
+
+<div class="section"><h3>Step 22 — Common mistakes</h3>
+<ol class="algo">
+<li>Calling A the parent of D. A is the <b>grandparent</b> / ancestor.</li>
+<li>Mixing degree of a node with degree of the tree.</li>
+<li>Switching level 0 and level 1 in the same answer. Stay consistent.</li>
+<li>Swapping height and depth. Depth = from root down. Height = from the node down to a leaf.</li>
+<li>Saying E and F are siblings. Different parents (B and C).</li>
+<li>Saying two separate trees are “not a tree so they are a graph”. They are a <b>forest</b>.</li>
+<li>Saying the empty tree is invalid. root = NULL is valid.</li>
+<li>Dumping binary-tree types (full / complete / AVL) in a “define a tree” answer. Those belong to later tabs.</li>
+</ol></div>
+
+<div class="section"><h3>Step 23 — How a general tree is stored (LCRS)</h3>
+<p>A general-tree node may have many children. To store it with only two pointers: <b>left = first child</b>, <b>right = next sibling</b>. This is <b>left-child right-sibling (LCRS)</b> or natural correspondence.</p>
+<div class="diagram">General: A has children B, C, D. B has E, F. D has G.
+
+        A
+     /  |  \\
+    B   C   D
+   / \\      |
+  E   F     G
+
+LCRS binary: left = first child, right = next brother/sister.
+
+        A
+       /
+      B
+     / \\
+    E   C
+     \\   \\
+      F   D
+         /
+        G</div>
+<ol class="algo">
+<li>Keep the root.</li>
+<li>First child becomes the left child.</li>
+<li>The remaining children hang as a right chain under that first child.</li>
+</ol>
+<div class="exam">Pre-order of the general tree = pre-order of the LCRS binary tree. Post-order of the general tree = in-order of the LCRS binary tree. A general tree has no natural in-order.</div></div>
+
+<div class="section"><h3>Step 24 — Forest stored as one binary tree</h3>
+<p>Convert each tree with LCRS, then join the roots as a right-sibling chain: root(T1)→right = root(T2).</p>
+<div class="diagram">Forest after deleting A:
+
+   B          C
+  / \\         |
+ D   E        F
+      \\
+       G
+
+Join B→right = C. That is one binary tree.</div>
+<div class="exam">Exam line: forest = many trees. Binary form = first root as the binary root, remaining roots hanging to the right.</div></div>
+
+<div class="section"><h3>Step 25 — createNode in C</h3>
+<p>This is the smallest program for basics: make one node. Left and right start as NULL. That one node is a one-node tree. The empty tree is just root = NULL.</p>
+<div class="fn"><b>Algorithm createNode(value)</b>
+<ol class="algo">
+<li>Allocate memory for one node.</li>
+<li>Store value in data.</li>
+<li>Set left = NULL and right = NULL.</li>
+<li>Return the pointer.</li>
+</ol></div>
+<pre class="code">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+struct Node {
+    int data;
+    struct Node *left;
+    struct Node *right;
+};
+
+struct Node *createNode(int value) {
+    struct Node *n = (struct Node*)malloc(sizeof(struct Node));
+    n-&gt;data = value;
+    n-&gt;left = n-&gt;right = NULL;
+    return n;
+}
+
+int main(void) {
+    int x;
+    struct Node *root;
+    printf("Enter one value: ");
+    scanf("%d", &amp;x);
+    root = createNode(x);
+    printf("Node %d created. left = NULL, right = NULL.\\n", root-&gt;data);
+    return 0;
+}</pre>
+<div class="io">Enter one value: 10
+Node 10 created. left = NULL, right = NULL.</div></div>
+
+<div class="section"><h3>Step 26 — Basics finished. What is next?</h3>
+<p>You can now define a tree, draw A–G, name every term, tell tree from graph from forest, list applications, and write createNode.</p>
+<table class="table"><tr><th>Next tab</th><th>New rule it adds</th></tr>
+<tr><td>Binary Tree</td><td>At most two named children: left and right. Traversal, linked/array, insert/delete/search with no key order</td></tr>
+<tr><td>BST</td><td>Whole left subtree &lt; node &lt; whole right subtree</td></tr>
+<tr><td>Multiway</td><td>A node may hold many keys and many children</td></tr>
+<tr><td>B-Tree</td><td>Balanced multiway tree used on disk</td></tr>
+<tr><td>AVL</td><td>BST that stays balanced with rotations</td></tr>
+</table>
+<div class="law">Press Next tab to start Binary Tree. Keep the A–G picture in your head — Binary tab uses it again for traversals.</div></div>`;
+const TAB_INTRO={
 binary:`<div class="section"><h3>Binary Tree — every concept in this tab</h3>
 <div class="law">Empty, or root + left binary tree + right binary tree. At most two named children.</div>
 <ol class="algo">
@@ -1309,104 +1721,6 @@ avl:`<div class="section"><h3>AVL Tree — every concept in this tab</h3>
 </ol></div>`
 };
 const TAB_EXTRA={
-basics:`<div class="section"><h3>Tree vs graph vs forest — properties</h3>
-<table class="table"><tr><th>Property</th><th>Tree</th><th>Graph</th><th>Forest</th></tr>
-<tr><td>Roots</td><td>Exactly one</td><td>None required</td><td>One or more</td></tr>
-<tr><td>Cycles</td><td>Never</td><td>Allowed</td><td>Never (each piece is a tree)</td></tr>
-<tr><td>Edges</td><td>Exactly n − 1</td><td>Any number</td><td>n − k if k trees</td></tr>
-<tr><td>Path between two nodes</td><td>Exactly one</td><td>Zero or more</td><td>One if same tree, none if different trees</td></tr>
-<tr><td>Parents</td><td>Every non-root has exactly one</td><td>A node may have many</td><td>Same as a tree, per piece</td></tr>
-</table>
-<div class="law">Two parents or a loop ⇒ graph. Two roots and no shared nodes ⇒ forest. A forest of 1 tree is just a tree.</div></div>
-<div class="section"><h3>Empty tree, forest, recursive idea</h3>
-<div class="grid2">
-<div class="card"><b>Empty tree</b><p>Zero nodes. <code>root = NULL</code>. It is a valid tree. Height of NULL = −1 if you count edges (say which convention you use).</p></div>
-<div class="card"><b>Forest</b><p>Many trees, no shared root. Delete the root of a tree → its children become roots of a forest.</p></div>
-</div>
-<div class="diagram">Delete A from the class-notes tree:
-
-  Tree 1              Tree 2
-    B                   C
-   / \\                   \\
-  D   E                   F
-       \\
-        G
-Together = a forest.</div>
-<div class="law">Recursive: a tree = a root + a list of subtrees. Every child starts a smaller tree. Algorithms on trees are almost always recursive for this reason.</div></div>
-<div class="section"><h3>General tree stored as binary — LCRS</h3>
-<p>A general-tree node may have many children. To store it with only two pointers: <b>left = first child</b>, <b>right = next sibling</b>. This is <b>left-child right-sibling (LCRS)</b> or natural correspondence.</p>
-<div class="diagram">General: A has children B, C, D. B has E, F. D has G.
-
-        A
-     /  |  \\
-    B   C   D
-   / \\      |
-  E   F     G
-
-LCRS binary: left = first child, right = next brother/sister.
-
-        A
-       /
-      B
-     / \\
-    E   C
-     \\   \\
-      F   D
-         /
-        G</div>
-<ol class="algo">
-<li>Keep the root.</li>
-<li>First child becomes the left child.</li>
-<li>The remaining children hang as a right chain under that first child.</li>
-</ol>
-<div class="exam">Pre-order of the general tree = pre-order of the LCRS binary tree. Post-order of the general tree = in-order of the LCRS binary tree. A general tree has no natural in-order.</div></div>
-<div class="section"><h3>Forest stored as one binary tree</h3>
-<p>Convert each tree with LCRS, then join the roots as a right-sibling chain: root(T1)→right = root(T2), and so on.</p>
-<div class="diagram">Forest after deleting A:
-
-   B          C
-  / \\         |
- D   E        F
-      \\
-       G
-
-Join B→right = C. That is one binary tree.</div>
-<div class="exam">Exam line: forest = many trees. Binary form = first root as the binary root, remaining roots hanging to the right.</div></div>
-<div class="section"><h3>Applications of trees (4-mark list)</h3>
-<table class="table"><tr><th>Use</th><th>Why a tree</th></tr>
-<tr><td>File system / folders</td><td>One parent folder, no cycle</td></tr>
-<tr><td>HTML / XML DOM</td><td>Tags nest; &lt;html&gt; is the root</td></tr>
-<tr><td>Expression / compiler</td><td>Operators inside, operands at leaves</td></tr>
-<tr><td>Database index</td><td>B-Tree / B+ Tree, height log_m n</td></tr>
-<tr><td>Huffman coding</td><td>Extended binary tree of codes</td></tr>
-<tr><td>Decision / game tree</td><td>Each move opens child positions</td></tr>
-<tr><td>Routing / org chart</td><td>Hierarchy, one boss</td></tr>
-</table>
-<table class="table"><tr><th>n keys</th><th>List (worst)</th><th>Balanced tree ≈ log₂ n</th></tr>
-<tr><td>1,000</td><td>1,000</td><td>10</td></tr>
-<tr><td>1,000,000</td><td>1,000,000</td><td>20</td></tr>
-<tr><td>1,000,000,000</td><td>1,000,000,000</td><td>30</td></tr>
-</table></div>
-<div class="section"><h3>Syntax — create a node (algorithm)</h3>
-<div class="fn"><b>Algorithm createNode(value)</b>
-<ol class="algo">
-<li>Allocate memory for one node.</li>
-<li>Store value in data.</li>
-<li>Set every child pointer to NULL (binary: left and right).</li>
-<li>Return the pointer. An empty tree is just root = NULL.</li>
-</ol></div>
-<pre class="code">struct Node {
-    int data;
-    struct Node *left;
-    struct Node *right;
-};
-struct Node *createNode(int value) {
-    struct Node *n = (struct Node*)malloc(sizeof(struct Node));
-    n-&gt;data = value;
-    n-&gt;left = n-&gt;right = NULL;
-    return n;
-}</pre>
-<div class="io">Node 10 created. left = NULL, right = NULL. This is a one-node tree.</div></div>`,
 binary:`<div class="section"><h3>More binary concepts: count, copy, threads, expression</h3>
 <div class="fn"><b>Algorithm count(n)</b> — if n is NULL return 0, else 1 + count(left) + count(right).</div>
 <div class="fn"><b>Algorithm height(n)</b> — if n is NULL return −1 (or 0), else 1 + max(height(left), height(right)).</div>
@@ -1447,29 +1761,7 @@ avl:`<div class="section"><h3>More AVL concepts: delete, height bound, vs others
 <tr><td>Use</td><td>memory, small n</td><td>memory, guaranteed log n</td><td>databases, disk</td></tr>
 </table></div>`
 };
-const TAB_END={
-basics:`<div class="section"><h3>Terminology summary</h3>
-<p>Same sample: A at the top; B and C under A; D and E under B; F under C; G under E.</p>
-<table class="table"><tr><th>Term</th><th>Definition</th><th>Example on A–G</th></tr>
-<tr><td>Node</td><td>One data box plus links to children</td><td>A, B, C, D, E, F, G — 7 nodes</td></tr>
-<tr><td>Root</td><td>Only node with no parent</td><td>A</td></tr>
-<tr><td>Edge</td><td>Parent–child link. n nodes ⇒ n − 1 edges</td><td>6 edges</td></tr>
-<tr><td>Parent / Child</td><td>Immediate above / immediate below</td><td>Parent of D is B, not A</td></tr>
-<tr><td>Siblings</td><td>Same parent</td><td>B and C; D and E. E and F are not</td></tr>
-<tr><td>Leaf</td><td>No children. Degree 0</td><td>D, G, F</td></tr>
-<tr><td>Internal</td><td>At least one child</td><td>A, B, C, E</td></tr>
-<tr><td>Degree of a node</td><td>Number of children</td><td>A=2, C=1, D=0</td></tr>
-<tr><td>Degree of the tree</td><td>Maximum node degree</td><td>2</td></tr>
-<tr><td>Level / Depth</td><td>Edges from the root. Root = 0</td><td>A=0, G=3</td></tr>
-<tr><td>Height of a node</td><td>Longest downward path in edges. Leaf = 0</td><td>height(B)=2, height(A)=3</td></tr>
-<tr><td>Height of tree</td><td>Height of the root</td><td>3</td></tr>
-<tr><td>Path</td><td>Exactly one simple route</td><td>A→B→E→G length 3</td></tr>
-<tr><td>Ancestor / Descendant</td><td>Up to root / everything below</td><td>Ancestors of G: E, B, A</td></tr>
-<tr><td>Subtree</td><td>A node plus all its descendants</td><td>Subtree of B = {B, D, E, G}</td></tr>
-<tr><td>Forest</td><td>A set of disjoint trees</td><td>Delete A → tree(B) and tree(C)</td></tr>
-<tr><td>Weight</td><td>Number of leaves</td><td>3</td></tr>
-</table></div>`
-};
+const TAB_END={};
 function mixPoint(block){
   const T=sectionsOf(block.theory), V=sectionsOf(block.visualization), P=sectionsOf(block.program);
   const out=[], n=Math.max(T.length,V.length,P.length);
@@ -1486,6 +1778,7 @@ function filterSections(els, keep, skip){
   });
 }
 function mixTab(tab){
+  if(tab.id==='basics') return sectionsOf(TAB_BASICS);
   const out=[];
   if(TAB_INTRO[tab.id]) out.push.apply(out, sectionsOf(TAB_INTRO[tab.id]));
   (tab.keys||[]).forEach(function(k){
@@ -1511,7 +1804,7 @@ function enhanceCard(card, topicId){
     run.onclick=()=>{ box.hidden=false; typewrite(box, io.textContent); };
     row.appendChild(run); card.appendChild(row); card.appendChild(box);
   }
-  if(!card.querySelector('#termBoard, .tv-svg, .live-tree')){
+  if(!card.classList.contains('no-auto-tree') && !card.querySelector('#termBoard, .tv-svg, .live-tree')){
     const title=(card.querySelector('h3')||{}).textContent||'';
     const hold=document.createElement('div');
     hold.innerHTML=drawTree(treeForTitle(title, topicId));
@@ -1578,7 +1871,7 @@ function render(){
   const t=topics.find(x=>x.id===currentTopic)||topics[0];
   document.getElementById('pointPill').textContent='TAB '+t.no;
   document.getElementById('topicTitle').textContent=t.title;
-  document.getElementById('officialLine').innerHTML='<b>'+t.title+'.</b> '+t.official+'. Inside: definition, example, implementation, then advanced. Same examples as before. Next walks this tab.';
+  document.getElementById('officialLine').innerHTML='<b>'+t.title+'.</b> '+t.official+'. Next walks one idea at a time. Same A–G sample tree for every Basics word.';
   [...menu.querySelectorAll('button')].forEach(b=>b.classList.toggle('active',b.dataset.id===currentTopic));
   cards=mixTab(t);
   showStep(0);
