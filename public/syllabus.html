@@ -9,8 +9,11 @@
 *{box-sizing:border-box}
 html,body{margin:0;background:#fff;color:#1a1a1a;font:20px/1.7 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
 .wrap{max-width:900px;margin:auto;padding:0 18px}
-.hero,.menu-shell,.footer,.topic-head,.official,.badge,.tabs,.part,.teach{display:none!important}
+.hero,.menu-shell,.footer,.topic-head,.official,.badge,.part,.teach,.drawer,.points-btn{display:none!important}
 .bar{background:#fff;border-bottom:1px solid #e5e5e5;padding:10px 0}
+.tabs6{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;width:100%;margin-bottom:10px}
+@media(max-width:900px){.tabs6{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){.tabs6{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .bar-in{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .points-btn,.lbtn,.run-btn{border:1px solid #cfcfcf;background:#fff;color:#1a1a1a;border-radius:10px;padding:10px 14px;cursor:pointer;font:650 17px/1.2 system-ui,sans-serif}
 .points-btn{min-width:220px;text-align:left}
@@ -83,8 +86,8 @@ html,body{margin:0;background:#fff;color:#1a1a1a;font:20px/1.7 system-ui,-apple-
 </style>
 </head>
 <body>
-<div class="bar"><div class="wrap bar-in">
-<button type="button" class="points-btn" id="pointsBtn">Point <span id="barNo">1</span> · <span id="barName">Definition</span></button>
+<div class="bar"><div class="wrap">
+<nav class="menu tabs6" id="menu"></nav>
 <div class="lesson-btns">
 <button type="button" class="lbtn" id="lessonPrev">Prev</button>
 <button type="button" class="lbtn primary" id="lessonNext">Next</button>
@@ -92,14 +95,12 @@ html,body{margin:0;background:#fff;color:#1a1a1a;font:20px/1.7 system-ui,-apple-
 <span id="lessonStat">1 / 1</span>
 </div>
 </div></div>
-<div class="drawer" id="drawer"><div class="wrap">
-<div class="drawer-title">Pick a syllabus point. Inside it, theory, tree and program come one step at a time.</div>
-<nav class="menu" id="menu"></nav>
-</div></div>
 <main class="wrap content">
 <p class="crumb" id="officialLine"></p>
 <h2 id="topicTitle" hidden></h2>
 <span id="pointPill" hidden></span>
+<button type="button" class="points-btn" id="pointsBtn" hidden></button>
+<div class="drawer" id="drawer" hidden></div>
 <section class="panel" id="panel"></section>
 </main>
 
@@ -107,16 +108,12 @@ html,body{margin:0;background:#fff;color:#1a1a1a;font:20px/1.7 system-ui,-apple-
 
 <script>
 const topics=[
-{id:'definition',no:1,label:'Definition',title:'Tree Definition and Fundamentals',official:'Definition'},
-{id:'traversal',no:2,label:'Traversal',title:'Tree Traversal',official:'Traversal'},
-{id:'linked',no:3,label:'Linked Implementation',title:'Linked Implementation of Binary Tree',official:'Linked implementation'},
-{id:'binary-ops',no:4,label:'Binary Tree Operations',title:'Operations on Binary Trees',official:'Operations on Binary Trees: insert, delete, search operations'},
-{id:'bst-ops',no:5,label:'BST Operations',title:'Binary Search Tree Operations',official:'Binary Search Trees: insert, delete, search operations'},
-{id:'multiway',no:6,label:'Multiway Trees',title:'Multiway Trees',official:'Multiway Trees'},
-{id:'btree',no:7,label:'B-Trees',title:'B-Trees',official:'B trees'},
-{id:'avl',no:8,label:'AVL Tree',title:'AVL Tree and Balance Factor',official:'AVL Tree'},
-{id:'single-rotation',no:9,label:'Single Rotation',title:'Single Rotation of AVL Trees',official:'Single rotation of AVL Trees'},
-{id:'double-rotation',no:10,label:'Double Rotation',title:'Double Rotation of AVL Trees',official:'Double rotation of AVL Trees'}];
+{id:'basics',no:1,label:'Tree Basics',title:'Tree Basics',official:'All tree definitions and terminology',keys:['definition']},
+{id:'binary',no:2,label:'Binary Tree',title:'Binary Tree',official:'Binary tree, traversal, linked/array, insert delete search',keys:['traversal','linked','binary-ops']},
+{id:'bst',no:3,label:'Binary Search Tree',title:'Binary Search Tree',official:'BST insert, delete, search',keys:['bst-ops']},
+{id:'multiway',no:4,label:'Multiway Tree',title:'Multiway Tree',official:'m-way search trees',keys:['multiway']},
+{id:'btree',no:5,label:'B-Tree',title:'B-Tree',official:'B trees',keys:['btree']},
+{id:'avl',no:6,label:'AVL Tree',title:'AVL Tree',official:'AVL, single and double rotation',keys:['avl','single-rotation','double-rotation']}];
 
 const data={
 'definition':{
@@ -1151,7 +1148,7 @@ linked:'10(20(40,),30)',
 'bst-ops':'50(30(20,40),70(60,80))',
 multiway:'40(20(10,30),60(50,70))',
 btree:'20(10(5,12),30(25,40))',
-avl:'30(20(10,),40)',
+avl:'30(20(10,),40)',basics:'A(B(D,E(,G)),C(,F))',binary:'10(20(40,50),30)',bst:'50(30(20,40),70(60,80))',
 'single-rotation':'20(10,30)',
 'double-rotation':'20(10,30)'
 };
@@ -1242,10 +1239,69 @@ function sectionsOf(htmlStr){
   d.innerHTML=htmlStr||'';
   return [...d.querySelectorAll('.section')];
 }
+const TAB_INTRO={
+basics:`<div class="section"><h3>Tree Basics — every definition with key points</h3>
+<p>Read this first. The <b>same class-notes examples</b> you already have come in the next steps.</p>
+<div class="law">A <b>Tree</b> is a non-linear, hierarchical structure of nodes and edges. Exactly one path between any two nodes. One root. No cycles. n nodes ⇒ n − 1 edges.</div>
+<table class="table"><tr><th>Term</th><th>Key point</th></tr>
+<tr><td>Node</td><td>One data box plus links to children</td></tr>
+<tr><td>Root</td><td>Only node with no parent</td></tr>
+<tr><td>Edge</td><td>Parent–child link. Total edges = n − 1</td></tr>
+<tr><td>Parent / Child</td><td>Immediate above / immediate below. A is not the parent of its grandchild</td></tr>
+<tr><td>Siblings</td><td>Same parent. Different parents ⇒ not siblings</td></tr>
+<tr><td>Leaf</td><td>No children. Degree 0</td></tr>
+<tr><td>Internal</td><td>At least one child</td></tr>
+<tr><td>Degree of a node</td><td>Number of children</td></tr>
+<tr><td>Degree of the tree</td><td>Maximum node degree</td></tr>
+<tr><td>Level / Depth</td><td>Edges from the root. Root = 0 in these notes</td></tr>
+<tr><td>Height of a node</td><td>Longest downward path in edges. Leaf = 0</td></tr>
+<tr><td>Height of tree</td><td>Height of the root</td></tr>
+<tr><td>Path</td><td>Exactly one simple path between two nodes</td></tr>
+<tr><td>Ancestor / Descendant</td><td>Up to root / everything below</td></tr>
+<tr><td>Subtree</td><td>A node plus all its descendants</td></tr>
+<tr><td>Forest</td><td>A set of disjoint trees</td></tr>
+<tr><td>Weight</td><td>Number of leaves</td></tr>
+</table>
+<table class="table"><tr><th>Kind of tree</th><th>One-line definition</th><th>Key point</th></tr>
+<tr><td>Binary tree</td><td>Every node has 0, 1 or 2 children. Left and right are named</td><td>Left-only and right-only are different trees</td></tr>
+<tr><td>BST</td><td>Binary tree + whole left subtree &lt; node &lt; whole right subtree</td><td>In-order is sorted</td></tr>
+<tr><td>Multiway / m-way</td><td>A node may have more than 2 children</td><td>Order m ⇒ at most m children and m − 1 keys</td></tr>
+<tr><td>B-Tree</td><td>Height-balanced multiway search tree used on disk</td><td>All leaves on the same level. Root splits to grow height</td></tr>
+<tr><td>AVL</td><td>BST that stays balanced</td><td>|BF| ≤ 1. Fix with single or double rotation</td></tr>
+</table>
+<div class="note">Open the other tabs for the full story of that tree. Examples on the next steps are the same A–G / class-notes pictures.</div></div>`,
+binary:`<div class="section"><h3>Binary Tree — what this tab covers</h3>
+<div class="law">A binary tree is empty, or a root plus two disjoint binary trees: left and right. At most two children. Sides have names.</div>
+<p><b>Key points</b></p>
+<ol class="algo"><li>0, 1 or 2 children — never more.</li><li>Left child ≠ right child even if the value is the same.</li><li>Types: full / strict, complete / almost complete, perfect, skewed, extended.</li><li>Traversal: pre NLR, in LNR, post LRN, level-order with a queue.</li><li>Linked form: [left | data | right]. Array form: left = 2i, right = 2i+1 (complete trees / heaps).</li><li>No key-order rule → insert / delete / search are O(n) level-order jobs.</li></ol>
+<div class="exam">Advanced here: rebuild from two traversals, iterative in-order, n₀ = n₂ + 1, Catalan count.</div></div>`,
+bst:`<div class="section"><h3>Binary Search Tree — what this tab covers</h3>
+<div class="law">For every node: whole left subtree &lt; node &lt; whole right subtree. Both sides are BSTs. In-order is sorted.</div>
+<p><b>Key points</b></p>
+<ol class="algo"><li>Search / insert walk left or right like binary search.</li><li>Delete has 3 cases: leaf, one child, two children (replace by in-order successor).</li><li>Balanced: O(log n). Sorted inserts make a stick: O(n). That is why AVL exists.</li></ol></div>`,
+multiway:`<div class="section"><h3>Multiway Tree — what this tab covers</h3>
+<div class="law">Order m ⇒ at most m children and at most m − 1 keys. A node with r keys has r+1 children.</div>
+<p><b>Key points</b></p>
+<ol class="algo"><li>Keys inside a node are sorted and act as separators.</li><li>Search compares inside the fat node, then picks one child.</li><li>Implementation: arrays of keys and child pointers in one node.</li><li>Advanced: B-Tree is the balanced, disk-friendly multiway tree — next tab.</li></ol></div>`,
+btree:`<div class="section"><h3>B-Tree — what this tab covers</h3>
+<div class="law">Height-balanced multiway search tree. All leaves on one level. Height grows only when the root splits.</div>
+<p><b>Key points</b></p>
+<ol class="algo"><li>Max m children, max m − 1 keys. Except root, at least ceil(m/2) children.</li><li>Search: from root, pick the child range, stop in a node.</li><li>Insert: add in a leaf; overflow → split at median; median goes up.</li><li>Delete: borrow from a sibling, or merge.</li><li>Advanced: B vs B+ (records only in leaves, leaves linked).</li></ol></div>`,
+avl:`<div class="section"><h3>AVL Tree — what this tab covers</h3>
+<div class="law">AVL = BST + |height(left) − height(right)| ≤ 1 for every node. BF is −1, 0 or +1.</div>
+<p><b>Key points</b></p>
+<ol class="algo"><li>Insert like a BST, then walk up and rotate if |BF| = 2.</li><li>Single rotation: LL → right rotate, RR → left rotate.</li><li>Double rotation: LR → left then right, RL → right then left.</li><li>Insert needs at most one rotation. Search stays O(log n).</li></ol></div>`
+};
 function mixPoint(block){
   const T=sectionsOf(block.theory), V=sectionsOf(block.visualization), P=sectionsOf(block.program);
   const out=[], n=Math.max(T.length,V.length,P.length);
   for(let i=0;i<n;i++){ if(T[i]) out.push(T[i]); if(V[i]) out.push(V[i]); if(P[i]) out.push(P[i]); }
+  return out;
+}
+function mixTab(tab){
+  const out=[];
+  if(TAB_INTRO[tab.id]) out.push.apply(out, sectionsOf(TAB_INTRO[tab.id]));
+  (tab.keys||[]).forEach(function(k){ out.push.apply(out, mixPoint(data[k]||{})); });
   return out;
 }
 function enhanceCard(card, topicId){
@@ -1284,7 +1340,7 @@ function showStep(i){
   bindTermViz();
   const nav=document.createElement('div'); nav.className='nav-big';
   const prev=document.createElement('button'); prev.className='lbtn'; prev.textContent='Prev'; prev.onclick=()=>{stopPlay();showStep(stepI-1);};
-  const next=document.createElement('button'); next.className='lbtn primary'; next.textContent=stepI===cards.length-1?'Next point':'Next'; next.onclick=()=>{stopPlay(); if(stepI===cards.length-1) goNextPoint(); else showStep(stepI+1);};
+  const next=document.createElement('button'); next.className='lbtn primary'; next.textContent=stepI===cards.length-1?'Next tab':'Next'; next.onclick=()=>{stopPlay(); if(stepI===cards.length-1) goNextPoint(); else showStep(stepI+1);};
   nav.appendChild(prev); nav.appendChild(next); panel.appendChild(nav);
   document.getElementById('lessonStat').textContent=(stepI+1)+' / '+cards.length;
   window.scrollTo({top:0,behavior:'smooth'});
@@ -1323,28 +1379,27 @@ function bindTermViz(){
   board.querySelectorAll('g[data-id]').forEach((g,i)=>{ g.style.opacity='0'; setTimeout(()=>{g.style.transition='opacity .35s'; g.style.opacity='1';},80*i); });
   apply('root');
 }
-let currentTopic='definition';
+let currentTopic='basics';
 const menu=document.getElementById('menu'); const panel=document.getElementById('panel');
-const drawer=document.getElementById('drawer'); const pointsBtn=document.getElementById('pointsBtn');
-function buildMenu(){ menu.innerHTML=''; topics.forEach(t=>{ const b=document.createElement('button'); b.dataset.id=t.id; b.innerHTML='<span class="num">'+t.no+'</span><span>'+t.label+'</span>'; b.onclick=()=>{currentTopic=t.id;location.hash=t.id;drawer.classList.remove('show');pointsBtn.classList.remove('open');render();}; menu.appendChild(b); }); }
+function buildMenu(){ menu.innerHTML=''; topics.forEach(t=>{ const b=document.createElement('button'); b.dataset.id=t.id; b.innerHTML='<span class="num">'+t.no+'</span><span>'+t.label+'</span>'; b.onclick=()=>{currentTopic=t.id;location.hash=t.id;render();}; menu.appendChild(b); }); }
 function render(){
   stopPlay();
   const t=topics.find(x=>x.id===currentTopic)||topics[0];
-  document.getElementById('pointPill').textContent='SYLLABUS POINT '+t.no;
+  document.getElementById('pointPill').textContent='TAB '+t.no;
   document.getElementById('topicTitle').textContent=t.title;
-  document.getElementById('barNo').textContent=t.no;
-  document.getElementById('barName').textContent=t.label;
-  document.getElementById('officialLine').innerHTML='<b>Point '+t.no+' / 10 — '+t.title+'.</b> Official: '+t.official+' Read with Next. Every step has a tree. Code has Run.';
+  document.getElementById('officialLine').innerHTML='<b>'+t.title+'.</b> '+t.official+'. Inside: definition, example, implementation, then advanced. Same examples as before. Next walks this tab.';
   [...menu.querySelectorAll('button')].forEach(b=>b.classList.toggle('active',b.dataset.id===currentTopic));
-  cards=mixPoint(data[t.id]||{});
+  cards=mixTab(t);
   showStep(0);
 }
-pointsBtn.onclick=()=>{drawer.classList.toggle('show');pointsBtn.classList.toggle('open');};
 document.getElementById('lessonPrev').onclick=()=>{stopPlay();showStep(stepI-1);};
 document.getElementById('lessonNext').onclick=()=>{stopPlay(); if(stepI===cards.length-1) goNextPoint(); else showStep(stepI+1);};
 document.getElementById('lessonPlay').onclick=playTeach;
 buildMenu();
-const initial=location.hash.replace('#',''); if(topics.some(x=>x.id===initial)) currentTopic=initial; render();
+const HASH_MAP={definition:'basics',traversal:'binary',linked:'binary','binary-ops':'binary','bst-ops':'bst','single-rotation':'avl','double-rotation':'avl'};
+const initial=location.hash.replace('#','');
+currentTopic=HASH_MAP[initial]||(topics.some(x=>x.id===initial)?initial:'basics');
+render();
 
 </script>
 </body>
