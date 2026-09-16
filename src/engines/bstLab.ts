@@ -31,9 +31,10 @@ export function idleBst(root: BinNode | null): TreeStep {
 }
 
 function pathMarks(path: string[], current?: string, extra?: Record<string, string>) {
-  const marks: Record<string, string> = { ...extra }
+  const marks: Record<string, string> = {}
   for (const id of path) marks[id] = 'path'
   if (current) marks[current] = 'current'
+  Object.assign(marks, extra)
   return marks
 }
 

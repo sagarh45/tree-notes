@@ -61,6 +61,10 @@ export function usePlayback(steps: TreeStep[]) {
     stop()
     setIndex(0)
   }
+  const seek = (at: number) => {
+    stop()
+    setIndex(Math.max(0, Math.min(Math.round(at), max)))
+  }
 
   return {
     index: safeIndex,
@@ -74,6 +78,7 @@ export function usePlayback(steps: TreeStep[]) {
     next,
     prev,
     restart,
+    seek,
     stop,
   }
 }

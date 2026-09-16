@@ -13,13 +13,13 @@ Open http://localhost:4321. If that port is occupied, use `npm run dev -- --port
 
 ## Study Pages
 
-- **Syllabus:** seven syllabus points with links to their notes; all 13 chapters.
-- **Theory:** 54 topics with definitions, explanations, diagrams, worked examples and applicable C syntax/algorithms. Complete programs are inline or linked.
+- **Syllabus (home):** ten pointwise lessons matching the Unit IV headings. Each point contains theory, diagrams, case playback, algorithms, syntax and full C programs.
+- **Reference:** all 13 chapters and 54 source topics, including optional material outside the core syllabus.
 - **Visualizer:** traversals, BST, AVL, B-Tree, heap, Red-Black, Huffman and trie; example trees, playback, variables and code.
-- **Programs:** 31 complete C listings, including chapter examples; search, copy, download, sample input/output where provided.
+- **Programs:** 34 complete C listings, including linked-memory, multiway-search and full B-Tree deletion examples; also embedded inside the relevant syllabus points.
 - **Practice / Revise:** questions, formulas, complexity comparisons and exam revision.
 
-The light layout includes chapter filtering, full-note search, stable topic numbers, a syllabus-focus filter, mobile navigation and expandable diagrams. Topic and program URLs support direct links. The library also distinguishes unordered binary-tree operations from BST operations.
+The light layout includes a master syllabus index, a mobile point selector, topic search, next/previous lessons and straight directed tree edges. Case players have step buttons, speed, autoplay, restart, a step slider and a transcript. LR/RL always include the intermediate rotation. AVL deletion includes all six child-balance cases. Topic and program URLs support direct links. The library distinguishes unordered binary-tree operations from BST operations.
 
 ## Syllabus And Notes
 
@@ -47,8 +47,21 @@ npm run build
 npm run verify:notes
 ```
 
-The notes checker requires GCC on PATH. It checks topic/program links, renders each diagram specification, tests duplicate insertion into B-Trees, and syntax-checks all C listings with C11. It also compiles and runs the new unordered binary-tree program against sample, empty, single-node, missing-key, root/last-deletion and duplicate-value cases.
+The notes checker requires GCC on PATH. It checks every master point has diagrams, case playback and programs; renders diagram specifications; tests straight edges and all rotation intermediate states; and syntax-checks all 34 C listings. Randomized tests cover full-tree AVL insertion traces, cascading deletion rebalancing, and 30 complete B-Tree C insert/search/delete runs. Linked, multiway and binary-tree programs also have executable sample/edge-case tests.
 
 Generated executables, screenshots and logs belong in the ignored `.verification` directory. The check does not run every interactive C program end to end.
 
-The visualizer currently animates B-Tree insertion. B-Tree deletion is explained separately with borrow, merge and root-shrink diagrams in Theory.
+The free-form visualizer animates B-Tree insertion. The B-Tree syllabus point contains prepared deletion case players (both borrow directions, merge, internal replacement and root shrink), plus a full order-4 C program. The deletion drawings use order 3 with bottom-up repair; the program uses minimum degree 2 with top-down repair, explicitly labelled in the lesson.
+
+## Production
+
+Canonical site: https://tree-notes1.vercel.app/
+
+GitHub source branch: `trees-lab-syllabus-refresh`. The existing `main` branch is preserved and is not this redesign. Deploy explicitly to the existing `tree-notes1` project:
+
+```sh
+vercel link --yes --project tree-notes1 --scope sagar-somayya-hiremaths-projects
+vercel deploy --prod --yes --project tree-notes1
+```
+
+The old `tree-notes` Vercel project was removed. Do not recreate it. Local verification files are excluded through both `.gitignore` and `.vercelignore`.

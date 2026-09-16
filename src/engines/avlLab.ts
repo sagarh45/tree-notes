@@ -35,7 +35,7 @@ export function buildAvlInsert(root: BinNode | null, key: number): { steps: Tree
   }
   const steps: TreeStep[] = r.steps.map((s, i) => ({
     id: `avl-${i}`,
-    label: s.kind === 'insert' ? `Place ${key}` : s.kind === 'unbalanced' ? `BF out of range (${s.rot})` : `Rotate ${s.rot}`,
+    label: s.kind === 'insert' ? `Place ${key}` : s.kind === 'unbalanced' ? `BF out of range (${s.rot})` : s.note.split(':')[0],
     tree: s.tree,
     marks: s.marks,
     showBf: true,
@@ -45,7 +45,7 @@ export function buildAvlInsert(root: BinNode | null, key: number): { steps: Tree
       key,
       phase: s.kind,
       rotation: s.rot ?? 'none',
-      localRoot: String(s.tree.value),
+      treeRoot: String(s.tree.value),
     },
     explanation: {
       happening: s.note,
@@ -55,10 +55,10 @@ export function buildAvlInsert(root: BinNode | null, key: number): { steps: Tree
           : s.kind === 'unbalanced'
             ? 'Walking back up, a node has |BF| = 2. The two-letter case is the path from that node toward the new key.'
             : 'A rotation (or double rotation) restores BF and keeps in-order (still a BST).',
-      changed: s.kind === 'rotated' ? `Local root is now ${s.tree.value}.` : s.note,
+      changed: s.note,
     },
     message: s.note,
-    messageTone: s.kind === 'unbalanced' ? 'warn' : 'success',
+    messageTone: Object.values(s.marks).includes('unbalanced') ? 'warn' : 'success',
   }))
   if (!steps.length) {
     steps.push({
@@ -95,9 +95,11 @@ export function buildRotationDemo(kind: RotKind): TreeStep[] {
     explanation: {
       happening: s.title,
       why: s.detail,
-      changed: i === 0 ? 'Unbalanced shape.' : 'After rotation, BF is legal again.',
+      changed: i === 0 ? 'Unbalanced shape.' : i === rotationScenarioLength(kind) - 1 ? 'Both subtrees are balanced; in-order is unchanged.' : 'First rotation complete. The pivot still needs the second rotation.',
     },
     message: s.detail,
     messageTone: i === 0 ? 'warn' : 'success',
   }))
 }
+
+function rotationScenarioLength(kind: RotKind) { return kind === 'LR' || kind === 'RL' ? 3 : 2 }

@@ -1,3 +1,4 @@
+import { useId } from 'react'
 import { layoutTrie, type TrieNode } from '../../lib/trie'
 
 type Props = {
@@ -7,6 +8,7 @@ type Props = {
 }
 
 export function TrieSvg({ root, highlight = [], compact = false }: Props) {
+  const arrowId = useId()
   if (!root) {
     return <div className="viz-frame viz-empty">Trie is empty. Type a word and Insert.</div>
   }
@@ -22,6 +24,7 @@ export function TrieSvg({ root, highlight = [], compact = false }: Props) {
         role="img"
         aria-label="Trie diagram"
       >
+        <defs><marker id={arrowId} viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M 0 0 L 8 4 L 0 8 Z" fill="context-stroke" /></marker></defs>
         {laid.edges.map((e, i) => {
           const midX = (e.from.x + e.to.x) / 2
           const midY = (e.from.y + e.to.y) / 2
@@ -33,7 +36,8 @@ export function TrieSvg({ root, highlight = [], compact = false }: Props) {
                 x1={e.from.x}
                 y1={e.from.y + r}
                 x2={e.to.x}
-                y2={e.to.y - r}
+                y2={e.to.y - r - 2}
+                markerEnd={`url(#${arrowId})`}
               />
               <text className={`trie-elabel${on ? ' on' : ''}`} x={midX + 8} y={midY} textAnchor="start">
                 {e.ch}

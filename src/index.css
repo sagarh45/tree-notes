@@ -1824,7 +1824,7 @@ a.btn { text-decoration: none; display: inline-block; }
 .tb-syntax { min-width: 0; }
 .term-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
 .term-mini { border-radius: 6px; min-width: 0; }
-.dg-pair { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
+.dg-pair { grid-template-columns: minmax(0, 1fr); }
 .dg-steps { grid-column: 1 / -1; min-width: 0; }
 .ex-viz { border-radius: 6px; box-shadow: none; }
 .ex-viz:hover { box-shadow: none; }

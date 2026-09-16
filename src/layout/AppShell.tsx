@@ -1,10 +1,10 @@
-import { Outlet, NavLink, useLocation } from 'react-router-dom'
+import { Outlet, NavLink, Link, useLocation } from 'react-router-dom'
 import { Suspense, useEffect, useState } from 'react'
 import { BookOpen, Code2, FlaskConical, GraduationCap, Home, ListChecks, type LucideIcon } from 'lucide-react'
 
 const LINKS: [string, string, string, LucideIcon][] = [
   ['/', 'Syllabus', 'Syllabus', Home],
-  ['/theory', 'Theory', 'Theory', BookOpen],
+  ['/reference', 'Reference', 'Reference', BookOpen],
   ['/lab', 'Visualizer', 'Lab', FlaskConical],
   ['/programs', 'Programs', 'Code', Code2],
   ['/practice', 'Practice', 'Quiz', ListChecks],
@@ -14,6 +14,7 @@ const LINKS: [string, string, string, LucideIcon][] = [
 export function AppShell() {
   const [progress, setProgress] = useState(0)
   const { pathname, hash } = useLocation()
+  const isCourse = pathname === '/'
 
   useEffect(() => {
     document.documentElement.classList.remove('dark')
@@ -38,7 +39,7 @@ export function AppShell() {
   }, [])
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell${isCourse ? ' course-shell' : ''}`}>
       <div className="read-bar" aria-hidden="true">
         <span style={{ width: `${progress}%` }} />
       </div>
@@ -64,8 +65,9 @@ export function AppShell() {
             <p>Data Structures / WIT / 2026-27</p>
           </div>
         </div>
+        {isCourse ? <div className="course-tools"><Link to="/reference"><BookOpen size={16} />Reference</Link><Link to="/practice"><ListChecks size={16} />Practice</Link></div> : null}
       </header>
-      <nav className="nav-bar" aria-label="Primary">
+      <nav className="nav-bar" aria-label="Resources">
         {LINKS.map(([to, label, , Icon]) => (
           <NavLink key={to} to={to} end={to === '/'}>
             <span className="nav-ico" aria-hidden="true">
@@ -83,7 +85,7 @@ export function AppShell() {
       <footer className="app-footer">
         <b>Unit IV / Trees.</b> WIT 25ITU3CC2T, 2026-27. Core syllabus and additional reference notes.
       </footer>
-      <nav className="bottom-nav" aria-label="Mobile">
+      <nav className="bottom-nav" aria-label="Mobile resources">
         {LINKS.map(([to, , short, Icon]) => (
           <NavLink key={to} to={to} end={to === '/'}>
             <Icon size={20} aria-hidden="true" />

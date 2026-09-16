@@ -2,7 +2,8 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { lazy } from 'react'
 import { AppShell } from './layout/AppShell'
 
-const HomePage = lazy(() => import('./pages/HomePage').then(m => ({ default: m.HomePage })))
+const CoursePage = lazy(() => import('./pages/CoursePage').then(m => ({ default: m.CoursePage })))
+const TheoryEntry = lazy(() => import('./pages/CoursePage').then(m => ({ default: m.TheoryEntry })))
 const TheoryPage = lazy(() => import('./pages/TheoryPage').then(m => ({ default: m.TheoryPage })))
 const LabPage = lazy(() => import('./pages/LabPage').then(m => ({ default: m.LabPage })))
 const ProgramsPage = lazy(() => import('./pages/ProgramsPage').then(m => ({ default: m.ProgramsPage })))
@@ -14,8 +15,9 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<AppShell />}>
-          <Route index element={<HomePage />} />
-          <Route path="theory" element={<TheoryPage />} />
+          <Route index element={<CoursePage />} />
+          <Route path="theory" element={<TheoryEntry />} />
+          <Route path="reference" element={<TheoryPage />} />
           <Route path="lab" element={<LabPage />} />
           <Route path="programs" element={<ProgramsPage />} />
           <Route path="practice" element={<PracticePage />} />

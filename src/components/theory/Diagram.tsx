@@ -165,6 +165,7 @@ function build(d: DiagramSpec): React.ReactElement | null {
                     <div className="dg-arrow" aria-hidden="true">
                       <span className="dg-rot">{f.rotation}</span>↓
                     </div>
+                    {f.middle ? <Figure title={`First: ${f.rotation === 'LR' ? 'left' : 'right'} rotate the child`} caption="The pivot is still unbalanced. The second rotation is required."><BinaryTreeSvg root={f.middle} showBf compact /></Figure> : null}
                     <Figure title={`After ${f.rotation} rotation at ${f.pivot}`} caption={f.note}>
                       <BinaryTreeSvg root={f.after} marks={marksByValue(f.after, { [String(f.key)]: 'new' })} showBf compact />
                     </Figure>

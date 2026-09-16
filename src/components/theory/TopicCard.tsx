@@ -1,6 +1,9 @@
-import { memo, useState } from 'react'
-import { BookOpen, Lightbulb, Network, Image, Calculator, ListOrdered, Braces, Pencil, FileCode2, Timer, Target, TriangleAlert, Play, Copy, Check, type LucideIcon } from 'lucide-react'
+import { memo, useMemo, useState } from 'react'
+import { BookOpen, Lightbulb, Network, Image, Calculator, ListOrdered, Braces, Pencil, FileCode2, Timer, Target, TriangleAlert, Play, Copy, Check, Download, type LucideIcon } from 'lucide-react'
 import { PROGRAM_LINKS } from '../../data/syllabus/coverage'
+import { PROGRAM_CATALOG } from '../../data/programCatalog'
+import { topicCases } from '../../data/lessonCases'
+import { LessonPlayer } from './LessonPlayer'
 import { Link } from 'react-router-dom'
 import type { Topic } from '../../data/syllabus/types'
 import { TERM_CARDS } from '../../data/terms'
@@ -39,13 +42,21 @@ function Code({ code, title, note }: { code: string; title?: string; note?: stri
       setStatus('error')
     }
   }
+  const download = () => {
+    const url = URL.createObjectURL(new Blob([code], { type: 'text/x-c;charset=utf-8' }))
+    const a = document.createElement('a')
+    a.href = url
+    a.download = title?.endsWith('.c') ? title : 'tree-example.c'
+    a.click()
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000)
+  }
   return (
     <div className="code-panel tb-code">
       <div className="head">
         <span>{title ?? 'C'}</span>
-        <button type="button" className="icon-button" title={status === 'copied' ? 'Copied' : 'Copy code'} aria-label="Copy code" onClick={copy}>
+        <div className="row"><button type="button" className="icon-button" title="Download C file" aria-label="Download C file" onClick={download}><Download size={17} /></button><button type="button" className="icon-button" title={status === 'copied' ? 'Copied' : 'Copy code'} aria-label="Copy code" onClick={copy}>
           {status === 'copied' ? <Check size={17} /> : <Copy size={17} />}
-        </button>
+        </button></div>
       </div>
       <pre>
         <code>{code}</code>
@@ -100,8 +111,11 @@ const LAB_LABEL: Record<string, string> = {
   trie: 'Trie',
 }
 
-export const TopicCard = memo(function TopicCard({ topic, number }: { topic: Topic; number: string }) {
+export const TopicCard = memo(function TopicCard({ topic, number, lesson = false }: { topic: Topic; number: string; lesson?: boolean }) {
   const programId = topic.program ? topic.id : PROGRAM_LINKS[topic.id]
+  const program = topic.program ?? (lesson ? PROGRAM_CATALOG.find(p => p.id === programId) : undefined)
+  const cases = useMemo(() => lesson ? topicCases(topic.id) : [], [lesson, topic.id])
+  const [showReferences, setShowReferences] = useState(false)
 
   return (
     <article className="topic" id={topic.id}>
@@ -111,7 +125,7 @@ export const TopicCard = memo(function TopicCard({ topic, number }: { topic: Top
           <h2>{topic.title}</h2>
           {topic.tagline ? <p className="muted topic-tag">{topic.tagline}</p> : null}
         </div>
-        {topic.lab ? (
+        {topic.lab && !lesson ? (
           <Link className="btn play topic-lab" to={`/lab?tab=${topic.lab}`}>
             <Play size={16} aria-hidden="true" /> Visualize {LAB_LABEL[topic.lab] ?? topic.lab}
           </Link>
@@ -139,8 +153,9 @@ export const TopicCard = memo(function TopicCard({ topic, number }: { topic: Top
         </Block>
       ) : null}
 
-      {topic.diagrams?.length ? (
-        <Block icon={Image} label={`Diagram${topic.diagrams.length > 1 ? 's' : ''}`} tone="fig">
+      {cases.length ? <Block icon={Play} label="Step-by-step cases" tone="fig"><LessonPlayer cases={cases} /></Block> : null}
+      {topic.diagrams?.length && (!cases.length || showReferences) ? (
+        <Block icon={Image} label={cases.length ? 'Reference diagrams' : `Diagram${topic.diagrams.length > 1 ? 's' : ''}`} tone="fig">
           <div className="ex-row">
             {topic.diagrams.map((d, i) => (
               <Diagram d={d} key={i} />
@@ -148,6 +163,7 @@ export const TopicCard = memo(function TopicCard({ topic, number }: { topic: Top
           </div>
         </Block>
       ) : null}
+      {cases.length && topic.diagrams?.length ? <label className="reference-toggle"><input type="checkbox" checked={showReferences} onChange={e => setShowReferences(e.target.checked)} /> Reference diagrams</label> : null}
 
       {topic.formulas?.length ? (
         <Block icon={Calculator} label="Formulas" tone="formula">
@@ -185,27 +201,27 @@ export const TopicCard = memo(function TopicCard({ topic, number }: { topic: Top
         </Block>
       ) : null}
 
-      {topic.program ? (
-        <Block icon={FileCode2} label={`Example program — ${topic.program.title}`} tone="code">
-          <details className="program-disclosure">
+      {program ? (
+        <Block icon={FileCode2} label={`Example program — ${program.title}`} tone="code">
+          <details className="program-disclosure" open={lesson ? true : undefined}>
             <summary>Full C program</summary>
-              <Code title={`${topic.id}.c`} code={topic.program.code} />
-              {topic.program.input ? (
+              <Code title={`${programId ?? topic.id}.c`} code={program.code} />
+              {program.input ? (
                 <div className="tb-output">
                   <b>Input</b>
-                  <pre>{topic.program.input}</pre>
+                  <pre>{program.input}</pre>
                 </div>
               ) : null}
-              {topic.program.output ? (
+              {program.output ? (
                 <div className="tb-output">
                   <b>Output</b>
-                  <pre>{topic.program.output}</pre>
+                  <pre>{program.output}</pre>
                 </div>
               ) : null}
           </details>
         </Block>
       ) : null}
-      {programId ? <Link className="topic-program-link" to={`/programs?program=${programId}`}><FileCode2 size={18} aria-hidden="true" /> Open complete C program</Link> : null}
+      {programId && !lesson ? <Link className="topic-program-link" to={`/programs?program=${programId}`}><FileCode2 size={18} aria-hidden="true" /> Open complete C program</Link> : null}
 
       {topic.complexity?.length ? (
         <Block icon={Timer} label="Time complexity" tone="cx">

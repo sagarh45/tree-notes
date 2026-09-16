@@ -5,6 +5,7 @@
  */
 import { heightOf, makeNode, resetIds, withBalanceFactors, type BinNode, type NodeValue } from './binaryTree'
 import type { BTreeNode } from './btree'
+import { rotationStages } from './avl'
 
 /* ------------------------------------------------------------------ */
 /*  Ordering helper — numbers by value, strings alphabetically          */
@@ -33,6 +34,7 @@ function insertPlain(root: BinNode | null, key: NodeValue, path: string[]): { ro
     return { root: n, newId: n.id }
   }
   path.push(root.id)
+  if (key === root.value) return { root, newId: root.id }
   if (less(key, root.value)) {
     const r = insertPlain(root.left, key, path)
     return { root: { ...root, left: r.root }, newId: r.newId }
@@ -79,6 +81,7 @@ export type AvlFrame = {
   before: BinNode
   /** tree after rebalancing (with BF) */
   after: BinNode
+  middle?: BinNode
   rotation?: Rotation
   /** value of the first unbalanced node found from the inserted node upward */
   pivot?: NodeValue
@@ -102,6 +105,7 @@ type Report = { rotation?: Rotation; pivot?: NodeValue }
 
 function avlIns(root: BinNode | null, key: NodeValue, rep: Report): BinNode {
   if (!root) return makeNode(key)
+  if (key === root.value) return root
   let node: BinNode
   if (less(key, root.value)) node = { ...root, left: avlIns(root.left, key, rep) }
   else node = { ...root, right: avlIns(root.right, key, rep) }
@@ -149,7 +153,10 @@ export function avlBuildFrames(seq: NodeValue[]): AvlFrame[] {
     } else {
       note = `Insert ${key} like a normal BST. Every BF is still −1, 0 or +1, so no rotation.`
     }
-    out.push({ key, before: beforeBf, after: afterBf, rotation: rep.rotation, pivot: rep.pivot, note })
+    const pivotId = rep.pivot === undefined ? undefined : idOfValue(beforeBf, rep.pivot)
+    const stages = pivotId ? rotationStages(beforeBf, pivotId) : []
+    const middle = stages.length === 2 ? stages[0].tree : undefined
+    out.push({ key, before: beforeBf, after: afterBf, middle, rotation: rep.rotation, pivot: rep.pivot, note })
   }
   return out
 }

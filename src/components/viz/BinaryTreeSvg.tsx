@@ -1,3 +1,4 @@
+import { useId } from 'react'
 import { layoutTree, type BinNode, type ThreadEdge } from '../../lib/binaryTree'
 
 export type TreeMarks = Record<string, string>
@@ -33,6 +34,7 @@ export function BinaryTreeSvg({
   compact = false,
   dimUnmarked = false,
 }: Props) {
+  const arrowId = useId()
   if (!root) {
     return <div className={`viz-frame viz-empty${compact ? ' compact' : ''}`}>{emptyText}</div>
   }
@@ -46,8 +48,8 @@ export function BinaryTreeSvg({
     compact
       ? { hGap: Math.max(52, labelWidth + 12), vGap: 64, padX: Math.max(32, labelWidth / 2 + 10), padY: extraTop ? 40 : 28 }
       : extraTop
-        ? { padY: 58, hGap: Math.max(76, labelWidth + 12), vGap: 92 }
-        : { hGap: Math.max(76, labelWidth + 12), vGap: 90 },
+        ? { padY: 58, padX: Math.max(44, labelWidth / 2 + 12), hGap: Math.max(76, labelWidth + 12), vGap: 92 }
+        : { padX: Math.max(44, labelWidth / 2 + 12), hGap: Math.max(76, labelWidth + 12), vGap: 90 },
   )
   const r = compact ? 15 : 24
   const pos = new Map(laid.nodes.map((n) => [n.node.id, n]))
@@ -62,16 +64,18 @@ export function BinaryTreeSvg({
         role="img"
         aria-label="Binary tree diagram"
       >
+        <defs><marker id={arrowId} viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M 0 0 L 8 4 L 0 8 Z" fill="context-stroke" /></marker></defs>
         {laid.edges.map((e) => {
           const midX = (e.from.x + e.to.x) / 2
           const midY = (e.from.y + e.to.y) / 2 - 10
           const isLeft = pos.get(e.fromId)?.node.left?.id === e.toId
           return (
             <g key={`${e.fromId}-${e.toId}`}>
-              <path
+              <line
                 className="tn-edge"
-                d={`M ${e.from.x} ${e.from.y + r - 2} Q ${midX} ${midY} ${e.to.x} ${e.to.y - r + 2}`}
-                fill="none"
+                x1={e.from.x} y1={e.from.y + r}
+                x2={e.to.x} y2={e.to.y - r - 2}
+                markerEnd={`url(#${arrowId})`}
               />
               {edgeLabels ? (
                 <text className="tn-elabel" x={midX + (isLeft ? -10 : 10)} y={midY + 6}>
@@ -101,15 +105,13 @@ export function BinaryTreeSvg({
           const a = pos.get(th.fromId)
           const b = pos.get(th.toId)
           if (!a || !b) return null
-          const sweep = th.side === 'L' ? -36 : 36
-          const cpx = (a.x + b.x) / 2 + sweep
-          const cpy = Math.max(a.y, b.y) + 28
           return (
             <g key={`th-${th.fromId}-${th.side}`}>
-              <path
+              <line
                 className="tn-thread"
-                d={`M ${a.x + (th.side === 'L' ? -r : r)} ${a.y} Q ${cpx} ${cpy} ${b.x} ${b.y + r}`}
-                fill="none"
+                x1={a.x + (th.side === 'L' ? -r : r)} y1={a.y}
+                x2={b.x} y2={b.y + r + 2}
+                markerEnd={`url(#${arrowId})`}
               />
             </g>
           )

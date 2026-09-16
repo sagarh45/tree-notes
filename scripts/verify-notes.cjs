@@ -73,3 +73,115 @@ for (const [input, output] of cases) {
   assert.equal(run.stdout.trim().replace(/\r\n/g, '\n'), output)
 }
 console.log('PASS: binary-tree sample, empty tree, single node, missing key, root/last deletion, duplicates')
+
+const { COURSE, COURSE_TOPICS } = require('../src/data/course.ts')
+const { topicCases, avlDeletion, AVL_DELETE_CASES } = require('../src/data/lessonCases.ts')
+const { LINKED_PROGRAM, MULTIWAY_PROGRAM, BTREE_PROGRAM } = require('../src/data/coursePrograms.ts')
+const { rotationScenario, avlInsertObserved, avlInsert } = require('../src/lib/avl.ts')
+const { visitValues, heightOf } = require('../src/lib/binaryTree.ts')
+const { BinaryTreeSvg } = require('../src/components/viz/BinaryTreeSvg.tsx')
+const { avlBuildFrames } = require('../src/lib/stepBuilders.ts')
+assert.equal(COURSE.length, 10)
+let caseCount = 0
+for (const lesson of COURSE) {
+  let programs = 0, players = 0
+  for (const id of lesson.topics) {
+    const topic = COURSE_TOPICS.get(id)
+    assert(topic, `Missing course topic: ${id}`)
+    assert(topic.diagrams?.length || topic.termCards, `Missing course diagram: ${id}`)
+    programs += Boolean(topic.program || PROGRAM_LINKS[id])
+    const cases = topicCases(id)
+    players += cases.length
+    caseCount += cases.length
+    assert.equal(new Set(cases.map(c => c.id)).size, cases.length, `Duplicate case IDs: ${id}`)
+    for (const c of cases) {
+      assert(c.steps.length, `No steps: ${id}/${c.id}`)
+      for (const step of c.steps) assert(step.explanation.happening, `No explanation: ${id}/${c.id}`)
+    }
+  }
+  assert(programs, `Missing program in syllabus point ${lesson.id}`)
+  assert(players, `Missing interactive visualization in ${lesson.id}`)
+}
+const sorted = tree => visitValues(tree, 'inorder')
+const balanced = tree => {
+  if (!tree) return
+  assert(Math.abs(heightOf(tree.left) - heightOf(tree.right)) <= 1, `Unbalanced final node ${tree.value}`)
+  balanced(tree.left); balanced(tree.right)
+}
+for (const kind of ['LL', 'RR', 'LR', 'RL']) {
+  const frames = rotationScenario(kind)
+  assert.equal(Math.abs(frames[0].tree.bf), 2, `${kind} must start unbalanced`)
+  assert.equal(frames.length, kind.length === 2 && kind[0] !== kind[1] ? 3 : 2)
+  for (const f of frames) assert.deepEqual(sorted(f.tree), sorted(frames[0].tree), `${kind} lost a subtree`)
+  balanced(frames.at(-1).tree)
+}
+for (const seq of [[30, 10, 20], [10, 30, 20], ['C', 'A', 'B']]) {
+  const last = avlBuildFrames(seq).at(-1)
+  assert(last.middle, 'Double rotation skipped the intermediate tree')
+  assert.deepEqual(sorted(last.before), sorted(last.middle))
+  assert.deepEqual(sorted(last.middle), sorted(last.after))
+}
+assert.deepEqual(sorted(avlBuildFrames([20, 10, 30, 20]).at(-1).after), [10, 20, 30])
+const drawing = renderToStaticMarkup(React.createElement(BinaryTreeSvg, { root: treeFromSpec('20(10,30)') }))
+assert.equal((drawing.match(/<line class="tn-edge"/g) ?? []).length, 2)
+assert(!/<path class="tn-edge"/.test(drawing), 'Curved tree edge remains')
+assert(drawing.includes('marker-end='), 'Arrowheads missing')
+
+let seed = 20260916
+const random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296 }
+let cascades = 0
+for (let trial = 0; trial < 30; trial++) {
+  const keys = Array.from({ length: 30 }, (_, i) => i - 10)
+  for (let i = keys.length - 1; i > 0; --i) { const j = Math.floor(random() * (i + 1)); [keys[i], keys[j]] = [keys[j], keys[i]] }
+  let tree = null
+  const values = new Set()
+  for (const key of keys) {
+    const reference = avlInsert(tree, key)
+    const result = avlInsertObserved(tree, key)
+    values.add(key)
+    for (const step of result.steps) assert.deepEqual(sorted(step.tree), [...values].sort((a,b) => a-b), 'Insert trace lost the outer tree')
+    assert.deepEqual(sorted(result.root), sorted(reference))
+    balanced(result.root)
+    tree = result.root
+  }
+  assert.equal(avlInsertObserved(tree, keys[0]).steps.length, 0, 'Duplicate should be ignored')
+  for (const key of [...keys, 999]) {
+    const steps = avlDeletion(tree, key)
+    values.delete(key)
+    tree = steps.at(-1).tree
+    assert.deepEqual(sorted(tree), [...values].sort((a,b) => a-b), 'AVL deletion lost keys')
+    balanced(tree)
+    if (steps.filter(s => /^(LL|RR|LR|RL) at/.test(s.label)).length > 1) cascades++
+  }
+}
+assert(cascades > 0, 'Randomized coverage did not exercise cascading rotations')
+for (const c of AVL_DELETE_CASES) {
+  const tree = treeFromSpec(c.spec)
+  balanced(tree)
+  const steps = avlDeletion(tree, c.key)
+  balanced(steps.at(-1).tree)
+  assert.deepEqual(sorted(steps.at(-1).tree), sorted(tree).filter(v => v !== c.key))
+}
+console.log(`PASS: 10 pointwise lessons, ${caseCount} cases, straight arrows, four rotations, full-tree insertion traces, ${cascades} cascading AVL deletion repairs`)
+
+for (const [id, p] of Object.entries({ linked: LINKED_PROGRAM, multiway: MULTIWAY_PROGRAM, btree: BTREE_PROGRAM })) {
+  const output = path.join(out, `${id}-course${process.platform === 'win32' ? '.exe' : ''}`)
+  const compile = cp.spawnSync('gcc', ['-x', 'c', '-std=c11', '-Wall', '-Wextra', '-o', output, '-'], { input: p.code, encoding: 'utf8' })
+  assert.equal(compile.status, 0, compile.stderr)
+  const run = cp.spawnSync(output, [], { input: p.input ?? '', encoding: 'utf8', timeout: 5000 })
+  assert.equal(run.status, 0, String(run.error ?? run.stderr))
+  assert.equal(run.stdout.trim().replace(/\r\n/g, '\n'), p.output)
+  if (id === 'btree') {
+    for (let trial = 0; trial < 30; trial++) {
+      const keys = Array.from({ length: 60 }, () => Math.floor(random() * 100) - 50)
+      const deletes = [...keys].reverse().concat([999])
+      const values = new Set(keys)
+      const expected = [`Inorder: ${[...values].sort((a,b) => a-b).join(' ')}`, 'Found']
+      for (const key of deletes) { values.delete(key); expected.push(`After delete ${key}:${[...values].sort((a,b) => a-b).map(v => ` ${v}`).join('')}`) }
+      const run = cp.spawnSync(output, [], { input: `${keys.length}\n${keys.join(' ')}\n${keys[0]}\n${deletes.length}\n${deletes.join(' ')}\n`, encoding: 'utf8', timeout: 5000 })
+      assert.equal(run.status, 0, String(run.error ?? run.stderr))
+      assert.equal(run.stdout.trim().replace(/\r\n/g, '\n'), expected.join('\n'))
+    }
+  }
+}
+console.log('PASS: linked, multiway and full B-Tree C samples; 30 randomized insert/search/delete program runs')

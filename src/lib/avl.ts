@@ -1,4 +1,5 @@
-import { heightOf, makeNode, withBalanceFactors, type BinNode } from './binaryTree'
+import { findNode, heightOf, makeNode, withBalanceFactors, type BinNode } from './binaryTree'
+import { bstInsert } from './bst'
 
 export type RotKind = 'LL' | 'RR' | 'LR' | 'RL'
 
@@ -61,11 +62,18 @@ function annotate(n: BinNode): BinNode {
   return withBalanceFactors(n) as BinNode
 }
 
+export function unbalancedMarks(root: BinNode | null): Record<string, string> {
+  if (!root) return {}
+  return { ...unbalancedMarks(root.left), ...unbalancedMarks(root.right),
+    ...(Math.abs(balanceFactor(root)) > 1 ? { [root.id]: 'unbalanced' } : {}) }
+}
+
 export function rotationScenario(kind: RotKind): AvlStep[] {
   if (kind === 'LL') {
     const z = makeNode(30)
     const y = makeNode(20)
     const x = makeNode(10)
+    x.left = makeNode(5)
     const t3 = makeNode(35)
     const t2 = makeNode(25)
     z.left = y
@@ -98,6 +106,7 @@ export function rotationScenario(kind: RotKind): AvlStep[] {
     const z = makeNode(10)
     const y = makeNode(20)
     const x = makeNode(30)
+    x.right = makeNode(40)
     const t1 = makeNode(5)
     const t2 = makeNode(15)
     z.right = y
@@ -130,6 +139,7 @@ export function rotationScenario(kind: RotKind): AvlStep[] {
     const z = makeNode(30)
     const y = makeNode(10)
     const x = makeNode(20)
+    x.left = makeNode(15)
     const t4 = makeNode(35)
     const t1 = makeNode(5)
     z.left = y
@@ -170,6 +180,7 @@ export function rotationScenario(kind: RotKind): AvlStep[] {
   const z = makeNode(10)
   const y = makeNode(30)
   const x = makeNode(20)
+  x.right = makeNode(25)
   const t1 = makeNode(5)
   const t4 = makeNode(35)
   z.right = y
@@ -215,63 +226,57 @@ export type LiveAvlStep = {
   rot?: RotKind
 }
 
+export function replaceSubtree(root: BinNode, id: string, subtree: BinNode): BinNode {
+  if (root.id === id) return subtree
+  return { ...root, left: root.left ? replaceSubtree(root.left, id, subtree) : null,
+    right: root.right ? replaceSubtree(root.right, id, subtree) : null }
+}
+
+/** Each elementary rotation is a full-tree snapshot, including unchanged ancestors. */
+export function rotationStages(root: BinNode, pivotId: string) {
+  const pivot = findNode(root, pivotId)!
+  const bf = balanceFactor(pivot)
+  const kind: RotKind = bf > 1
+    ? balanceFactor(pivot.left) >= 0 ? 'LL' : 'LR'
+    : balanceFactor(pivot.right) <= 0 ? 'RR' : 'RL'
+  const stages: { tree: BinNode; note: string; kind: RotKind; pivot: string }[] = []
+  let tree = root
+  const apply = (at: BinNode, direction: 'left' | 'right') => {
+    const child = (direction === 'left' ? at.right : at.left)!
+    const middle = direction === 'left' ? child.left : child.right
+    const rotated = direction === 'left' ? rotateLeft(at) : rotateRight(at)
+    tree = replaceSubtree(tree, at.id, rotated)
+    stages.push({ tree: annotate(tree), kind, pivot: rotated.id,
+      note: `${direction === 'left' ? 'Left' : 'Right'} rotate ${at.value}: ${child.value} becomes this subtree's root. ${at.value} moves ${direction === 'left' ? 'left' : 'right'}. ${middle ? `Middle subtree ${middle.value} moves to ${at.value}.` : 'Middle subtree is NULL.'}` })
+  }
+  if (kind === 'LR') apply(pivot.left!, 'left')
+  if (kind === 'RL') apply(pivot.right!, 'right')
+  apply(findNode(tree, pivotId)!, bf > 1 ? 'right' : 'left')
+  return stages
+}
+
 export function avlInsertObserved(root: BinNode | null, value: number): {
   root: BinNode
   steps: LiveAvlStep[]
 } {
-  const steps: LiveAvlStep[] = []
-
-  function ins(n: BinNode | null): BinNode {
-    if (!n) {
-      const created = makeNode(value)
-      steps.push({
-        kind: 'insert',
-        value,
-        tree: annotate(created),
-        marks: { [created.id]: 'new' },
-        note: `Place ${value} as a new leaf (same as BST insert).`,
-      })
-      return created
-    }
-    if (typeof n.value !== 'number' || n.value === value) return n
-    const next =
-      value < n.value ? { ...n, left: ins(n.left) } : { ...n, right: ins(n.right) }
-
-    const bf = balanceFactor(next)
-    if (bf > 1 || bf < -1) {
-      const annotated = annotate(next)
-      const rot: RotKind =
-        bf > 1
-          ? typeof next.left?.value === 'number' && value < next.left.value
-            ? 'LL'
-            : 'LR'
-          : typeof next.right?.value === 'number' && value > next.right.value
-            ? 'RR'
-            : 'RL'
-      steps.push({
-        kind: 'unbalanced',
-        value,
-        tree: annotated,
-        marks: { [next.id]: 'unbalanced' },
-        note: `Node ${next.value} has BF = ${bf > 0 ? '+' : ''}${bf}. Case ${rot}.`,
-        rot,
-      })
-      const fixed = rebalance(next, value)
-      steps.push({
-        kind: 'rotated',
-        value,
-        tree: annotate(fixed),
-        marks: { [fixed.id]: 'found' },
-        note: `Rebalanced with ${rot} rotation(s). ${fixed.value} is the new local root.`,
-        rot,
-      })
-      return fixed
-    }
-    return next
+  const inserted = bstInsert(root, value)
+  if (inserted.duplicate) return { root: inserted.root, steps: [] }
+  let tree = inserted.root
+  const steps: LiveAvlStep[] = [{ kind: 'insert', value, tree: annotate(tree),
+    marks: { [inserted.createdId]: 'new' }, note: `Place ${value} as a BST leaf. Check ancestors from bottom to top.` }]
+  for (const id of inserted.path.slice(0, -1).reverse()) {
+    const node = findNode(tree, id)!
+    const bf = balanceFactor(node)
+    if (Math.abs(bf) <= 1) continue
+    const stages = rotationStages(tree, id)
+    steps.push({ kind: 'unbalanced', value, tree: annotate(tree), marks: { [id]: 'unbalanced' },
+      note: `First unbalanced ancestor ${node.value}: BF = ${bf}. Case ${stages[0].kind}.`, rot: stages[0].kind })
+    for (const stage of stages) steps.push({ kind: 'rotated', value, tree: stage.tree,
+      marks: { [stage.pivot]: 'found', ...unbalancedMarks(stage.tree) }, note: stage.note, rot: stage.kind })
+    tree = stages[stages.length - 1].tree
+    break
   }
-
-  const nextRoot = ins(root)
-  return { root: nextRoot, steps }
+  return { root: annotate(tree), steps }
 }
 
 export function avlFromSequence(seq: number[]): BinNode | null {

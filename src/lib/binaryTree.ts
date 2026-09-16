@@ -137,7 +137,7 @@ export function layoutTree(
   return {
     nodes,
     edges,
-    width: Math.max(i * hGap + padX * 2, 280),
+    width: Math.max(Math.max(0, i - 1) * hGap + padX * 2, 240),
     height: padY * 2 + maxDepth * vGap + 24,
   }
 }
