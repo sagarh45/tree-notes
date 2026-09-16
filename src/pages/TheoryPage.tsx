@@ -1,312 +1,137 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { THEORY_SECTIONS } from '../data/theory'
-import { THEORY_FIGURES, type Fig } from '../data/figures'
-import { TERM_CARDS } from '../data/terms'
-import { BinaryTreeSvg } from '../components/viz/BinaryTreeSvg'
-import { BTreeSvg } from '../components/viz/BTreeSvg'
-import { HeapDualViz } from '../components/viz/HeapDualViz'
-import { TrieSvg } from '../components/viz/TrieSvg'
-import { HuffmanPanel } from '../components/viz/HuffmanPanel'
-import { withBalanceFactors } from '../lib/binaryTree'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { ArrowUp, Search, X } from 'lucide-react'
+import { TopicCard } from '../components/theory/TopicCard'
+import { CHAPTERS, ALL_TOPICS } from '../data/syllabus'
+import { CORE_CHAPTERS } from '../data/syllabus/coverage'
 
-type Group = 'FOUNDATION' | 'CORE MODELS' | 'ADVANCED' | 'EXAM'
+const SEARCH_TEXT = new Map(ALL_TOPICS.map(t => [t.id, JSON.stringify(t).replace(/<[^>]*>/g, ' ').toLowerCase()]))
+const TOPIC_NUMBERS = new Map(CHAPTERS.flatMap(ch => ch.topics.map((t, i) => [t.id, `${ch.number}.${i + 1}`])))
 
-const GROUP_OF: Record<string, Group> = {
-  intro: 'FOUNDATION',
-  sample: 'FOUNDATION',
-  terms: 'FOUNDATION',
-  why: 'FOUNDATION',
-  binary: 'FOUNDATION',
-  shapes: 'FOUNDATION',
-  props: 'FOUNDATION',
-  repr: 'FOUNDATION',
-  general: 'FOUNDATION',
-  trav: 'CORE MODELS',
-  nonrec: 'CORE MODELS',
-  ops: 'CORE MODELS',
-  bst: 'CORE MODELS',
-  'bst-ops': 'CORE MODELS',
-  avl: 'CORE MODELS',
-  rot: 'CORE MODELS',
-  'avl-ops': 'CORE MODELS',
-  'avl-del': 'CORE MODELS',
-  multi: 'CORE MODELS',
-  bsplit: 'CORE MODELS',
-  bsearch: 'CORE MODELS',
-  bdel: 'CORE MODELS',
-  cx: 'CORE MODELS',
-  exam: 'CORE MODELS',
-  solved: 'EXAM',
-  apps: 'EXAM',
-  master: 'EXAM',
-}
-
-function groupOf(id: string): Group {
-  return GROUP_OF[id] ?? 'ADVANCED'
-}
-
-/** Titles in the data still carry old hand-numbers; the page numbers itself. */
-function cleanTitle(title: string) {
-  return title.replace(/^\d+\.\s*/, '')
-}
-
-function TermLegend() {
-  return (
-    <div className="legend legend-terms">
-      <span>
-        <i style={{ background: 'var(--teal)', borderColor: 'var(--teal)' }} /> this word’s node
-      </span>
-      <span>
-        <i style={{ background: 'var(--green-soft)', borderColor: 'var(--green)' }} /> matching set
-      </span>
-      <span>
-        <i style={{ background: 'var(--accent-soft)', borderColor: 'var(--accent)' }} /> path / ancestor
-      </span>
-      <span>
-        <i style={{ background: '#f1f5f9', borderColor: '#cbd5e1' }} /> ignore for this word
-      </span>
-    </div>
-  )
-}
-
-function FigureView({ fig }: { fig: Fig }) {
-  if (fig.heap) return <HeapDualViz arr={fig.heap} compact />
-  if (fig.trie) return <TrieSvg root={fig.trie} compact />
-  if (fig.forest?.length) return <HuffmanPanel forest={fig.forest} codes={fig.codes} compact />
-  if (fig.btree) return <BTreeSvg root={fig.btree} compact />
-  return (
-    <BinaryTreeSvg
-      root={fig.showBf ? withBalanceFactors(fig.root ?? null) : (fig.root ?? null)}
-      marks={fig.marks}
-      tags={fig.tags}
-      showBf={fig.showBf}
-      showColor={fig.showColor}
-      showIndex={fig.showIndex}
-      showNulls={fig.showNulls}
-      edgeLabels={fig.edgeLabels}
-      threads={fig.threads}
-      compact
-    />
-  )
-}
-
-function useActiveSection(ids: string[]) {
-  const [active, setActive] = useState(ids[0] ?? '')
+function useActiveId(ids: string[]) {
+  const [active, setActive] = useState('')
   useEffect(() => {
-    const obs = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0]
-        if (visible) setActive(visible.target.id)
-      },
-      { rootMargin: '-15% 0px -70% 0px', threshold: 0 },
-    )
-    for (const id of ids) {
-      const el = document.getElementById(id)
-      if (el) obs.observe(el)
+    let frame = 0
+    const update = () => {
+      let current = ids[0] ?? ''
+      for (const id of ids) {
+        const el = document.getElementById(id)
+        if (el && el.getBoundingClientRect().top <= 140) current = id
+      }
+      setActive(current)
     }
-    return () => obs.disconnect()
+    const onScroll = () => {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(update)
+    }
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', onScroll)
+    }
   }, [ids])
-  return active
+  return ids.includes(active) ? active : (ids[0] ?? '')
 }
 
 export function TheoryPage() {
-  const ids = useMemo(() => THEORY_SECTIONS.map((s) => s.id), [])
-  const active = useActiveSection(ids)
+  const { hash } = useLocation()
+  const navigate = useNavigate()
   const [query, setQuery] = useState('')
-
-  const figureCount = useMemo(
-    () => Object.values(THEORY_FIGURES).reduce((n, list) => n + list.length, 0) + TERM_CARDS.length,
-    [],
-  )
-
+  const [scope, setScope] = useState('all')
+  const [chapter, setChapter] = useState('all')
   const q = query.trim().toLowerCase()
-  const matches = useMemo(
-    () =>
-      q
-        ? THEORY_SECTIONS.filter(
-            (s) => cleanTitle(s.title).toLowerCase().includes(q) || s.body.toLowerCase().includes(q),
-          )
-        : THEORY_SECTIONS,
-    [q],
-  )
+  const shown = useMemo(() => CHAPTERS
+    .filter(ch => (scope === 'all' || CORE_CHAPTERS.has(ch.id)) && (chapter === 'all' || chapter === ch.id))
+    .map(ch => ({ ...ch, topics: ch.topics.filter(t => !q ||
+      `${ch.title} ${ch.syllabus}`.toLowerCase().includes(q) || SEARCH_TEXT.get(t.id)?.includes(q)) }))
+    .filter(ch => ch.topics.length), [scope, chapter, q])
+  const ids = useMemo(() => shown.flatMap(ch => ch.topics.map(t => t.id)), [shown])
+  const active = useActiveId(ids)
+
+  useEffect(() => {
+    if (!hash) return
+    setQuery('')
+    setScope('all')
+    setChapter('all')
+    const frame = requestAnimationFrame(() => {
+      document.getElementById(hash.slice(1))?.scrollIntoView({ block: 'start' })
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [hash])
+
+  const reset = () => { setQuery(''); setScope('all'); setChapter('all') }
+  const jump = (id: string) => {
+    navigate(`#${id}`)
+    document.getElementById(id)?.scrollIntoView({ block: 'start' })
+  }
 
   return (
-    <div className="theory-shell">
-      <aside className="theory-rail" aria-label="Section index">
+    <div className="theory-shell" id="top">
+      <aside className="theory-rail" aria-label="Syllabus index">
         <div className="rail-box">
-          <div className="rail-head">
-            <span className="rail-count">{THEORY_SECTIONS.length}</span>
-            <div>
-              <b>Sections</b>
-              <div className="muted rail-sub">{figureCount} drawn diagrams</div>
-            </div>
-          </div>
-          <input
-            className="rail-search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Filter sections…"
-            aria-label="Filter sections"
-          />
+          <div className="rail-head"><b>Chapter index</b><span className="muted">{ids.length} topics</span></div>
           <nav className="rail-list">
-            {THEORY_SECTIONS.map((s, i) => {
-              const hidden = q ? !matches.some((m) => m.id === s.id) : false
-              const prev = i > 0 ? groupOf(THEORY_SECTIONS[i - 1].id) : null
-              const g = groupOf(s.id)
-              return (
-                <div key={s.id} className={hidden ? 'rail-hidden' : undefined}>
-                  {g !== prev ? <div className="rail-group">{g}</div> : null}
-                  <a href={`#${s.id}`} className={active === s.id ? 'on' : undefined}>
-                    <span className="rail-num">{i + 1}</span>
-                    {cleanTitle(s.title)}
-                  </a>
-                </div>
-              )
-            })}
+            {shown.map(ch => (
+              <div key={ch.id}>
+                <div className="rail-group">{ch.number}. {ch.title}</div>
+                {ch.topics.map(t => (
+                  <Link key={t.id} to={`#${t.id}`} className={active === t.id ? 'on' : undefined} aria-current={active === t.id ? 'location' : undefined}>
+                    <span className="rail-num">{TOPIC_NUMBERS.get(t.id)}</span>
+                    {t.title}
+                  </Link>
+                ))}
+              </div>
+            ))}
           </nav>
         </div>
       </aside>
 
       <div className="theory-main">
-        <div className="card hero-band" id="top">
-          <div className="hero-kicker">UNIT IV · DATA STRUCTURES</div>
-          <h2>Trees — the complete notes, and every single one of them is drawn</h2>
-          <p className="muted">
-            Definition, description, diagram, worked example, full C function and a live visualizer for every topic.
-            Foundation (definition → formulas → representation → general-tree conversion), core models (traversals,
-            iterative traversals, tree operations, BST, AVL with deletion, B-Tree with search and deletion), the
-            advanced models most notes skip (heap, heap sort, Red-Black, Huffman, trie, threads, expression trees, B+),
-            and finally solved exam problems.
-          </p>
-          <div className="stat-strip">
-            <div className="stat">
-              <b>{THEORY_SECTIONS.length}</b>
-              <span>theory sections</span>
-            </div>
-            <div className="stat">
-              <b>{figureCount}</b>
-              <span>drawn diagrams</span>
-            </div>
-            <div className="stat">
-              <b>10</b>
-              <span>solved exam problems</span>
-            </div>
-            <div className="stat">
-              <b>8</b>
-              <span>live visualizer labs</span>
-            </div>
+        <header className="notes-heading">
+          <p className="eyebrow">UNIT IV / WIT 2026-27</p>
+          <h2>Trees</h2>
+          <p className="muted">Nodes, branches, searching and balancing.</p>
+        </header>
+        <div className="notes-controls">
+          <div className="scope-tabs" role="group" aria-label="Reading scope">
+            <button type="button" aria-pressed={scope === 'all'} onClick={() => setScope('all')}>All notes</button>
+            <button type="button" aria-pressed={scope === 'core'} onClick={() => { setScope('core'); setChapter('all') }}>Syllabus focus</button>
           </div>
-          <div className="row hero-actions">
-            <Link className="btn play" to="/lab">
-              Open Visualizer Lab →
-            </Link>
-            <Link className="btn enq" to="/programs">
-              All C Programs →
-            </Link>
-            <Link className="btn gray" to="/revise">
-              Formula sheet →
-            </Link>
-          </div>
+          <label className="notes-search">
+            <Search size={18} aria-hidden="true" />
+            <input aria-label="Search notes" placeholder="Search topic, algorithm or code" value={query} onChange={e => setQuery(e.target.value)} />
+            {query ? <button className="icon-button" title="Clear search" aria-label="Clear search" onClick={() => setQuery('')}><X size={17} /></button> : null}
+          </label>
+          <label className="chapter-select">Chapter
+            <select value={chapter} onChange={e => setChapter(e.target.value)}>
+              <option value="all">All chapters</option>
+              {CHAPTERS.filter(ch => scope === 'all' || CORE_CHAPTERS.has(ch.id)).map(ch => <option key={ch.id} value={ch.id}>{ch.number}. {ch.title}</option>)}
+            </select>
+          </label>
+          <label className="theory-mobile-jump">Topic
+            <select aria-label="Jump to topic" value={active} disabled={!ids.length} onChange={e => jump(e.target.value)}>
+              {!ids.length ? <option value="">No matching topics</option> : null}
+              {shown.map(ch => <optgroup key={ch.id} label={ch.title}>{ch.topics.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}</optgroup>)}
+            </select>
+          </label>
+          <span className="notes-result" role="status">{ids.length} of {ALL_TOPICS.length} topics</span>
         </div>
 
-        {q && matches.length === 0 ? (
-          <div className="card">
-            <p className="muted" style={{ margin: 0 }}>
-              Nothing matches “{query}”. Clear the filter to see all {THEORY_SECTIONS.length} sections.
-            </p>
-          </div>
-        ) : null}
-
-        {THEORY_SECTIONS.map((s, i) => {
-          const hidden = q ? !matches.some((m) => m.id === s.id) : false
-          if (hidden) return null
-          const figs = THEORY_FIGURES[s.id] ?? []
-          return (
-            <article className="card theory-article" id={s.id} key={s.id}>
-              <header className="art-head">
-                <span className={`art-badge g-${groupOf(s.id).split(' ')[0].toLowerCase()}`}>{groupOf(s.id)}</span>
-                <h2>
-                  <span className="art-num">{i + 1}</span>
-                  {cleanTitle(s.title)}
-                </h2>
-              </header>
-              <div className="theory-body" dangerouslySetInnerHTML={{ __html: s.body }} />
-
-              {s.id === 'terms' ? (
-                <div className="theory-body">
-                  <TermLegend />
-                  {TERM_CARDS.map((t) => (
-                    <div className="term-split" key={t.id} id={`term-${t.id}`}>
-                      <div>
-                        <div className="term-name">{t.title}</div>
-                        <p>
-                          <b>Meaning:</b> {t.meaning}
-                        </p>
-                        <div className="ex">
-                          <b>On this drawing:</b> {t.example}
-                        </div>
-                        <p>
-                          <b>Exam line:</b> {t.exam}
-                        </p>
-                      </div>
-                      <div>
-                        {t.root ? (
-                          <BinaryTreeSvg
-                            root={t.root}
-                            marks={t.marks}
-                            tags={t.tags}
-                            visitOrder={t.visitOrder}
-                            dimUnmarked
-                            compact
-                          />
-                        ) : null}
-                        {t.roots?.length ? (
-                          <div className="ex-row" style={{ marginTop: t.root ? 10 : 0 }}>
-                            {t.roots.map((r) => (
-                              <div key={r.title}>
-                                <div className="pack-title">{r.title}</div>
-                                <BinaryTreeSvg root={r.root} marks={r.marks} tags={r.tags} dimUnmarked compact />
-                              </div>
-                            ))}
-                          </div>
-                        ) : null}
-                        <p className="muted">{t.caption}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : figs.length ? (
-                <>
-                  <div className="fig-head">
-                    Diagrams for this section <span className="fig-pill">{figs.length}</span>
-                  </div>
-                  <div className="ex-row">
-                    {figs.map((fig) => (
-                      <figure className="ex-viz" key={fig.title}>
-                        <figcaption className="fig-title">{fig.title}</figcaption>
-                        <FigureView fig={fig} />
-                        <p className="muted">{fig.caption}</p>
-                      </figure>
-                    ))}
-                  </div>
-                </>
-              ) : null}
-              <a className="to-top" href="#top">
-                ↑ back to index
-              </a>
-            </article>
-          )
-        })}
-
-        <div className="card tip-card">
-          <b>Study path:</b> Foundation (1–9) so the vocabulary and formulas are automatic → core models (10–23) where
-          every operation has a full C function → the exam block (24, 35–37) for applications, solved problems and the
-          master map → advanced models (25–34) to sound senior in the viva. After each section, open the matching
-          Visualizer tab and replay one example pack until the Law and the picture are the same object in your head.
-        </div>
+        {!ids.length ? <div className="notes-empty"><h3>No matching topics</h3><p className="muted">{query ? `No results for "${query}".` : 'This selection has no topics.'}</p><button className="btn gray" onClick={reset}>Clear filters</button></div> : null}
+        {shown.map(ch => (
+          <section key={ch.id} id={ch.id} className="chapter-block">
+            <header className="ch-banner">
+              <div>
+                <div className="ch-kicker">Chapter {ch.number} / {CORE_CHAPTERS.has(ch.id) ? 'Syllabus focus' : 'Extra reading'}</div>
+                <h2>{ch.title}</h2>
+                <p className="muted">{ch.syllabus}</p>
+              </div>
+            </header>
+            {ch.topics.map(t => <TopicCard key={t.id} topic={t} number={TOPIC_NUMBERS.get(t.id)!} />)}
+          </section>
+        ))}
+        <a className="to-top" href="#top"><ArrowUp size={16} aria-hidden="true" /> Back to top</a>
       </div>
     </div>
   )

@@ -104,7 +104,7 @@ export function bTreeInsert(root: BTreeNode, key: number, order: number): {
       highlightId: n.id,
       highlightKey: key,
     })
-    if (isLeaf(n)) return n
+    if (n.keys.includes(key) || isLeaf(n)) return n
     const i = findChildIndex(n, key)
     return descend(n.children[i]!)
   }

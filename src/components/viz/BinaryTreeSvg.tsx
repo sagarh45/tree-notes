@@ -38,14 +38,16 @@ export function BinaryTreeSvg({
   }
 
   const hasTags = Boolean(tags && Object.keys(tags).length)
+  const labelLength = (n: BinNode | null): number => n ? Math.max(String(n.value).length, labelLength(n.left), labelLength(n.right)) : 0
+  const labelWidth = labelLength(root) * (compact ? 7 : 9) + 16
   const extraTop = showBf || hasTags || showColor || showIndex
   const laid = layoutTree(
     root,
     compact
-      ? { hGap: 52, vGap: 64, padX: 32, padY: extraTop ? 40 : 28 }
+      ? { hGap: Math.max(52, labelWidth + 12), vGap: 64, padX: Math.max(32, labelWidth / 2 + 10), padY: extraTop ? 40 : 28 }
       : extraTop
-        ? { padY: 58, hGap: 76, vGap: 92 }
-        : { hGap: 76, vGap: 90 },
+        ? { padY: 58, hGap: Math.max(76, labelWidth + 12), vGap: 92 }
+        : { hGap: Math.max(76, labelWidth + 12), vGap: 90 },
   )
   const r = compact ? 15 : 24
   const pos = new Map(laid.nodes.map((n) => [n.node.id, n]))
@@ -56,6 +58,7 @@ export function BinaryTreeSvg({
         className="tree-svg"
         viewBox={`0 0 ${laid.width} ${laid.height + (showNulls ? 16 : 0)}`}
         width="100%"
+        style={{ minWidth: Math.min(laid.width, compact ? 600 : 900) }}
         role="img"
         aria-label="Binary tree diagram"
       >
@@ -119,7 +122,7 @@ export function BinaryTreeSvg({
           const colorCls = color === 'R' ? 'red' : color === 'B' ? 'black' : ''
           return (
             <g key={node.id} className={`tn-g ${mark} ${colorCls}`} transform={`translate(${x} ${y})`}>
-              <circle className="tn" r={r} />
+              {String(node.value).length > 3 ? <rect className="tn" x={-(String(node.value).length * (compact ? 7 : 9) + 16) / 2} y={-r} width={String(node.value).length * (compact ? 7 : 9) + 16} height={r * 2} rx={r} /> : <circle className="tn" r={r} />}
               <text className="tn-text" textAnchor="middle" dominantBaseline="central">
                 {node.value}
               </text>

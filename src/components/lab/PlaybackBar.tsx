@@ -1,4 +1,5 @@
 import type { Speed } from '../../hooks/usePlayback'
+import { ArrowLeft, ArrowRight, Play, Pause, RotateCcw } from 'lucide-react'
 
 type Props = {
   index: number
@@ -28,30 +29,30 @@ export function PlaybackBar({
   onSpeed,
 }: Props) {
   return (
-    <div className="card" aria-label="Playback controls">
+    <div className="playback-panel" aria-label="Playback controls">
       <h3>Playback</h3>
       <div className="playback">
-        <button type="button" className="btn gray" onClick={onPrev} aria-label="Previous step" disabled={total === 0}>
-          ← Prev
+        <button type="button" className="icon-button" onClick={onPrev} title="Previous step" aria-label="Previous step" disabled={total === 0 || index === 0}>
+          <ArrowLeft size={18} />
         </button>
         {playing ? (
-          <button type="button" className="btn warn" onClick={onPause} aria-label="Pause">
-            Pause
+          <button type="button" className="icon-button" onClick={onPause} title="Pause" aria-label="Pause">
+            <Pause size={18} />
           </button>
         ) : (
-          <button type="button" className="btn play" onClick={onPlay} aria-label="Play" disabled={total === 0}>
-            Play
+          <button type="button" className="icon-button" onClick={onPlay} title="Play" aria-label="Play" disabled={total === 0}>
+            <Play size={18} />
           </button>
         )}
-        <button type="button" className="btn gray" onClick={onNext} aria-label="Next step" disabled={total === 0}>
-          Next →
+        <button type="button" className="icon-button" onClick={onNext} title="Next step" aria-label="Next step" disabled={total === 0 || index >= total - 1}>
+          <ArrowRight size={18} />
         </button>
-        <button type="button" className="btn gray" onClick={onRestart} aria-label="Restart" disabled={total === 0}>
-          Restart
+        <button type="button" className="icon-button" onClick={onRestart} title="Restart" aria-label="Restart" disabled={total === 0}>
+          <RotateCcw size={18} />
         </button>
         <div className="speed-group" role="group" aria-label="Playback speed">
           {SPEEDS.map((s) => (
-            <button key={s} type="button" className={speed === s ? 'active' : ''} onClick={() => onSpeed(s)}>
+            <button key={s} type="button" aria-pressed={speed === s} className={speed === s ? 'active' : ''} onClick={() => onSpeed(s)}>
               {s}x
             </button>
           ))}

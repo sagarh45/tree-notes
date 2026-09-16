@@ -1,182 +1,87 @@
-import { useMemo, useState } from 'react'
-import { PROGRAMS, type Program } from '../data/programs'
+import { useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
+import { Check, Copy, Download, ExternalLink } from 'lucide-react'
+import { PROGRAM_CATALOG } from '../data/programCatalog'
 
-const TOPIC_ORDER: NonNullable<Program['topic']>[] = [
-  'Binary tree',
-  'BST',
-  'AVL',
-  'B-Tree',
-  'Heap',
-  'Advanced',
-]
-
-const TOPIC_NOTE: Record<string, string> = {
-  'Binary tree': 'Structure, traversals (recursive and iterative) and the query functions.',
-  BST: 'The search rule: search, insert, all three delete cases, and every utility built on the sorted in-order.',
-  AVL: 'Balance factors, the four rotations, and the harder delete path.',
-  'B-Tree': 'Multiway search: median splits, in-node scanning, sorted traversal.',
-  Heap: 'The array that IS a tree — swim, sink, and heap sort.',
-  Advanced: 'Huffman, tries, expression trees, threads, general-tree conversion and reconstruction.',
-}
+const GROUPS = ['Binary tree', 'BST', 'AVL', 'B-Tree', 'Heap', 'Advanced']
+const ORDERED = GROUPS.flatMap(group => PROGRAM_CATALOG.filter(p => (p.topic ?? 'Advanced') === group))
 
 export function ProgramsPage() {
-  const [activeId, setActiveId] = useState(PROGRAMS[0].id)
-  const [copied, setCopied] = useState(false)
+  const [params, setParams] = useSearchParams()
   const [query, setQuery] = useState('')
-
-  const grouped = useMemo(() => {
-    const byTopic = new Map<string, Program[]>()
-    for (const t of TOPIC_ORDER) byTopic.set(t, [])
-    for (const p of PROGRAMS) {
-      const t = p.topic ?? 'Advanced'
-      if (!byTopic.has(t)) byTopic.set(t, [])
-      byTopic.get(t)!.push(p)
-    }
-    return [...byTopic.entries()].filter(([, list]) => list.length > 0)
-  }, [])
-
-  /** Sidebar order = grouped order, so the numbers match what the user sees. */
-  const ordered = useMemo(() => grouped.flatMap(([, list]) => list), [grouped])
-  const numberOf = useMemo(() => {
-    const m = new Map<string, number>()
-    ordered.forEach((p, i) => m.set(p.id, i + 1))
-    return m
-  }, [ordered])
-
+  const [status, setStatus] = useState('')
   const q = query.trim().toLowerCase()
-  const shows = (p: Program) =>
-    !q || p.title.toLowerCase().includes(q) || p.blurb.toLowerCase().includes(q) || p.code.toLowerCase().includes(q)
-
-  const prog = PROGRAMS.find((p) => p.id === activeId) ?? PROGRAMS[0]
-  const lines = useMemo(() => prog.code.replace(/\r\n/g, '\n').split('\n'), [prog])
-
+  const visible = ORDERED.filter(p => !q || `${p.title} ${p.blurb} ${p.code}`.toLowerCase().includes(q))
+  const requested = params.get('program')
+  const prog = visible.find(p => p.id === requested) ?? visible[0]
+  const select = (id: string) => { setParams({ program: id }); setStatus('') }
   const copy = async () => {
-    await navigator.clipboard.writeText(prog.code)
-    setCopied(true)
-    window.setTimeout(() => setCopied(false), 1200)
+    if (!prog) return
+    try { await navigator.clipboard.writeText(prog.code); setStatus('Code copied.') }
+    catch { setStatus('Clipboard unavailable. Download the C file instead.') }
+  }
+  const download = () => {
+    if (!prog) return
+    const url = URL.createObjectURL(new Blob([prog.code], { type: 'text/x-c;charset=utf-8' }))
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${prog.id}.c`
+    a.click()
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000)
   }
 
   return (
     <div>
-      <div className="card hero-band">
-        <div className="hero-kicker">C PROGRAMS</div>
-        <h2>{PROGRAMS.length} complete programs — you type every key, nothing is hard-coded</h2>
-        <p className="muted">
-          Each program is general and menu driven with <code>scanf</code>. There is no{' '}
-          <code>A-&gt;left = new_node(...)</code> anywhere in the source: the tree is always built by calling{' '}
-          <code>insert()</code> with keys you enter. Every listing compiles as-is in C.
-        </p>
-        <div className="stat-strip">
-          <div className="stat">
-            <b>{PROGRAMS.length}</b>
-            <span>programs</span>
-          </div>
-          <div className="stat">
-            <b>{grouped.length}</b>
-            <span>topics</span>
-          </div>
-          <div className="stat">
-            <b>{PROGRAMS.reduce((n, p) => n + p.code.split('\n').length, 0)}</b>
-            <span>lines of C</span>
-          </div>
-          <div className="stat">
-            <b>0</b>
-            <span>hard-coded nodes</span>
-          </div>
-        </div>
-      </div>
-
+      <header className="notes-heading">
+        <p className="eyebrow">UNIT IV / C</p>
+        <h2>Programs</h2>
+        <p className="muted">{PROGRAM_CATALOG.length} complete listings / Binary tree, BST, AVL and more</p>
+      </header>
       <div className="prog-layout">
-        <aside className="card prog-side" aria-label="Program list">
-          <h3 style={{ marginBottom: 8 }}>Program list</h3>
-          <input
-            className="rail-search"
-            style={{ width: '100%' }}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search title or code…"
-            aria-label="Search programs"
-          />
-          {grouped.map(([topic, list]) => {
-            const visible = list.filter(shows)
-            if (!visible.length) return null
-            return (
-              <div key={topic}>
-                <div className="rail-group">{topic}</div>
-                {TOPIC_NOTE[topic] ? <p className="prog-topic-note">{TOPIC_NOTE[topic]}</p> : null}
-                {visible.map((p) => (
-                  <button
-                    key={p.id}
-                    type="button"
-                    className={p.id === activeId ? 'prog-item active' : 'prog-item'}
-                    onClick={() => setActiveId(p.id)}
-                  >
-                    <span className="prog-num">{numberOf.get(p.id)}</span>
-                    {p.title}
-                  </button>
-                ))}
-              </div>
-            )
-          })}
-          {q && !PROGRAMS.some(shows) ? (
-            <p className="muted" style={{ fontSize: '0.85rem' }}>
-              Nothing matches “{query}”.
-            </p>
-          ) : null}
+        <aside className="prog-side" aria-label="Program list">
+          <label className="program-search-label">Search programs
+            <input className="rail-search" value={query} onChange={e => { setQuery(e.target.value); setStatus('') }} placeholder="Title or code" />
+          </label>
+          <label className="program-mobile-select">Program
+            <select value={prog?.id ?? ''} disabled={!visible.length} onChange={e => select(e.target.value)}>
+              {!visible.length ? <option value="">No matching programs</option> : null}
+              {visible.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
+            </select>
+          </label>
+          <div className="program-desktop-list">
+            {GROUPS.map(group => {
+              const items = visible.filter(p => (p.topic ?? 'Advanced') === group)
+              return items.length ? <div key={group}><div className="rail-group">{group}</div>{items.map(p => (
+                <button key={p.id} type="button" className={p.id === prog?.id ? 'prog-item active' : 'prog-item'} aria-current={p.id === prog?.id ? 'true' : undefined} onClick={() => select(p.id)}>
+                  <span className="prog-num">{ORDERED.indexOf(p) + 1}</span>{p.title}
+                </button>
+              ))}</div> : null
+            })}
+          </div>
+          <p className="muted notes-result" role="status">{visible.length} programs</p>
         </aside>
-
-        <div className="card prog-main">
-          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        {prog ? <section className="prog-main">
+          <div className="program-heading">
             <div>
-              <span className="art-badge g-core">{prog.topic ?? 'Advanced'}</span>
-              <h2 style={{ marginBottom: 4 }}>
-                {numberOf.get(prog.id)}. {prog.title}
-              </h2>
-              <p className="muted" style={{ margin: 0 }}>
-                {prog.source} · {lines.length} lines
-              </p>
+              <p className="eyebrow">{prog.topic ?? 'Advanced'}</p>
+              <h2>{prog.title}</h2>
+              <p className="muted">{prog.blurb}</p>
             </div>
-            <div className="row">
-              <button type="button" className="btn gray" onClick={copy}>
-                {copied ? 'Copied!' : 'Copy code'}
-              </button>
-              <button
-                type="button"
-                className="btn play"
-                onClick={() => window.open('https://onecompiler.com/c', '_blank', 'noopener,noreferrer')}
-              >
-                ▶ Run on OneCompiler
-              </button>
+            <div className="row program-actions">
+              <button className="icon-button" title="Copy code" aria-label="Copy code" onClick={copy}>{status === 'Code copied.' ? <Check size={19} /> : <Copy size={19} />}</button>
+              <button className="icon-button" title="Download C file" aria-label="Download C file" onClick={download}><Download size={19} /></button>
+              <a className="icon-button" title="Open C compiler" aria-label="Open C compiler" href="https://onecompiler.com/c" target="_blank" rel="noreferrer"><ExternalLink size={19} /></a>
             </div>
           </div>
-          <p>{prog.blurb}</p>
+          <div className="copy-status" role="status">{status}</div>
+          {prog.topicId ? <Link className="topic-program-link" to={`/theory#${prog.topicId}`}>Related theory</Link> : null}
           <div className="code-panel">
-            <div className="head">
-              <span>{prog.id}.c</span>
-              <span>C · {lines.length} lines</span>
-            </div>
-            <pre>
-              {lines.map((line, i) => (
-                <span className="code-line" key={i}>
-                  <span className="code-ln">{i + 1}</span>
-                  {line || ' '}
-                </span>
-              ))}
-            </pre>
+            <div className="head"><span>{prog.id}.c</span><span>C</span></div>
+            <pre><code>{prog.code}</code></pre>
           </div>
-          <p className="muted" style={{ fontSize: '0.88rem' }}>
-            How to use it: copy the code, paste it into OneCompiler, press Run, then type the keys when it asks. Feed
-            the <b>same</b> keys into the matching Visualizer tab and the two outputs must agree step for step — that
-            is how you know you understood it and not just memorised it.
-          </p>
-        </div>
-      </div>
-
-      <div className="card tip-card">
-        <b>Exam habit:</b> when they ask “write a program”, they want the struct, the function, and a{' '}
-        <code>main</code> that reads input. Write the struct first, then the one function they asked about, then a tiny
-        main with <code>scanf</code>. Never invent nodes in source — that is the fastest way to lose marks for
-        “program is not general”.
+          {prog.input ? <div className="tb-output"><b>Sample input</b><pre>{prog.input}</pre></div> : null}
+          {prog.output ? <div className="tb-output"><b>Sample output</b><pre>{prog.output}</pre></div> : null}
+        </section> : <section className="notes-empty"><h3>No matching programs</h3><button className="btn gray" onClick={() => setQuery('')}>Clear search</button></section>}
       </div>
     </div>
   )

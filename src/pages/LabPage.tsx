@@ -1,4 +1,5 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { PlaybackBar } from '../components/lab/PlaybackBar'
 import { CodePanel } from '../components/lab/CodePanel'
 import { VariablesPanel } from '../components/lab/VariablesPanel'
@@ -83,8 +84,18 @@ const ADV: [TreeKind, string][] = [
   ['trie', 'Trie'],
 ]
 
+const ALL_KINDS: TreeKind[] = ['traversal', 'bst', 'avl', 'btree', 'heap', 'rbtree', 'huffman', 'trie']
+
+function isKind(v: string | null): v is TreeKind {
+  return !!v && ALL_KINDS.includes(v as TreeKind)
+}
+
 export function LabPage() {
-  const [kind, setKind] = useState<TreeKind>('traversal')
+  const [params, setParams] = useSearchParams()
+  const [kind, setKind] = useState<TreeKind>(() => {
+    const t = params.get('tab')
+    return isKind(t) ? t : 'traversal'
+  })
   const [travRoot, setTravRoot] = useState<BinNode | null>(null)
   const [bstRoot, setBstRoot] = useState<BinNode | null>(null)
   const [avlRoot, setAvlRoot] = useState<BinNode | null>(null)
@@ -122,6 +133,7 @@ export function LabPage() {
   }, [playback])
 
   const switchKind = (k: TreeKind) => {
+    setParams({ tab: k })
     setKind(k)
     setSteps([])
     setShowThreads(false)
@@ -131,7 +143,21 @@ export function LabPage() {
     else setValue('10')
   }
 
+  useEffect(() => {
+    const t = params.get('tab')
+    if (isKind(t)) {
+      setKind(t)
+      setSteps([])
+      setShowThreads(false)
+      if (t === 'btree') setValue('8')
+      else if (t === 'huffman') setValue('A:4,B:2,C:1,D:1')
+      else if (t === 'trie') setValue('cat')
+      else setValue('10')
+    }
+  }, [params])
+
   const num = () => {
+    if (!value.trim()) return null
     const v = Number(value)
     return Number.isFinite(v) ? Math.trunc(v) : null
   }
@@ -299,33 +325,11 @@ export function LabPage() {
   const threads = showThreads && kind === 'traversal' ? inorderThreads(current.tree) : current.threads
 
   return (
-    <div>
-      <div className="card hero-band">
-        <div className="hero-kicker">VISUALIZER LAB</div>
-        <h2>Eight models, {TOTAL_PACKS} example trees, one step at a time</h2>
-        <p className="muted">
-          Every model is a different <b>law</b> bolted onto the same idea of a tree. Type a key, press Insert, then
-          Play — the drawing, the array or call stack, the variables and the highlighted line of C all move together.
-          Tap any drawn example pack to load it instantly.
-        </p>
-        <div className="stat-strip">
-          <div className="stat">
-            <b>8</b>
-            <span>models</span>
-          </div>
-          <div className="stat">
-            <b>{TOTAL_PACKS}</b>
-            <span>example trees</span>
-          </div>
-          <div className="stat">
-            <b>{steps.length || '—'}</b>
-            <span>steps loaded</span>
-          </div>
-          <div className="stat">
-            <b>{history.length}</b>
-            <span>operations run</span>
-          </div>
-        </div>
+    <div className="lab-page">
+      <div className="notes-heading">
+        <p className="eyebrow">UNIT IV / VISUALIZER</p>
+        <h2>Tree lab</h2>
+        <p className="muted">8 models / {TOTAL_PACKS} example trees</p>
         <div className="tabs" role="tablist" aria-label="Core tree type">
           {CORE.map(([k, label]) => (
             <button key={k} type="button" role="tab" aria-selected={kind === k} onClick={() => switchKind(k)}>
@@ -342,8 +346,8 @@ export function LabPage() {
         </div>
       </div>
 
-      <div className="card">
-        <h3>Operation Controls</h3>
+      <section className="lab-controls">
+        <h3>Operations</h3>
         <div className="row">
           <label className="field">
             {kind === 'trie' ? 'Word (a–z)' : kind === 'huffman' ? 'Frequencies' : 'Key (from user)'}
@@ -408,9 +412,10 @@ export function LabPage() {
             Reset empty
           </button>
         </div>
-        <p className="muted" style={{ margin: '10px 0 6px', fontWeight: 800 }}>
-          Example packs — tap a drawn model
-        </p>
+        <details className="lab-examples" onClick={e => {
+          if ((e.target as HTMLElement).closest('button.pack-card')) e.currentTarget.open = false
+        }}>
+          <summary>Example trees</summary>
         <div className="ex-row">
           {kind === 'huffman'
             ? HUFF_PACKS.map((p) => (
@@ -479,12 +484,8 @@ export function LabPage() {
                   </button>
                 ))}
         </div>
-        <p className="muted" style={{ marginBottom: 0, fontSize: '0.85rem' }}>
-          Shortcuts: <span className="kbd">Space</span> play/pause · <span className="kbd">←</span>{' '}
-          <span className="kbd">→</span> steps · <span className="kbd">I</span> insert · <span className="kbd">S</span>{' '}
-          search · <span className="kbd">D</span> delete / extract · <span className="kbd">R</span> reset
-        </p>
-      </div>
+        </details>
+      </section>
 
       <div className="grid-2">
         <div>
@@ -635,7 +636,7 @@ export function LabPage() {
         </table>
       </div>
 
-      <ModelGallery />
+      <details className="lab-gallery"><summary>All example trees</summary><ModelGallery /></details>
     </div>
   )
 }

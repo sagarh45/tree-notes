@@ -1,27 +1,27 @@
 import { Outlet, NavLink, useLocation } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
+import { BookOpen, Code2, FlaskConical, GraduationCap, Home, ListChecks, type LucideIcon } from 'lucide-react'
 
-const LINKS: [string, string, string, string][] = [
-  ['/', 'Home', 'Home', '🏠'],
-  ['/theory', 'Theory', 'Theory', '📘'],
-  ['/lab', 'Visualizer', 'Lab', '🎬'],
-  ['/programs', 'Programs', 'Code', '💻'],
-  ['/practice', 'Practice', 'Quiz', '📝'],
-  ['/revise', 'Revise', 'Revise', '⚡'],
+const LINKS: [string, string, string, LucideIcon][] = [
+  ['/', 'Syllabus', 'Syllabus', Home],
+  ['/theory', 'Theory', 'Theory', BookOpen],
+  ['/lab', 'Visualizer', 'Lab', FlaskConical],
+  ['/programs', 'Programs', 'Code', Code2],
+  ['/practice', 'Practice', 'Quiz', ListChecks],
+  ['/revise', 'Revise', 'Revise', GraduationCap],
 ]
 
 export function AppShell() {
   const [progress, setProgress] = useState(0)
-  const { pathname } = useLocation()
+  const { pathname, hash } = useLocation()
 
   useEffect(() => {
     document.documentElement.classList.remove('dark')
-    localStorage.setItem('trees-theme', 'light')
   }, [])
 
   useEffect(() => {
-    window.scrollTo({ top: 0 })
-  }, [pathname])
+    if (!hash) window.scrollTo({ top: 0 })
+  }, [pathname, hash])
 
   useEffect(() => {
     const onScroll = () => {
@@ -61,31 +61,32 @@ export function AppShell() {
           </span>
           <div>
             <h1>Unit IV — Trees</h1>
-            <p>Complete package · theory, every diagram, programs, visualizer, revision</p>
+            <p>Data Structures / WIT / 2026-27</p>
           </div>
         </div>
       </header>
       <nav className="nav-bar" aria-label="Primary">
-        {LINKS.map(([to, label, , ico]) => (
+        {LINKS.map(([to, label, , Icon]) => (
           <NavLink key={to} to={to} end={to === '/'}>
             <span className="nav-ico" aria-hidden="true">
-              {ico}
+              <Icon size={18} />
             </span>
             {label}
           </NavLink>
         ))}
       </nav>
       <main className="main">
-        <Outlet />
+        <Suspense fallback={<p role="status" className="muted">Loading...</p>}>
+          <Outlet />
+        </Suspense>
       </main>
       <footer className="app-footer">
-        <b>Unit IV — Trees.</b> Foundation → core models → advanced models → solved exam problems. Every example is
-        drawn, every program takes its keys from you.
+        <b>Unit IV / Trees.</b> WIT 25ITU3CC2T, 2026-27. Core syllabus and additional reference notes.
       </footer>
       <nav className="bottom-nav" aria-label="Mobile">
-        {LINKS.map(([to, , short, ico]) => (
+        {LINKS.map(([to, , short, Icon]) => (
           <NavLink key={to} to={to} end={to === '/'}>
-            <span aria-hidden="true">{ico}</span>
+            <Icon size={20} aria-hidden="true" />
             {short}
           </NavLink>
         ))}
