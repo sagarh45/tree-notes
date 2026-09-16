@@ -4,6 +4,7 @@
 node_modules
 dist
 dist-ssr
+public/programs
 .env*
 *.local
 *.log

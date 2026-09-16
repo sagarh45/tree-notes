@@ -1128,8 +1128,8 @@ int main(void) {
   },
   {
     id: 'avl-del-user',
-    title: 'AVL insert AND delete with rebalancing',
-    source: 'Menu: insert / delete / traversals',
+    title: 'AVL operations: create, insert, search, delete, traverse and clear',
+    source: 'Menu: balanced operations, min/max and cleanup',
     topic: 'AVL',
     blurb:
       'Delete is the harder half: one insert needs at most one rotation, but a delete may rotate at every ancestor. Rotation cases are chosen from the BF of the taller child.',
@@ -1145,6 +1145,7 @@ struct Node {
 
 struct Node *new_node(int data) {
     struct Node *n = (struct Node *)malloc(sizeof(struct Node));
+    if (!n) exit(1);
     n->data = data;
     n->h = 0;
     n->left = NULL;
@@ -1218,10 +1219,10 @@ struct Node *avl_delete(struct Node *n, int key) {
     fixh(n);
     b = bf(n);
     /* Delete cases are named from the BF of the TALLER CHILD, not from a new key. */
-    if (b > 1 && bf(n->left) >= 0)  return rotate_right(n);               /* L0 / L1  */
-    if (b > 1) { n->left = rotate_left(n->left); return rotate_right(n); } /* L-1     */
-    if (b < -1 && bf(n->right) <= 0) return rotate_left(n);               /* R0 / R-1 */
-    if (b < -1) { n->right = rotate_right(n->right); return rotate_left(n); } /* R1   */
+    if (b > 1 && bf(n->left) >= 0)  return rotate_right(n);               /* LL */
+    if (b > 1) { n->left = rotate_left(n->left); return rotate_right(n); } /* LR */
+    if (b < -1 && bf(n->right) <= 0) return rotate_left(n);               /* RR */
+    if (b < -1) { n->right = rotate_right(n->right); return rotate_left(n); } /* RL */
     return n;
 }
 
@@ -1241,11 +1242,37 @@ void show(struct Node *n, int depth) {
     show(n->left, depth + 1);
 }
 
+struct Node *search_avl(struct Node *n, int key) {
+    while (n && n->data != key)
+        n = key < n->data ? n->left : n->right;
+    return n;
+}
+void minmax(struct Node *n) {
+    if (!n) { puts("Empty tree"); return; }
+    struct Node *lo = n, *hi = n;
+    while (lo->left) lo = lo->left;
+    while (hi->right) hi = hi->right;
+    printf("Minimum = %d, Maximum = %d, Height = %d\\n", lo->data, hi->data, ht(n));
+}
+void preorder(struct Node *n) {
+    if (!n) return;
+    printf("%d ", n->data); preorder(n->left); preorder(n->right);
+}
+void postorder(struct Node *n) {
+    if (!n) return;
+    postorder(n->left); postorder(n->right); printf("%d ", n->data);
+}
+void destroy(struct Node *n) {
+    if (!n) return;
+    destroy(n->left); destroy(n->right); free(n);
+}
+
 int main(void) {
     struct Node *root = NULL;
     int ch, key;
     for (;;) {
-        printf("\\n1 insert  2 delete  3 inorder  4 show tree (rotated 90 deg)  0 quit\\n> ");
+        printf("\\n1 insert  2 delete  3 inorder  4 show tree\\n");
+        printf("5 search  6 min/max/height  7 preorder  8 postorder  9 clear  0 quit\\n> ");
         if (scanf("%d", &ch) != 1 || ch == 0) break;
         if (ch == 1 || ch == 2) {
             printf("key: ");
@@ -1259,8 +1286,20 @@ int main(void) {
             printf("\\n");
         } else if (ch == 4) {
             show(root, 0);
+        } else if (ch == 5) {
+            if (scanf("%d", &key) != 1) break;
+            puts(search_avl(root, key) ? "Found" : "Not found");
+        } else if (ch == 6) {
+            minmax(root);
+        } else if (ch == 7) {
+            preorder(root); puts("");
+        } else if (ch == 8) {
+            postorder(root); puts("");
+        } else if (ch == 9) {
+            destroy(root); root = NULL; puts("Tree cleared");
         }
     }
+    destroy(root);
     return 0;
 }
 `,

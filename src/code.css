@@ -1,0 +1,40 @@
+.source-panel { min-width: 0; background: #fff; color: #25333e; border: 1px solid #cedbdf; border-radius: 6px; overflow: hidden; }
+.lab-source { --code-font: 17px; }
+.source-panel .head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; background: #eff5f7; color: #314955; }
+.source-panel .head > span { font-size: 0.85rem; overflow-wrap: anywhere; min-width: 0; }
+.source-tools, .font-controls { display: flex; align-items: center; gap: 3px; }
+.font-controls { border-right: 1px solid #ccdadc; padding-right: 5px; margin-right: 3px; }
+.font-controls output { min-width: 24px; text-align: center; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+.source-panel .icon-button { width: 36px; height: 36px; min-width: 36px; }
+.source-panel .icon-button[aria-pressed="true"] { background: #d7eee8; color: #13664f; border-color: #80b9a7; }
+.code-panel.source-panel pre.source-code { margin: 0; padding: 18px 16px; max-height: 480px; overflow: auto; font: var(--code-font)/1.65 Consolas, "Cascadia Code", "Courier New", monospace; background: #fbfdff; color: #28343f; tab-size: 4; text-align: left; }
+.source-code code { font: inherit; color: inherit; background: none; padding: 0; }
+.source-code.source-wrap, .source-code.source-wrap code { white-space: pre-wrap; overflow-wrap: anywhere; }
+.source-code .token.comment { color: #596c62; font-style: italic; }
+.source-code .token.keyword { color: #96325c; font-weight: 600; }
+.source-code .token.string, .source-code .token.char { color: #176a3a; }
+.source-code .token.number, .source-code .token.boolean { color: #a44319; }
+.source-code .token.function { color: #155fab; }
+.source-code .token.operator, .source-code .token.punctuation { color: #48576c; }
+.source-code .token.macro, .source-code .token.directive, .source-code .token.constant { color: #7042a2; }
+.source-code .token.class-name { color: #076d78; }
+.source-panel .copy-status { margin: 0; padding: 4px 12px; }
+.program-runner { border-top: 1px solid #cbdcdb; background: #fff; }
+.runner-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 12px; }
+.runner-bar > b { display: flex; align-items: center; gap: 7px; font-size: 0.87rem; color: #255949; }
+.runner-run, .runner-stop { display: inline-flex; align-items: center; gap: 6px; padding: 9px 15px; min-height: 40px; margin: 0; border-radius: 5px; font-size: 0.87rem; }
+.runner-run { background: #17775b; color: white; }
+.runner-stop { background: #a23d47; color: white; }
+.runner-io { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 14px; padding: 0 12px; }
+.runner-io > div { min-width: 0; }
+.runner-io label, .runner-output-label { display: block; font-size: 0.8rem; font-weight: 600; margin: 0 0 6px; color: #4c6067; }
+.runner-io textarea, .source-panel pre.runner-output { box-sizing: border-box; width: 100%; min-height: 154px; max-height: 320px; margin: 0; padding: 10px; border: 1px solid #ccdadb; border-radius: 4px; color: #253d36; background: #f8fbfa; font: 16px/1.55 Consolas, "Cascadia Code", monospace; white-space: pre-wrap; overflow-wrap: anywhere; overflow: auto; }
+.runner-io textarea { resize: vertical; background: #fff; }
+.runner-status { min-height: 30px; margin: 0; padding: 8px 12px; color: #306652; font-size: 0.8rem; }
+.runner-error { color: #aa293b; }
+@media (max-width: 600px) {
+  .runner-io { grid-template-columns: minmax(0, 1fr); }
+  .source-panel .head { padding: 10px 8px; }
+  .source-tools { width: 100%; justify-content: flex-end; }
+  .source-panel pre.source-code { padding: 14px 10px; }
+}

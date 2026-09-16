@@ -81,7 +81,8 @@ const { rotationScenario, avlInsertObserved, avlInsert } = require('../src/lib/a
 const { visitValues, heightOf } = require('../src/lib/binaryTree.ts')
 const { BinaryTreeSvg } = require('../src/components/viz/BinaryTreeSvg.tsx')
 const { avlBuildFrames } = require('../src/lib/stepBuilders.ts')
-assert.equal(COURSE.length, 10)
+assert.deepEqual(COURSE.map(s => s.title), ['Tree Basics', 'Binary Tree', 'Binary Search Tree', 'Multiway Trees', 'B Tree', 'AVL Tree'])
+assert.equal(new Set(COURSE.flatMap(s => s.topics)).size, COURSE.flatMap(s => s.topics).length, 'A topic belongs to exactly one main section')
 let caseCount = 0
 for (const lesson of COURSE) {
   let programs = 0, players = 0
@@ -89,6 +90,7 @@ for (const lesson of COURSE) {
     const topic = COURSE_TOPICS.get(id)
     assert(topic, `Missing course topic: ${id}`)
     assert(topic.diagrams?.length || topic.termCards, `Missing course diagram: ${id}`)
+    for (const d of topic.diagrams ?? []) assert(renderToStaticMarkup(React.createElement(Diagram, { d })).length > 0, `Blank course diagram: ${id}`)
     programs += Boolean(topic.program || PROGRAM_LINKS[id])
     const cases = topicCases(id)
     players += cases.length
@@ -162,7 +164,7 @@ for (const c of AVL_DELETE_CASES) {
   balanced(steps.at(-1).tree)
   assert.deepEqual(sorted(steps.at(-1).tree), sorted(tree).filter(v => v !== c.key))
 }
-console.log(`PASS: 10 pointwise lessons, ${caseCount} cases, straight arrows, four rotations, full-tree insertion traces, ${cascades} cascading AVL deletion repairs`)
+console.log(`PASS: ${COURSE.length} main sections, ${caseCount} cases, straight arrows, four rotations, full-tree insertion traces, ${cascades} cascading AVL deletion repairs`)
 
 for (const [id, p] of Object.entries({ linked: LINKED_PROGRAM, multiway: MULTIWAY_PROGRAM, btree: BTREE_PROGRAM })) {
   const output = path.join(out, `${id}-course${process.platform === 'win32' ? '.exe' : ''}`)

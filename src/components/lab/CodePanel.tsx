@@ -8,6 +8,7 @@ type Props = {
 
 export function CodePanel({ title, code, activeLine, mode, onMode }: Props) {
   const lines = code.replace(/\r\n/g, '\n').split('\n')
+  const highlighted = useMemo(() => code.replace(/\r\n/g, '\n').split('\n').map(line => Prism.highlight(line || ' ', Prism.languages.c, 'c')), [code])
   return (
     <div className="card">
       <div className="row" style={{ justifyContent: 'space-between', marginBottom: 8 }}>
@@ -21,16 +22,16 @@ export function CodePanel({ title, code, activeLine, mode, onMode }: Props) {
           </button>
         </div>
       </div>
-      <div className="code-panel">
+      <div className="code-panel source-panel lab-source">
         <div className="head">
           <span>{title}</span>
           <span style={{ opacity: 0.85, fontSize: '0.85rem' }}>{mode === 'code' ? 'C' : 'Steps'}</span>
         </div>
-        <pre aria-label={title}>
+        <pre className="source-code" aria-label={title} tabIndex={0}>
           {lines.map((line, i) => (
             <span key={i} className={`code-line${activeLine === i ? ' active' : ''}`}>
               <span style={{ color: '#64748b', display: 'inline-block', width: 36 }}>{i + 1}</span>
-              {line || ' '}
+              {mode === 'code' ? <span dangerouslySetInnerHTML={{ __html: highlighted[i] }} /> : line || ' '}
             </span>
           ))}
         </pre>
@@ -38,3 +39,7 @@ export function CodePanel({ title, code, activeLine, mode, onMode }: Props) {
     </div>
   )
 }
+import { useMemo } from 'react'
+import Prism from 'prismjs'
+import 'prismjs/components/prism-c'
+import '../../code.css'

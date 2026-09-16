@@ -10,7 +10,7 @@ export const PROGRAM_LINKS: Record<string, string> = {
   'bst-def': 'bst-menu', 'bst-search': 'search-user', 'bst-insert': 'bst-menu',
   'bst-minmax': 'bstutil-user', 'bst-complexity': 'bst-menu',
   'tbt-def': 'thread-user', 'avl-def': 'avl-user', 'avl-rot': 'avl-user',
-  'avl-delete': 'avl-del-user', 'avl-search': 'search-user',
+  'avl-delete': 'avl-del-user', 'avl-search': 'avl-del-user',
   'ops-idea': 'count-user', 'ops-height': 'count-user', 'ops-mirror': 'shape-user',
   'ops-same': 'query-user', 'gen-lcrs': 'lcrs-user', 'gen-forest': 'lcrs-user',
   'bt-multi': 'bsearch-user', 'bt-ins': 'btree-user', 'bt-find': 'bsearch-user',

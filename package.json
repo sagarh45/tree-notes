@@ -5,23 +5,30 @@
   "type": "module",
   "description": "Interactive DSA notes for Binary Trees, BST, B-Trees, and AVL Trees",
   "scripts": {
+    "predev": "node scripts/build-programs.cjs",
     "dev": "vite",
+    "prebuild": "node scripts/build-programs.cjs",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "verify:notes": "node scripts/verify-notes.cjs",
+    "verify:runner": "node scripts/verify-runner.cjs",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@bjorn3/browser_wasi_shim": "^0.4.2",
     "lucide-react": "^1.46.0",
+    "prismjs": "^1.30.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.9.1"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",
+    "@types/prismjs": "^1.26.6",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
+    "@yowasp/clang": "^22.0.0-git20542-10",
     "oxlint": "^1.81.0",
     "typescript": "~5.9.2",
     "vite": "^8.3.0"

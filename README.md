@@ -13,13 +13,21 @@ Open http://localhost:4321. If that port is occupied, use `npm run dev -- --port
 
 ## Study Pages
 
-- **Syllabus (home):** ten pointwise lessons matching the Unit IV headings. Each point contains theory, diagrams, case playback, algorithms, syntax and full C programs.
+- **Syllabus (home):** six master sections: Tree Basics, Binary Tree, Binary Search Tree, Multiway Trees, B Tree and AVL Tree. Topics progress from basics and creation to operations and advanced examples. Each topic keeps its theory, diagrams, algorithms, syntax and programs together.
 - **Reference:** all 13 chapters and 54 source topics, including optional material outside the core syllabus.
 - **Visualizer:** traversals, BST, AVL, B-Tree, heap, Red-Black, Huffman and trie; example trees, playback, variables and code.
-- **Programs:** 34 complete C listings, including linked-memory, multiway-search and full B-Tree deletion examples; also embedded inside the relevant syllabus points.
+- **Programs:** 36 complete C listings, including general-tree creation/subtree deletion, unbalanced multiway operations and full B-Tree deletion; also embedded in their matching topics. Source uses C syntax highlighting, a 17px default font, adjustable font size and optional line wrapping.
 - **Practice / Revise:** questions, formulas, complexity comparisons and exam revision.
 
-The light layout includes a master syllabus index, a mobile point selector, topic search, next/previous lessons and straight directed tree edges. Case players have step buttons, speed, autoplay, restart, a step slider and a transcript. LR/RL always include the intermediate rotation. AVL deletion includes all six child-balance cases. Topic and program URLs support direct links. The library distinguishes unordered binary-tree operations from BST operations.
+The light layout includes a master syllabus index, a mobile section selector, topic search, next/previous sections and straight directed tree edges. There are 121 prepared case sequences. Case players have step buttons, speed, autoplay, restart, a step slider and a transcript. LR/RL always include the intermediate rotation. AVL deletion includes all six child-balance cases. Old ten-point URLs redirect to their matching new sections. The library distinguishes unordered binary-tree operations from BST operations.
+
+## C Program Execution
+
+Every full listing has editable stdin, Run, Stop, sample reset, stdout and exit status. These are real C executables, not JavaScript simulations or prerecorded outputs. Source is read-only; syntax fragments without `main` are not standalone executables.
+
+`predev` and `prebuild` compile each unique source to WASI WebAssembly using the build-only `@yowasp/clang` toolchain. A SHA-256 source hash addresses the matching executable. The browser downloads only the selected small executable and runs it in a dedicated worker using `@bjorn3/browser_wasi_shim`. No compiler API, user account or server-side code execution is required; stdin stays in the browser. [WASI runtime](https://github.com/bjorn3/browser_wasi_shim) and [compiler](https://github.com/YoWASP/clang) are dependencies with their respective licenses.
+
+Execution has a 5-second limit after loading, 32 MB maximum WASM memory, 16,000 input characters and 64 KB output limits. Stop/navigation terminates the worker. Invalid or oversized C inputs can fail just as in native C; they cannot access the host filesystem or network. Generated `public/programs/*.wasm` files are ignored by Git and generated again on Vercel during the build.
 
 ## Syllabus And Notes
 
@@ -35,7 +43,7 @@ Supporting source files under `Final Notes` in the Unit IV folder:
 - `DataStructures_Unit_3.pdf`, `chap7b.pdf`, `AVL Tree.pdf`
 - Six TechVidvan PDFs covering trees, binary trees, C implementation, traversal, BST and AVL.
 
-Threads, general trees, heaps, Huffman, Red-Black, trie and B+ remain available as extra reading. The focus filter includes foundational material and supporting operations; it is not a claim that every extra exercise is named in the official syllabus.
+General trees, threaded trees, reconstruction and extended binary-tree operations are included in the matching six sections. Heaps, Huffman, Red-Black, trie and B+ remain extra reference reading. Supporting advanced topics are not a claim that every exercise is named in the official syllabus.
 
 Height is counted in edges (leaf 0, empty tree -1). Some class notes use "complete" for "perfect" and "almost complete" for the usual complete-tree shape; the binary-tree chapter explains this naming difference.
 
@@ -45,11 +53,12 @@ Height is counted in edges (leaf 0, empty tree -1). Some class notes use "comple
 npm run lint
 npm run build
 npm run verify:notes
+npm run verify:runner
 ```
 
-The notes checker requires GCC on PATH. It checks every master point has diagrams, case playback and programs; renders diagram specifications; tests straight edges and all rotation intermediate states; and syntax-checks all 34 C listings. Randomized tests cover full-tree AVL insertion traces, cascading deletion rebalancing, and 30 complete B-Tree C insert/search/delete runs. Linked, multiway and binary-tree programs also have executable sample/edge-case tests.
+The checkers require GCC on PATH. Notes checks render source and course diagrams, verify coverage, straight edges and rotation intermediate states, and syntax-check all 36 C listings. Randomized tests cover full-tree AVL traces, cascading deletion repair and 30 complete B-Tree C insert/search/delete runs. Runner checks execute every C sample in the same WASI runtime as the browser and compare stdout with native GCC, plus both rotation samples, custom input, error exits and 15 randomized multiway deletion runs.
 
-Generated executables, screenshots and logs belong in the ignored `.verification` directory. The check does not run every interactive C program end to end.
+Generated native executables, screenshots and logs belong in the ignored `.verification` directory. Build before running the runner checker so that the WASM executables exist.
 
 The free-form visualizer animates B-Tree insertion. The B-Tree syllabus point contains prepared deletion case players (both borrow directions, merge, internal replacement and root shrink), plus a full order-4 C program. The deletion drawings use order 3 with bottom-up repair; the program uses minimum degree 2 with top-down repair, explicitly labelled in the lesson.
 

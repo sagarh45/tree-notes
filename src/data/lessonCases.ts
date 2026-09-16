@@ -187,6 +187,44 @@ function btreeDeleteCases(): LessonCase[] {
 }
 
 export function topicCases(id: string): LessonCase[] {
+  if (id === 'binary-create') return [
+    pictures('create-three', 'Create: 10, 30, 5', [[null, 'Empty tree', 'root = NULL.'], ['10', 'Insert 10', 'Allocate the root with two NULL pointers.'], ['10(30,)', 'Insert 30', 'First free slot is root.left.'], ['10(30,5)', 'Insert 5', 'Next free slot is root.right. Values do not choose the side.']]),
+    pictures('create-six', 'Create: 8, 2, 7, 9, 4, 1', [[null, 'Empty tree', 'Start with no nodes.'], ['8', 'Insert 8', '8 becomes root.'], ['8(2,)', 'Insert 2', 'Fill root.left.'], ['8(2,7)', 'Insert 7', 'Fill root.right.'], ['8(2(9,),7)', 'Insert 9', 'Root is full. The queue reaches 2 next: fill its left slot.'], ['8(2(9,4),7)', 'Insert 4', 'Fill the right slot of 2.'], ['8(2(9,4),7(1,))', 'Insert 1', 'Move to 7 and fill its left slot.']]),
+  ]
+  if (id === 'general-create') return [{ id: 'hierarchy', title: 'Create a hierarchy, then delete a subtree', steps: [
+    bframe({ keys: [] }, 'Empty tree', 'root = NULL.'),
+    bframe({ keys: [1] }, 'Create root 1', 'No parent; first child and next sibling are NULL.'),
+    bframe({ keys: [1], children: [{ keys: [2] }] }, 'Add child 2', 'Set root.child to node 2.'),
+    bframe({ keys: [1], children: [{ keys: [2] }, { keys: [3] }, { keys: [4] }] }, 'Add siblings 3 and 4', 'All three are children of 1. The sibling chain is 2 -> 3 -> 4.'),
+    bframe({ keys: [1], children: [{ keys: [2], children: [{ keys: [5] }, { keys: [6] }] }, { keys: [3] }, { keys: [4] }] }, 'Add children 5 and 6 to 2', 'Preorder: 1, 2, 5, 6, 3, 4. Height is 2 edges.'),
+    bframe({ keys: [1], children: [{ keys: [3] }, { keys: [4] }] }, 'Delete subtree 2', 'Free 5 and 6, then 2. Reconnect root.child to 3. Nodes 3 and 4 stay.'),
+  ] }]
+  if (id === 'multiway-operations') return [
+    { id: 'create', title: 'Create: 20, 50, 10, 30, 40, 60', steps: [
+      bframe({ keys: [] }, 'Empty tree', 'root = NULL.'),
+      bframe({ keys: [20] }, 'Insert 20', 'Allocate a node with one key.'),
+      bframe({ keys: [20, 50] }, 'Insert 50', 'The leaf has space. Insert in sorted order.'),
+      bframe({ keys: [20, 50], children: [{ keys: [10] }, { keys: [] }, { keys: [] }] }, 'Insert 10', 'The root is full. 10 < 20, so create child[0]. Empty boxes are NULL ranges.'),
+      bframe({ keys: [20, 50], children: [{ keys: [10] }, { keys: [30, 40] }, { keys: [60] }] }, 'Insert 30, 40, 60', '30 and 40 fill child[1]. 60 creates child[2]. Inorder: 10, 20, 30, 40, 50, 60.'),
+    ] },
+    { id: 'full', title: 'Insert into a full leaf: no split', steps: [
+      bframe({ keys: [20, 50], children: [{ keys: [10] }, { keys: [30, 40] }, { keys: [60] }] }, 'Insert 35', 'Select the middle range at the root.'),
+      bframe({ keys: [20, 50], children: [{ keys: [10] }, { keys: [30, 40], children: [{ keys: [] }, { keys: [35] }, { keys: [] }] }, { keys: [60] }] }, 'Create range child for 35', '30 < 35 < 40. A new child grows below the full node. This is not a B-Tree split.'),
+    ] },
+    { id: 'leaf', title: 'Delete from a multi-key leaf', steps: [bframe({ keys: [30, 40] }, 'Delete 30', 'Both adjacent child ranges are empty.'), bframe({ keys: [40] }, 'Shift remaining keys', 'One key remains. No minimum-occupancy repair is required.')] },
+    { id: 'internal', title: 'Delete an internal key using predecessor', steps: [
+      bframe({ keys: [20, 50], children: [{ keys: [5, 10] }, { keys: [30, 40] }, { keys: [60] }] }, 'Delete 20', 'Its left range exists. Predecessor is maximum(left) = 10.'),
+      bframe({ keys: [10, 50], children: [{ keys: [5] }, { keys: [30, 40] }, { keys: [60] }] }, 'Replace 20, then remove old 10', 'All keys in child[0] remain smaller than 10; middle keys remain between 10 and 50.'),
+    ] },
+    { id: 'last', title: 'Delete last key / missing key / empty tree', steps: [bframe({ keys: [10] }, 'Delete missing 99', 'Range search reaches NULL; keep 10.'), bframe({ keys: [10] }, 'Delete 10', 'The leaf becomes empty.'), bframe({ keys: [] }, 'Free the leaf', 'root = NULL. Search returns not found; deletion stays empty.')] },
+  ]
+  if (id === 'tree-destroy') return [pictures('free', 'Free children before parent', [['10(30,5)', 'Original tree', 'Postorder cleanup starts at left child 30.'], ['10(,5)', 'Free 30', 'Return to 10 and continue with the right child.'], ['10', 'Free 5', 'Both subtrees are freed.'], [null, 'Free 10; root = NULL', 'All three allocations have been released.']])]
+  if (id === 'bt-construct') return [[50, 30, 70, 20, 40, 60, 80], [10, 20, 30, 40], [30, 10, 20, 30]].map((keys, i) => {
+    let tree: BinNode | null = null
+    const steps = [frame(null, 'Empty BST', 'root = NULL. The first insertion becomes the root.')]
+    for (const key of keys) { const result = buildBstInsert(tree, key); steps.push(...result.steps); tree = result.root }
+    return { id: `construction-${i}`, title: `Create: ${keys.join(', ')}`, steps }
+  })
   if (id === 'bt-operations') return binaryCases()
   if (id === 'avl-single') return rotationCases(['LL', 'RR'])
   if (id === 'avl-double' || id === 'avl-rot') return rotationCases(id === 'avl-rot' ? ['LL', 'RR', 'LR', 'RL'] : ['LR', 'RL'])
@@ -198,10 +236,11 @@ export function topicCases(id: string): LessonCase[] {
   ]
   if (['trav-intro', 'trav-pre', 'trav-in', 'trav-post', 'trav-level', 'trav-nonrec', 'trav-program'].includes(id)) {
     const order = id === 'trav-pre' ? ['preorder'] : id === 'trav-in' || id === 'trav-nonrec' ? ['inorder'] : id === 'trav-post' ? ['postorder'] : id === 'trav-level' ? ['levelorder'] : ['preorder', 'inorder', 'postorder']
-    return order.map(kind => ({ id: kind, title: kind, steps: buildTraversalSteps(treeFromSpec('A(B(D,E),C(,F))'), kind as 'preorder') }))
+    const examples = [{ title: 'Branching tree', spec: 'A(B(D,E),C(,F))' }, { title: 'Complete tree', spec: '40(20(10,30),60(50,70))' }, { title: 'Skewed tree', spec: '10(,20(,30))' }, { title: 'Single node', spec: '10' }]
+    return examples.flatMap((example, i) => order.map(kind => ({ id: `${kind}-${i}`, title: `${example.title}: ${kind}`, steps: buildTraversalSteps(treeFromSpec(example.spec), kind as 'preorder') })))
   }
   if (id === 'bst-search' || id === 'avl-search') return [25, 99].map(key => ({ id: `search-${key}`, title: key === 25 ? 'Search: found' : 'Search: missing', steps: buildBstSearch(treeFromSpec('30(20(10,25),40)'), key) }))
-  if (id === 'bst-insert' || id === 'bt-construct') return [
+  if (id === 'bst-insert') return [
     { id: 'left', title: 'Insert in left subtree', steps: buildBstInsert(treeFromSpec('30(20,40)'), 10).steps },
     { id: 'right', title: 'Insert in right subtree', steps: buildBstInsert(treeFromSpec('30(20,40)'), 35).steps },
     { id: 'empty', title: 'Insert in empty tree', steps: buildBstInsert(null, 30).steps },

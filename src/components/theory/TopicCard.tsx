@@ -1,5 +1,5 @@
 import { memo, useMemo, useState } from 'react'
-import { BookOpen, Lightbulb, Network, Image, Calculator, ListOrdered, Braces, Pencil, FileCode2, Timer, Target, TriangleAlert, Play, Copy, Check, Download, type LucideIcon } from 'lucide-react'
+import { BookOpen, Lightbulb, Network, Image, Calculator, ListOrdered, Braces, Pencil, FileCode2, Timer, Target, TriangleAlert, Play, type LucideIcon } from 'lucide-react'
 import { PROGRAM_LINKS } from '../../data/syllabus/coverage'
 import { PROGRAM_CATALOG } from '../../data/programCatalog'
 import { topicCases } from '../../data/lessonCases'
@@ -9,6 +9,8 @@ import type { Topic } from '../../data/syllabus/types'
 import { TERM_CARDS } from '../../data/terms'
 import { BinaryTreeSvg } from '../viz/BinaryTreeSvg'
 import { Diagram } from './Diagram'
+import { CodePanel } from '../CodePanel'
+import { programInput } from '../../data/programInputs'
 
 function Block({
   icon: Icon,
@@ -29,41 +31,6 @@ function Block({
       </div>
       <div className="tb-body">{children}</div>
     </section>
-  )
-}
-
-function Code({ code, title, note }: { code: string; title?: string; note?: string }) {
-  const [status, setStatus] = useState<'idle' | 'copied' | 'error'>('idle')
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(code)
-      setStatus('copied')
-    } catch {
-      setStatus('error')
-    }
-  }
-  const download = () => {
-    const url = URL.createObjectURL(new Blob([code], { type: 'text/x-c;charset=utf-8' }))
-    const a = document.createElement('a')
-    a.href = url
-    a.download = title?.endsWith('.c') ? title : 'tree-example.c'
-    a.click()
-    window.setTimeout(() => URL.revokeObjectURL(url), 1000)
-  }
-  return (
-    <div className="code-panel tb-code">
-      <div className="head">
-        <span>{title ?? 'C'}</span>
-        <div className="row"><button type="button" className="icon-button" title="Download C file" aria-label="Download C file" onClick={download}><Download size={17} /></button><button type="button" className="icon-button" title={status === 'copied' ? 'Copied' : 'Copy code'} aria-label="Copy code" onClick={copy}>
-          {status === 'copied' ? <Check size={17} /> : <Copy size={17} />}
-        </button></div>
-      </div>
-      <pre>
-        <code>{code}</code>
-      </pre>
-      <span className="copy-status" role="status">{status === 'copied' ? 'Code copied.' : status === 'error' ? 'Clipboard unavailable. Select the code to copy it.' : ''}</span>
-      {note ? <div className="tb-code-note">{note}</div> : null}
-    </div>
   )
 }
 
@@ -189,7 +156,7 @@ export const TopicCard = memo(function TopicCard({ topic, number, lesson = false
         <Block icon={Braces} label="Syntax (C)" tone="code">
           <div className="tb-syntax">
             {topic.syntax.map((s) => (
-              <Code key={s.title} title={s.title} code={s.code} note={s.note} />
+              <CodePanel key={s.title} title={s.title} code={s.code} note={s.note} />
             ))}
           </div>
         </Block>
@@ -205,16 +172,10 @@ export const TopicCard = memo(function TopicCard({ topic, number, lesson = false
         <Block icon={FileCode2} label={`Example program — ${program.title}`} tone="code">
           <details className="program-disclosure" open={lesson ? true : undefined}>
             <summary>Full C program</summary>
-              <Code title={`${programId ?? topic.id}.c`} code={program.code} />
-              {program.input ? (
-                <div className="tb-output">
-                  <b>Input</b>
-                  <pre>{program.input}</pre>
-                </div>
-              ) : null}
+              <CodePanel title={`${programId ?? topic.id}.c`} code={program.code} sampleInput={programInput(program)} />
               {program.output ? (
                 <div className="tb-output">
-                  <b>Output</b>
+                  <b>Expected sample output</b>
                   <pre>{program.output}</pre>
                 </div>
               ) : null}

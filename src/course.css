@@ -19,7 +19,10 @@
 .course-search-results > p { font-size: 0.8rem; color: #617575; }
 .course-search-results a { display: grid; grid-template-columns: 140px minmax(0, 1fr) 18px; gap: 10px; padding: 12px 0; border-top: 1px solid #e9eeee; text-decoration: none; font-size: 0.85rem; }
 .course-search-results a span { color: #617575; }
-.lesson-contents { display: flex; flex-wrap: wrap; column-gap: 20px; row-gap: 8px; padding: 2px 0 16px; border-bottom: 1px solid #dce5e4; }
+.lesson-contents { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; padding: 2px 0 20px; border-bottom: 1px solid #dce5e4; }
+.lesson-contents-group { min-width: 0; display: grid; gap: 9px; align-content: start; }
+.lesson-contents-group h3 { font-size: 0.84rem; color: #3b5563; margin: 6px 0; }
+.lesson-group-title { font-size: 1.05rem; color: #286453; background: #ecf4f1; border-top: 2px solid #9ebfb4; margin: 32px 0 0; padding: 14px 12px; }
 .lesson-contents a { display: flex; align-items: baseline; gap: 6px; font-size: 0.79rem; color: #24665b; text-decoration: none; }
 .lesson-contents span { color: #617575; }
 .lesson-pagination { display: flex; justify-content: space-between; gap: 16px; padding: 24px 0; }
@@ -66,7 +69,7 @@
   .course-index { display: none; }
   .course-mobile-point { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; align-items: center; position: sticky; top: 0; background: #fff; z-index: 20; padding: 10px 0; border-bottom: 1px solid #dce5e4; margin-bottom: 14px; }
   .course-mobile-point label { font-size: 0.75rem; color: #507567; }
-  .lesson-topics .topic { scroll-margin-top: 80px; }
+  .lesson-topics .topic { scroll-margin-top: 135px; }
 }
 @media (max-width: 540px) {
   .course-heading h2 { font-size: 1.4rem; }
@@ -76,7 +79,7 @@
   .course-shell .main { padding: 0 12px 24px; }
   .course-search-results a { grid-template-columns: minmax(0, 1fr) 18px; }
   .course-search-results a span { grid-column: 1 / -1; }
-  .lesson-contents { gap: 10px; }
+  .lesson-contents { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .case-picker { padding: 10px; gap: 7px; grid-template-columns: auto minmax(0, 1fr); }
   .case-picker > span { display: none; }
   .case-picker select { font-size: 0.79rem; }

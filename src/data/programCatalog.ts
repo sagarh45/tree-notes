@@ -1,6 +1,7 @@
 import { PROGRAMS, type Program } from './programs'
 import { CHAPTERS } from './syllabus'
 import { LINKED_PROGRAM, MULTIWAY_PROGRAM, BTREE_PROGRAM } from './coursePrograms'
+import { GENERAL_PROGRAM, MULTIWAY_OPERATIONS } from './extraPrograms'
 
 export type CatalogProgram = Program & { input?: string; output?: string; topicId?: string }
 
@@ -9,6 +10,8 @@ const GROUPS: Record<number, Program['topic']> = {
 }
 
 export const PROGRAM_CATALOG: CatalogProgram[] = [
+  { ...GENERAL_PROGRAM, id: 'general-tree', topic: 'Advanced', source: 'Tree Basics', blurb: 'Create a hierarchy, add children, search, traverse, count and remove a subtree.' },
+  { ...MULTIWAY_OPERATIONS, id: 'multiway-operations', topic: 'B-Tree', source: 'Multiway Trees', blurb: 'General unbalanced 3-way insertion, search, deletion and sorted traversal.' },
   { ...LINKED_PROGRAM, id: 'linked-memory', topic: 'Binary tree', source: 'Linked implementation', blurb: 'Allocate nodes, connect pointers, count and free the tree.' },
   { ...MULTIWAY_PROGRAM, id: 'multiway-search', topic: 'B-Tree', source: 'Multiway trees', blurb: 'Choose child pointers using sorted key ranges.' },
   { ...BTREE_PROGRAM, id: 'btree-delete', topic: 'B-Tree', source: 'B-Trees', blurb: 'Order 4: insertion, search, borrowing, merging and root shrinking.' },

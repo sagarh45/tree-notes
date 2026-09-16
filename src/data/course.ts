@@ -2,19 +2,48 @@ import { ALL_TOPICS } from './syllabus'
 import { CH6_AVL } from './syllabus/ch6-avl'
 import type { Topic } from './syllabus/types'
 import { LINKED_PROGRAM, MULTIWAY_PROGRAM, BTREE_PROGRAM } from './coursePrograms'
+import { EXTRA_COURSE_TOPICS } from './courseExtras'
+import { PROGRAMS } from './programs'
 
 export const COURSE = [
-  { id: 'definition', title: 'Definition', description: 'Trees, binary trees, terminology and properties.', topics: ['tree-def', 'tree-terms', 'bt-def', 'bt-types', 'bt-props', 'tree-why'] },
-  { id: 'traversal', title: 'Traversal', description: 'Pre-order, in-order and post-order; recursive calls and output.', topics: ['trav-intro', 'trav-pre', 'trav-in', 'trav-post', 'trav-program'] },
-  { id: 'linked', title: 'Linked implementation', description: 'Node structure, memory allocation, left and right pointers.', topics: ['bt-linked'] },
-  { id: 'binary-ops', title: 'Binary tree operations', description: 'Insertion, searching and deletion in an unordered binary tree.', topics: ['bt-operations'] },
-  { id: 'bst-ops', title: 'BST operations', description: 'The ordering rule; insertion, searching and all deletion cases.', topics: ['bst-def', 'bst-search', 'bst-insert', 'bst-minmax', 'bst-delete', 'bst-complexity'] },
-  { id: 'multiway', title: 'Multiway trees', description: 'Multiple keys, child pointers and search ranges.', topics: ['multiway-definition'] },
-  { id: 'btree', title: 'B-Trees', description: 'Order, occupancy, search, splits, borrowing and merging.', topics: ['bt-multi', 'bt-ins', 'bt-find', 'bt-del'] },
-  { id: 'avl', title: 'AVL tree', description: 'Balance factors, construction, searching and deletion rebalancing.', topics: ['avl-def', 'avl-insert', 'avl-search', 'avl-delete'] },
-  { id: 'single-rotation', title: 'Single rotations', description: 'LL and RR cases, pointer changes and middle-subtree transfer.', topics: ['avl-single'] },
-  { id: 'double-rotation', title: 'Double rotations', description: 'LR and RL cases, with both elementary rotations shown.', topics: ['avl-double'] },
-] as const
+  { id: 'tree-basics', title: 'Tree Basics', description: 'Root, branches and relationships; from an empty tree to a complete hierarchy.', groups: [
+    { title: 'Basics', topics: ['tree-def', 'tree-terms', 'tree-why'] },
+    { title: 'Create and operate', topics: ['general-create'] },
+    { title: 'Advanced representations', topics: ['gen-lcrs', 'gen-forest'] },
+  ] },
+  { id: 'binary-tree', title: 'Binary Tree', description: 'Create nodes, connect pointers, traverse and perform operations on any binary tree.', groups: [
+    { title: 'Basics and representation', topics: ['bt-def', 'bt-types', 'bt-props', 'bt-linked', 'bt-array'] },
+    { title: 'Create, insert, search and delete', topics: ['binary-create', 'bt-operations'] },
+    { title: 'Traversals', topics: ['trav-intro', 'trav-pre', 'trav-in', 'trav-post', 'trav-level', 'trav-program'] },
+    { title: 'More operations', topics: ['ops-idea', 'ops-height', 'ops-mirror', 'ops-same', 'ops-dia', 'tree-destroy'] },
+    { title: 'Advanced', topics: ['trav-nonrec', 'trav-rebuild', 'bt-expr', 'tbt-def'] },
+  ] },
+  { id: 'bst', title: 'Binary Search Tree', description: 'Create an ordered tree; search, insert, delete and answer sorted-key queries.', groups: [
+    { title: 'Basics and creation', topics: ['bst-def', 'bt-construct'] },
+    { title: 'Operations', topics: ['bst-insert', 'bst-search', 'bst-minmax', 'bst-delete'] },
+    { title: 'Advanced queries and analysis', topics: ['bst-queries', 'bst-complexity'] },
+  ] },
+  { id: 'multiway', title: 'Multiway Trees', description: 'Multiple keys per node, range-based children and operations without a balance guarantee.', groups: [
+    { title: 'Basics', topics: ['multiway-definition'] },
+    { title: 'Create and operate', topics: ['multiway-operations'] },
+  ] },
+  { id: 'btree', title: 'B Tree', description: 'Create a balanced multiway tree; search, split, borrow, merge and shrink its root.', groups: [
+    { title: 'Basics and creation', topics: ['bt-multi', 'bt-ins'] },
+    { title: 'Operations', topics: ['bt-find', 'bt-del', 'btree-traverse'] },
+  ] },
+  { id: 'avl', title: 'AVL Tree', description: 'Create a balanced BST; follow every rotation and repair after insertion or deletion.', groups: [
+    { title: 'Basics and creation', topics: ['avl-def', 'avl-insert'] },
+    { title: 'Rotations', topics: ['avl-single', 'avl-double'] },
+    { title: 'Operations and analysis', topics: ['avl-search', 'avl-delete', 'avl-traverse'] },
+  ] },
+].map(section => ({ ...section, topics: section.groups.flatMap(group => group.topics) }))
+
+export const LEGACY_POINTS: Record<string, { point: string; topic?: string }> = {
+  definition: { point: 'tree-basics' }, traversal: { point: 'binary-tree', topic: 'trav-intro' },
+  linked: { point: 'binary-tree', topic: 'bt-linked' }, 'binary-ops': { point: 'binary-tree', topic: 'bt-operations' },
+  'bst-ops': { point: 'bst' }, 'single-rotation': { point: 'avl', topic: 'avl-single' },
+  'double-rotation': { point: 'avl', topic: 'avl-double' },
+}
 
 const rotation = ALL_TOPICS.find(t => t.id === 'avl-rot')!
 const insertionProgram = CH6_AVL.topics.find(t => t.id === 'avl-insert')!.program!
@@ -53,10 +82,13 @@ const derived: Topic[] = [multiway, ...(['single', 'double'] as const).map(kind 
     input: kind === 'single' ? '3\n30 20 10' : '3\n30 10 20', output: undefined },
 }))]
 
-export const COURSE_TOPICS = new Map([...ALL_TOPICS, ...derived].map(t => [t.id, t.id === 'tree-def' || t.id === 'bt-linked'
+export const COURSE_TOPICS = new Map([...ALL_TOPICS, ...derived, ...EXTRA_COURSE_TOPICS].map(t => [t.id, t.id === 'bt-construct'
+  ? { ...t, title: 'Create a Binary Search Tree from keys' }
+  : t.id === 'ops-dia' ? { ...t, program: PROGRAMS.find(p => p.id === 'query-user') }
+  : t.id === 'tree-def' || t.id === 'bt-linked'
   ? { ...t, program: LINKED_PROGRAM }
   : t.id === 'bt-del' ? { ...t, program: BTREE_PROGRAM, points: [...(t.points ?? []), 'The diagrams use order 3 and bottom-up underflow repair. The C program uses order 4 (minimum degree 2) and repairs before descending. Both obey their stated occupancy rules.'] } : t]))
 export function lessonForTopic(topic: string) {
-  if (topic === 'avl-rot') return 'double-rotation'
+  if (topic === 'avl-rot') return 'avl'
   return COURSE.find(l => (l.topics as readonly string[]).includes(topic))?.id
 }
