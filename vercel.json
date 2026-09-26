@@ -1,29 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
-  "redirects": [
-    { "source": "/", "destination": "/syllabus.html", "permanent": false },
-    { "source": "/theory", "destination": "/syllabus.html#definition", "permanent": false },
-    { "source": "/overview", "destination": "/syllabus.html#definition", "permanent": false },
-    { "source": "/definition", "destination": "/syllabus.html#definition", "permanent": false },
-    { "source": "/traversal", "destination": "/syllabus.html#traversal", "permanent": false },
-    { "source": "/linked-implementation", "destination": "/syllabus.html#linked", "permanent": false },
-    { "source": "/binary-tree-operations", "destination": "/syllabus.html#binary-ops", "permanent": false },
-    { "source": "/bst-operations", "destination": "/syllabus.html#bst-ops", "permanent": false },
-    { "source": "/multiway-trees", "destination": "/syllabus.html#multiway", "permanent": false },
-    { "source": "/b-trees", "destination": "/syllabus.html#btree", "permanent": false },
-    { "source": "/avl-tree", "destination": "/syllabus.html#avl", "permanent": false },
-    { "source": "/single-rotation", "destination": "/syllabus.html#single-rotation", "permanent": false },
-    { "source": "/double-rotation", "destination": "/syllabus.html#double-rotation", "permanent": false }
-  ],
   "headers": [
-    {
-      "source": "/syllabus.html",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" },
-        { "key": "X-Tree-Notes-Version", "value": "syllabus-full-v12" }
-      ]
-    },
     {
       "source": "/index.html",
       "headers": [
@@ -33,7 +11,7 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Tree-Notes-Version", "value": "syllabus-full-v12" }
+        { "key": "X-Tree-Notes-Version", "value": "notes-justify-v1" }
       ]
     }
   ],
